@@ -1,0 +1,18 @@
+server:
+    port: 8181
+
+spring:
+    datasource:
+        url: jdbc:mariadb://${attachments_service:localhost}:${MARIADB_PORT_NUMBER:3308}/attachments_service?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC
+        username: auth
+        password: auth123
+        driver-class-name: org.mariadb.jdbc.Driver
+        hikari:
+            maximum-pool-size: 10
+    jpa:
+        show-sql: true
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MariaDB103Dialect
