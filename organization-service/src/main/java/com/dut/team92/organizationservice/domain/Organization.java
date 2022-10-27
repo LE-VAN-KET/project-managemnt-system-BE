@@ -28,4 +28,6 @@ public class Organization extends BaseDomain {
     private Boolean isDelete;
 
     private String logo;
+
+    private UUID userId;
 }

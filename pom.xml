@@ -10,13 +10,10 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>common</module>
-        <module>auth-service</module>
+        <module>user-service</module>
         <module>member-service</module>
         <module>infrastructure</module>
         <module>issues-service</module>
-        <module>comment-service</module>
-        <module>attachments-service</module>
-        <module>project-service</module>
         <module>organization-service</module>
     </modules>
     <parent>
@@ -54,21 +51,6 @@
             <dependency>
                 <groupId>com.dut.team92</groupId>
                 <artifactId>issues-service</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.dut.team92</groupId>
-                <artifactId>comment-service</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.dut.team92</groupId>
-                <artifactId>attachments-service</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.dut.team92</groupId>
-                <artifactId>project-service</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>

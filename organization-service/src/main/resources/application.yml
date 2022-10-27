@@ -4,7 +4,7 @@ server:
 
 spring:
     datasource:
-        url: jdbc:mariadb://${organization_service:localhost}:${MARIADB_PORT_NUMBER:3312}/organization_service?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC
+        url: jdbc:mariadb://${DATABASE_HOST:localhost}:${MARIADB_PORT_NUMBER:3312}/organization_service?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC
         username: auth
         password: auth123
         driver-class-name: org.mariadb.jdbc.Driver

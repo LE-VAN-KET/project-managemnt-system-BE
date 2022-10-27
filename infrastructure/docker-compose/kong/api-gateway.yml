@@ -1,0 +1,96 @@
+version: "3"
+
+# docker create network kong_network
+networks:
+    kong_network:
+        driver: bridge
+
+services:
+    # The database(Postgres) used by Kong
+    kong_database:
+        container_name: pds_db_kong
+        image: postgres:9.6
+        restart: always
+        environment:
+            POSTGRES_USER: kong
+            POSTGRES_PASSWORD: kong_password_dut_team92
+            POSTGRES_DB: kong
+        expose:
+            - "5432"
+        ports:
+            - "5432:5432"
+        volumes:
+            - ../volumes/kong/data:/var/lib/postgresql/data
+        shm_size: 256m
+        healthcheck:
+            test: [ "CMD", "pg_isready", "-U", "kong" ]
+            interval: 60s
+            timeout: 5s
+            retries: 5
+        networks:
+            - kong_network
+
+    # Kong: The API Gateway
+    kong:
+        build:
+            context: ./
+        container_name: pds_kong
+        image: kong:lastest-oidc
+        restart: always
+        environment:
+            KONG_DATABASE: postgres
+            KONG_PG_HOST: kong_database
+            KONG_PG_USER: kong
+            KONG_PG_PASSWORD: kong_password_dut_team92
+            KONG_PROXY_LISTEN: 0.0.0.0:8000
+            KONG_PROXY_LISTEN_SSL: 0.0.0.0:8443
+            KONG_ADMIN_LISTEN: 0.0.0.0:8001, 0.0.0.0:8444 ssl
+            KONG_PROXY_ACCESS_LOG: /dev/stdout
+            KONG_ADMIN_ACCESS_LOG: /dev/stdout
+            KONG_PROXY_ERROR_LOG: /dev/stderr
+            KONG_ADMIN_ERROR_LOG: /dev/stderr
+            KONG_PLUGINS: bundled,oidc
+            KONG_LOG_LEVEL: debug
+            #KONG_ADMIN_LISTEN_SSL: 0.0.0.0:8444
+        depends_on:
+            - kong_database
+        links:
+            - kong_database
+        healthcheck:
+            test: [ "CMD", "curl", "-f", "http://kong:8001" ]
+            interval: 5s
+            timeout: 2s
+            retries: 15
+        ports:
+            - "8000:8000"
+            - "8001:8001"
+            - "8443:8443"
+            - "8444:8444"
+#            - "80:8000"
+#            - "443:8443"
+        networks:
+            - kong_network
+
+
+    # Kong: Kong GUI
+    konga:
+        image: pantsel/konga:latest
+        restart: always
+        environment:
+            DB_ADAPTER: postgres
+            DB_HOST: kong_database
+            DB_PORT: '5432'
+            DB_USER: kong
+            DB_PASSWORD: kong_password_dut_team92
+            TOKEN_SECRET: konga_JWT_signing_secret
+        depends_on:
+            - kong_database
+        links:
+            - kong_database
+        ports:
+            - "1337:1337"
+        networks:
+            - kong_network
+
+#volumes:
+#    ./docker-compose/volumes/kong/data:
