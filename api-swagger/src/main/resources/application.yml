@@ -1,0 +1,21 @@
+server:
+    port: 8187
+
+logging:
+    level:
+        ROOT: INFO
+        com.dut.team92: DEBUG
+
+spring:
+    application:
+        name: api-swagger
+
+application:
+    swagger:
+        base-url: http://${HOST_PORT_API_GATEWAY:localhost:8000}
+        docs-url: v1/api-docs
+        version: 3.0.0
+        definitions:
+            - name: user-service
+              url: /users/v1/api-docs
+              version: ${application.swagger.version}

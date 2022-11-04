@@ -10,3 +10,4 @@ end
 
 kong.service.request.add_header("X-Username", username)
 kong.service.request.add_header("X-Preferred-Username", preferred_username)
+kong.service.request.add_header("Userinfo", user_info)

@@ -1,9 +1,14 @@
 server:
     port: 8182
 
+logging:
+    level:
+        ROOT: INFO
+        com.dut.team92: DEBUG
+
 spring:
     datasource:
-        url: jdbc:mariadb://${auth_service:localhost}:${MARIADB_PORT_NUMBER:3307}/auth_service?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC
+        url: jdbc:mariadb://${DATABASE_HOST:localhost}:${MARIADB_PORT_NUMBER:3307}/auth_service?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC
         username: auth
         password: auth123
         driver-class-name: org.mariadb.jdbc.Driver
@@ -16,3 +21,28 @@ spring:
         properties:
             hibernate:
                 dialect: org.hibernate.dialect.MariaDB103Dialect
+
+    redis:
+        database: 0
+        address: redis://${REDIS_HOST:localhost}:${REDIS_PORT:6379}
+        connection-pool-size: 4
+        connection-minimum-idle-size: 2
+        token-prefix: project-management:token
+        token-time-to-live: 1800
+
+application:
+    security:
+        authentication:
+            access-token-validity-in-seconds: 360
+            refresh-token-validity-in-seconds: 1800
+
+keystore:
+    password: team92pass
+
+# Config Swagger  UI
+springdoc:
+    api-docs:
+        path: /v1/api-docs
+    swagger-ui:
+        path: /swagger-ui-custom.html
+        operationsSorter: method

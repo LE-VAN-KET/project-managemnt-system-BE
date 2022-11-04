@@ -1,0 +1,141 @@
+version: '3'
+services:
+    db_auth:
+        container_name: db_auth
+        image: mariadb:latest
+        restart: always
+        ports:
+            - "3307:3306"
+        environment:
+            MARIADB_USER: auth
+            MARIADB_PASSWORD: auth123
+            MARIADB_ROOT_PASSWORD: root
+            MARIADB_DATABASE: auth_service
+            MARIADB_PORT_NUMBER: 3307
+        volumes:
+            - './volumes/database/auth/mysql:/var/lib/mysql'
+        networks:
+            - ${GLOBAL_NETWORK}
+
+    db_issues:
+        container_name: db_issues
+        image: mariadb:latest
+        restart: always
+        ports:
+            - "3310:3306"
+        environment:
+            MARIADB_USER: auth
+            MARIADB_PASSWORD: auth123
+            MARIADB_ROOT_PASSWORD: root
+            MARIADB_DATABASE: issues_service
+            MARIADB_PORT_NUMBER: 3310
+        volumes:
+            - './volumes/database/issues/mysql:/var/lib/mysql'
+        networks:
+            - ${GLOBAL_NETWORK}
+
+    db_member:
+        container_name: db_member
+        image: mariadb:latest
+        restart: always
+        ports:
+            - "3311:3306"
+        environment:
+            MARIADB_USER: auth
+            MARIADB_PASSWORD: auth123
+            MARIADB_ROOT_PASSWORD: root
+            MARIADB_DATABASE: members_service
+            MARIADB_PORT_NUMBER: 3311
+        volumes:
+            - './volumes/database/member/mysql:/var/lib/mysql'
+        networks:
+            - ${GLOBAL_NETWORK}
+
+    db_organization:
+        container_name: db_organization
+        image: mariadb:latest
+        restart: always
+        healthcheck:
+            test: "/usr/bin/msql --user=auth --password=auth123 --execute \"SHOW DATABASE;\""
+            interval: 3s
+            timeout: 1s
+            retries: 5
+        ports:
+            - "3312:3306"
+        environment:
+            MARIADB_USER: auth
+            MARIADB_PASSWORD: auth123
+            MARIADB_ROOT_PASSWORD: root
+            MARIADB_DATABASE: organization_service
+        volumes:
+            - './volumes/database/organization/mysql:/var/lib/mysql'
+        networks:
+            - ${GLOBAL_NETWORK}
+
+    redis:
+        image: redis:latest
+        hostname: redis
+        container_name: pds_redis
+        restart: always
+        volumes:
+            - ./volumes/redis/data:/data
+        ports:
+            - "6379:6379"
+        networks:
+            - ${GLOBAL_NETWORK}
+
+#    organization-service:
+#        hostname: organization_service
+#        container_name: organization-service
+#        image: organization-service:latest
+#        restart: always
+#        build:
+#            context: ../../organization-service/
+#        ports:
+#            - "8186:8186"
+#        environment:
+#            DATABASE_HOST: db_organization
+#            MARIADB_PORT_NUMBER: 3306
+#        links:
+#            - db_organization
+#        depends_on:
+#            - db_organization
+#        networks:
+#            - ${GLOBAL_NETWORK}
+
+    user-service:
+        hostname: user_service
+        container_name: user-service
+        image: user-service:latest
+        restart: always
+        build:
+            context: ../../user-service/
+        ports:
+            - "8182:8182"
+        environment:
+            DATABASE_HOST: db_auth
+            MARIADB_PORT_NUMBER: 3306
+            REDIS_HOST: redis
+            REDIS_PORT: 6379
+        links:
+            - db_auth
+        depends_on:
+            - db_auth
+            - redis
+        networks:
+            - ${GLOBAL_NETWORK}
+
+    api-swagger:
+        container_name: api-swagger
+        hostname: api-swagger
+        image: api-swagger:1.0
+        ports:
+            - "8187:8187"
+        restart: unless-stopped
+        build:
+            context: ../../api-swagger
+            dockerfile: Dockerfile
+        depends_on:
+            - user-service
+        networks:
+            - ${GLOBAL_NETWORK}
