@@ -3,25 +3,28 @@ package com.dut.team92.userservice.services;
 import com.dut.team92.common.security.TokenProvider;
 import com.dut.team92.userservice.configuration.properties.TokenProperties;
 import com.dut.team92.userservice.domain.dto.event.UserCreatedEvent;
-import com.dut.team92.userservice.domain.dto.request.CreateUserCommand;
-import com.dut.team92.userservice.domain.dto.request.LoginUserRequest;
-import com.dut.team92.userservice.domain.dto.request.RefreshTokenRequest;
+import com.dut.team92.userservice.domain.dto.request.*;
+import com.dut.team92.userservice.domain.dto.response.CreateOrganizationResponse;
+import com.dut.team92.userservice.domain.dto.response.CreateUserAdminOrganizationResponse;
 import com.dut.team92.userservice.domain.dto.response.CreateUserResponse;
 import com.dut.team92.userservice.domain.dto.response.LoginResponse;
 import com.dut.team92.userservice.domain.entity.TokenPair;
 import com.dut.team92.userservice.exception.InvalidAccessTokenException;
 import com.dut.team92.userservice.exception.InvalidRefreshTokenException;
 import com.dut.team92.userservice.exception.UserNotFoundException;
+import com.dut.team92.userservice.proxy.OrganizationServiceProxy;
 import com.dut.team92.userservice.repository.RedisTokenRepository;
-import com.dut.team92.userservice.security.jwt.TokenCreator;
 import com.dut.team92.userservice.services.handler.TokenCreateAndSaveHandler;
 import com.dut.team92.userservice.services.handler.TokenCreateAndUpdateHandler;
 import com.dut.team92.userservice.services.handler.UserCreateCommandHandler;
 import com.dut.team92.userservice.services.mapper.UserDataMapper;
 import com.dut.team92.userservice.util.TokenUtil;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
+import org.springframework.beans.BeanUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -46,6 +49,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final TokenProvider tokenProvider;
     private final RedisTokenRepository redisTokenRepository;
     private final TokenCreateAndUpdateHandler tokenCreateAndUpdateHandler;
+    private final OrganizationServiceProxy proxy;
 
     @Override
     public CreateUserResponse signup(CreateUserCommand createUserCommand) {
@@ -100,5 +104,38 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw InvalidRefreshTokenException.getInstance();
 
         return tokenCreateAndUpdateHandler.createAndUpdateToken(authentication);
+    }
+
+    @Override
+    @Transactional
+    public CreateUserAdminOrganizationResponse signupOrganization(CreateUserAdminOrganizationCommand
+                                                                  createUserAdminOrganizationCommand
+    ) {
+        UserCreatedEvent userCreatedEvent = userCreateCommandHandler
+                .createAdminForOrganization(createUserAdminOrganizationCommand);
+        CreateOrganizationCommand createOrganizationCommand = convertUserCommandToCreateOrganizationCommand(
+                createUserAdminOrganizationCommand);
+        createOrganizationCommand.setUserId(userCreatedEvent.getUser().getId());
+        // call api organization-service to create organization
+        var response = proxy.createOrganization(createOrganizationCommand);
+
+        if (response.getCode() == null) {
+            return userDataMapper.userToCreateUserAdminOrganizationResponse(userCreatedEvent.getUser(),
+                    "User saved successfully!", response);
+        } else {
+            return userCreateCommandHandler.throwExceptionOrganizationService(response);
+        }
+    }
+
+    private CreateOrganizationCommand convertUserCommandToCreateOrganizationCommand(
+            CreateUserAdminOrganizationCommand createUserAdminOrganizationCommand){
+        CreateOrganizationCommand command = new CreateOrganizationCommand();
+        Objects.requireNonNull(createUserAdminOrganizationCommand);
+        BeanUtils.copyProperties(createUserAdminOrganizationCommand, command);
+        return command;
+    }
+
+    private void fallbackCircuitOpen(CreateOrganizationCommand command, RuntimeException throwable) {
+
     }
 }

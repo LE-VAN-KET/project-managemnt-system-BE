@@ -1,8 +1,10 @@
 package com.dut.team92.userservice.controller;
 
+import com.dut.team92.userservice.domain.dto.request.CreateUserAdminOrganizationCommand;
 import com.dut.team92.userservice.domain.dto.request.CreateUserCommand;
 import com.dut.team92.userservice.domain.dto.request.LoginUserRequest;
 import com.dut.team92.userservice.domain.dto.request.RefreshTokenRequest;
+import com.dut.team92.userservice.domain.dto.response.CreateUserAdminOrganizationResponse;
 import com.dut.team92.userservice.domain.dto.response.CreateUserResponse;
 import com.dut.team92.userservice.domain.dto.response.LoginResponse;
 import com.dut.team92.userservice.domain.entity.TokenPair;
@@ -17,7 +19,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(value = "/api/auth")
 public class AuthenticationController {
@@ -45,6 +46,13 @@ public class AuthenticationController {
     @PostMapping("/refresh-token")
     public ResponseEntity<TokenPair> refresh(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
         return ResponseEntity.ok(authenticationService.refreshToken(refreshTokenRequest));
+    }
+
+    @PostMapping("/signup/organization")
+    public ResponseEntity<CreateUserAdminOrganizationResponse> signupOrganization(
+            @Valid @RequestBody CreateUserAdminOrganizationCommand createUserAdminOrganizationCommand) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(authenticationService
+                .signupOrganization(createUserAdminOrganizationCommand));
     }
 
 }

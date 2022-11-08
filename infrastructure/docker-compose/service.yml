@@ -84,27 +84,27 @@ services:
         networks:
             - ${GLOBAL_NETWORK}
 
-#    organization-service:
-#        hostname: organization_service
-#        container_name: organization-service
-#        image: organization-service:latest
-#        restart: always
-#        build:
-#            context: ../../organization-service/
-#        ports:
-#            - "8186:8186"
-#        environment:
-#            DATABASE_HOST: db_organization
-#            MARIADB_PORT_NUMBER: 3306
-#        links:
-#            - db_organization
-#        depends_on:
-#            - db_organization
-#        networks:
-#            - ${GLOBAL_NETWORK}
+    organization-service:
+        hostname: organization-service
+        container_name: organization-service
+        image: organization-service:latest
+        restart: always
+        build:
+            context: ../../organization-service/
+        ports:
+            - "8186:8186"
+        environment:
+            DATABASE_HOST: db_organization
+            MARIADB_PORT_NUMBER: 3306
+        links:
+            - db_organization
+        depends_on:
+            - db_organization
+        networks:
+            - ${GLOBAL_NETWORK}
 
     user-service:
-        hostname: user_service
+        hostname: user-service
         container_name: user-service
         image: user-service:latest
         restart: always
@@ -125,17 +125,12 @@ services:
         networks:
             - ${GLOBAL_NETWORK}
 
-    api-swagger:
-        container_name: api-swagger
-        hostname: api-swagger
-        image: api-swagger:1.0
+    sonarqube:
+        hostname: sonarqube
+        container_name: sonarqube
+        image: sonarqube
         ports:
-            - "8187:8187"
-        restart: unless-stopped
-        build:
-            context: ../../api-swagger
-            dockerfile: Dockerfile
-        depends_on:
-            - user-service
+            -   "10000:9000"
+            -   "10092:9092"
         networks:
             - ${GLOBAL_NETWORK}

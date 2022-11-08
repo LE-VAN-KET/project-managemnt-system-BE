@@ -84,7 +84,17 @@ public class GlobalExceptionHandler extends CommonExceptionHandler {
         addErrorLog(HttpStatus.BAD_REQUEST, exception.getMessage(), "MissingRequestHeaderException");
         return new CommonErrorResponse(
                 webUtil.getRequestId(),
-                HttpStatus.UNAUTHORIZED,
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BadRequestExceptionOrganization.class)
+    public CommonErrorResponse handleBadRequestOrganizationServiceException(BadRequestExceptionOrganization exception) {
+        addErrorLog(HttpStatus.BAD_REQUEST, exception.getMessage(), "BadRequestExceptionOrganization");
+        return new CommonErrorResponse(
+                webUtil.getRequestId(),
+                HttpStatus.BAD_REQUEST,
                 exception.getMessage());
     }
 

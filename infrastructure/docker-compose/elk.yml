@@ -23,6 +23,9 @@ services:
         restart: unless-stopped
         ports:
             - "5044:5044"
+        environment:
+            ELASTICSEARCH_HOST: http://elasticsearch
+            ELASTICSEARCH_PORT: 9200
         volumes:
             - ./logstash/pipeline:/usr/share/logstash/pipeline/
         depends_on:

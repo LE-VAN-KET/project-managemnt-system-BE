@@ -1,5 +1,24 @@
 version: '3'
 services:
+    zookeeper:
+        image: confluentinc/cp-zookeeper:${KAFKA_VERSION:-latest}
+        hostname: zookeeper
+        ports:
+            - "2181:2181"
+        environment:
+            ZOOKEEPER_SERVER_ID: 1
+            ZOOKEEPER_CLIENT_PORT: 2181
+            ZOOKEEPER_TICK_TIME: 2000
+            ZOOKEEPER_INIT_LIMIT: 5
+            ZOOKEEPER_SYNC_LIMIT: 2
+            ZOOKEEPER_SERVERS: zookeeper:2888:3888
+            KAFKA_OPTS: "-Dzookeeper.4lw.commands.whitelist=ruok"
+        volumes:
+            - "./volumes/zookeeper/data:/var/lib/zookeeper/data"
+            - "./volumes/zookeeper/transactions:/var/lib/zookeeper/log"
+        networks:
+            - ${GLOBAL_NETWORK:-kafka}
+
     schema-registry:
         image: confluentinc/cp-schema-registry:${KAFKA_VERSION}
         hostname: schema-registry
@@ -34,6 +53,9 @@ services:
             - "./volumes/kafka/broker-1:/var/lib/kafka/data"
         networks:
             - ${GLOBAL_NETWORK:-kafka}
+        depends_on:
+            -   zookeeper
+
     kafka-broker-2:
         image: confluentinc/cp-kafka:${KAFKA_VERSION}
         hostname: kafka-broker-2
@@ -51,6 +73,9 @@ services:
             - "./volumes/kafka/broker-2:/var/lib/kafka/data"
         networks:
             - ${GLOBAL_NETWORK:-kafka}
+        depends_on:
+            - zookeeper
+
     kafka-broker-3:
         image: confluentinc/cp-kafka:${KAFKA_VERSION}
         hostname: kafka-broker-3
@@ -68,6 +93,9 @@ services:
             - "./volumes/kafka/broker-3:/var/lib/kafka/data"
         networks:
             - ${GLOBAL_NETWORK:-kafka}
+        depends_on:
+            - zookeeper
+
     kafka-manager:
         image: hlebalbau/kafka-manager:stable
         restart: always
@@ -77,3 +105,5 @@ services:
             ZK_HOSTS: "zookeeper:2181"
         networks:
             - ${GLOBAL_NETWORK:-kafka}
+        depends_on:
+            - zookeeper

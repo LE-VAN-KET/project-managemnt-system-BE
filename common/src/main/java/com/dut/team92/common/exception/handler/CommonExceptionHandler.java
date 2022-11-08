@@ -155,4 +155,14 @@ public class CommonExceptionHandler {
         return handleServerErrorException(exception, "RetrievePrivateKeyException");
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(value = {CommonNotFoundException.class})
+    public CommonErrorResponse handleCommonNotFoundException(CommonNotFoundException ex) {
+        addErrorLog(HttpStatus.NOT_FOUND, ex.getMessage(), "CommonNotFoundException");
+        return new CommonErrorResponse(
+                webUtil.getRequestId(),
+                HttpStatus.NOT_FOUND,
+                ex.getMessage());
+    }
+
 }

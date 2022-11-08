@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public class CommonErrorResponse {
-    private final String id;
-    private final Integer code;
-    private final String message;
+    private String id;
+    private Integer code;
+    private String message;
 
     public CommonErrorResponse(String id, Integer code, String message) {
         this.id = id;
@@ -19,5 +19,8 @@ public class CommonErrorResponse {
         this.id = id;
         this.code = status.value();
         this.message = message;
+    }
+
+    public CommonErrorResponse() {
     }
 }

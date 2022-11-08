@@ -42,7 +42,6 @@ public class UserServiceImpl implements UserService{
     @Override
     public User create(User entity) {
         entity.setIsDelete(false);
-        entity.setIsOrganizerAdmin(false);
         entity.setIsSystemAdmin(false);
         entity.setStatus(UserStatus.ACTIVE);
         return userRepository.save(entity);

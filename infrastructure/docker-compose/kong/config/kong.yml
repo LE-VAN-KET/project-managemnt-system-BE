@@ -1,12 +1,39 @@
-#_format_version: "1.1"
-#services:
-#    - name: organization-service
-#      url: http://organization-service:8186
-#      plugins: []
-#      routes:
-#          - name: organization-service-path-get
-#            methods:
-#                - GET
-#            paths:
-#                - /api/test
-#            strip_path: false
+_format_version: '2.1'
+_transform: true
+
+services:
+    - name: user-service
+      url: http://user-service:8182
+      plugins: []
+      routes:
+          - name: actuator
+            paths:
+                - /actuator
+            strip_path: false
+
+          - name: user-service-pd1
+            methods:
+                - POST, GET
+            paths:
+                - /api/auth/*
+            strip_path: false
+
+    - name: organization-service
+      url: http://organization-service:8186
+      plugins: []
+      routes:
+          - name: organization-service-pd1
+            methods:
+                - POST, GET, PUT, PATCH, DELETE
+            paths:
+                - /api/organizations/*
+            strip_path: false
+
+upstreams:
+    - name: userservice
+      targets:
+          - target: user-service:8182
+
+    - name: organizationservice
+      targets:
+          - target: organization-service:8186
