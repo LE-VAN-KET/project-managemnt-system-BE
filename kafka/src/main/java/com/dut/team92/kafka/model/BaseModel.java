@@ -1,4 +1,7 @@
 package com.dut.team92.kafka.model;
 
-public interface BaseModel {
+import java.io.Serializable;
+
+public interface BaseModel extends Serializable {
+
 }

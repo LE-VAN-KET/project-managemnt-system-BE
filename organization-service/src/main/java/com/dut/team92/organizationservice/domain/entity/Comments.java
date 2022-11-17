@@ -22,15 +22,18 @@ public class Comments extends BaseDomain {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "comment_id", unique = true, nullable = false)
+    @Column(name = "comment_id", unique = true, nullable = false, columnDefinition = "BINARY(16)")
     private UUID id;
 
     private String content;
+
+    @Column(columnDefinition = "BINARY(16)")
     private UUID authorId;
 
     @Enumerated(EnumType.ORDINAL)
     private CommentType commentType;
 
+    @Column(columnDefinition = "BINARY(16)")
     private UUID replyFor;
 
     @ManyToOne

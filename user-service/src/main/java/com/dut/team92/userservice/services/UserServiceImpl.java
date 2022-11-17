@@ -1,21 +1,63 @@
 package com.dut.team92.userservice.services;
 
 import com.dut.team92.common.enums.UserStatus;
+import com.dut.team92.userservice.domain.dto.UserDto;
+import com.dut.team92.userservice.domain.dto.event.UserCreatedEvent;
+import com.dut.team92.userservice.domain.dto.request.CreateMemberDto;
 import com.dut.team92.userservice.domain.entity.User;
+import com.dut.team92.userservice.domain.entity.UserInformation;
+import com.dut.team92.userservice.exception.EmailAlreadyExistsException;
+import com.dut.team92.userservice.exception.FailedReadDataFileCSV;
+import com.dut.team92.userservice.exception.OrganizationNotFoundException;
+import com.dut.team92.userservice.exception.UsernameAlreadyExistsException;
+import com.dut.team92.userservice.message.publisher.UserKafkaMessagePublisher;
+import com.dut.team92.userservice.proxy.OrganizationServiceProxy;
+import com.dut.team92.userservice.repository.UserInformationRepository;
 import com.dut.team92.userservice.repository.UserRepository;
+import com.dut.team92.userservice.services.handler.UserCreateCommandHandler;
+import com.dut.team92.userservice.services.mapper.UserDataMapper;
+import com.dut.team92.userservice.services.mapper.UserInformationDataMapper;
+import com.dut.team92.userservice.util.CSVHelper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService{
+    private UserDataMapper userDataMapper;
+    private UserRepository userRepository;
+    private UserInformationDataMapper userInformationDataMapper;
+    private UserInformationRepository userInformationRepository;
+    private OrganizationServiceProxy organizationServiceProxy;
+    private UserKafkaMessagePublisher userKafkaMessagePublisher;
 
     @Autowired
-    private UserRepository userRepository;
+    public UserServiceImpl(UserDataMapper userDataMapper,
+                           UserRepository userRepository,
+                           UserInformationDataMapper userInformationDataMapper,
+                           UserInformationRepository userInformationRepository,
+                           OrganizationServiceProxy organizationServiceProxy,
+                           UserKafkaMessagePublisher userKafkaMessagePublisher) {
+        this.userDataMapper = userDataMapper;
+        this.userRepository = userRepository;
+        this.userInformationDataMapper = userInformationDataMapper;
+        this.userInformationRepository = userInformationRepository;
+        this.organizationServiceProxy = organizationServiceProxy;
+        this.userKafkaMessagePublisher = userKafkaMessagePublisher;
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -55,5 +97,45 @@ public class UserServiceImpl implements UserService{
     @Override
     public void delete(Long id) {
 
+    }
+
+    @Override
+    public List<UserDto> addListUserMemberToOrganization(MultipartFile file, UUID organizationId) {
+        try {
+//            boolean isOrganizationExist = organizationServiceProxy.checkOrganizationExist(
+//                    organizationId.toString());
+//            if (!isOrganizationExist) {
+//                throw new OrganizationNotFoundException("Organization not found with id " + organizationId);
+//            }
+            // check file isFormat CSV
+            CSVHelper.hasCSVFormat(file);
+            List<CreateMemberDto> createMemberDtos = CSVHelper.csvToMembers(file.getInputStream(), organizationId);
+            List<User> users = userDataMapper.createMemberDtoToUser(createMemberDtos);
+            users.forEach(this::validateUser);
+            List<User> savedUsers = userRepository.saveAll(users);
+            Map<String, User> userMap = new HashMap<>();
+            savedUsers.forEach(u -> userMap.put(u.getUsername(), u));
+            List<UserInformation> userInformations = userInformationDataMapper
+                    .createMemberDtoToUserInformation(createMemberDtos)
+                    .stream().map(infor -> {
+                        infor.setUser(userMap.get(infor.getUser().getUsername()));
+                        return infor;
+                    }).collect(Collectors.toList());
+            userInformationRepository.saveAll(userInformations);
+            userKafkaMessagePublisher.publish(savedUsers);
+            return userDataMapper.userListToUserDtoList(savedUsers);
+        } catch (IOException e) {
+            throw new FailedReadDataFileCSV("Fail save csv data: " + e.getMessage());
+        }
+    }
+
+    private void validateUser(User user) {
+        if (this.isUsernameExist(user.getUsername())) {
+            throw new UsernameAlreadyExistsException();
+        }
+
+        if (this.isMailNotification(user.getMailNotification())) {
+            throw new EmailAlreadyExistsException();
+        }
     }
 }

@@ -18,7 +18,7 @@ public class Sprint {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "sprint_id", unique = true, nullable = false)
+    @Column(name = "sprint_id", unique = true, nullable = false, columnDefinition = "BINARY(16)")
     private UUID id;
 
     private UUID projectId;
@@ -27,6 +27,7 @@ public class Sprint {
     private Date startDate;
     private Date endDate;
 
+    @Column(columnDefinition = "BINARY(16)")
     private UUID statusId;
     private Boolean isDelete;
     private int position;

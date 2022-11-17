@@ -45,7 +45,6 @@ services:
             MARIADB_PASSWORD: auth123
             MARIADB_ROOT_PASSWORD: root
             MARIADB_DATABASE: members_service
-            MARIADB_PORT_NUMBER: 3311
         volumes:
             - './volumes/database/member/mysql:/var/lib/mysql'
         networks:
@@ -55,11 +54,6 @@ services:
         container_name: db_organization
         image: mariadb:latest
         restart: always
-        healthcheck:
-            test: "/usr/bin/msql --user=auth --password=auth123 --execute \"SHOW DATABASE;\""
-            interval: 3s
-            timeout: 1s
-            retries: 5
         ports:
             - "3312:3306"
         environment:
@@ -87,15 +81,17 @@ services:
     organization-service:
         hostname: organization-service
         container_name: organization-service
-        image: organization-service:latest
+        image: vanket/microservice-pbl6:organization-service
         restart: always
         build:
             context: ../../organization-service/
+            dockerfile: Dockerfile
         ports:
             - "8186:8186"
         environment:
             DATABASE_HOST: db_organization
             MARIADB_PORT_NUMBER: 3306
+            LOGSTASH_HOST_PORT: logstash:5044
         links:
             - db_organization
         depends_on:
@@ -106,10 +102,11 @@ services:
     user-service:
         hostname: user-service
         container_name: user-service
-        image: user-service:latest
+        image: vanket/microservice-pbl6:user-service
         restart: always
         build:
             context: ../../user-service/
+            dockerfile: Dockerfile
         ports:
             - "8182:8182"
         environment:
@@ -117,6 +114,7 @@ services:
             MARIADB_PORT_NUMBER: 3306
             REDIS_HOST: redis
             REDIS_PORT: 6379
+            LOGSTASH_HOST_PORT: logstash:5044
         links:
             - db_auth
         depends_on:
@@ -125,12 +123,33 @@ services:
         networks:
             - ${GLOBAL_NETWORK}
 
-    sonarqube:
-        hostname: sonarqube
-        container_name: sonarqube
-        image: sonarqube
+    member-service:
+        hostname: member-service
+        container_name: member-service
+        image: vanket/microservice-pbl6:member-service
+        restart: always
+        build:
+            context: ../../member-service/
+            dockerfile: Dockerfile
         ports:
-            -   "10000:9000"
-            -   "10092:9092"
+            - "8185:8185"
+        environment:
+            DATABASE_HOST: db_member
+            MARIADB_PORT_NUMBER: 3306
+            LOGSTASH_HOST_PORT: logstash:5044
+        links:
+            - db_member
+        depends_on:
+            - db_member
         networks:
             - ${GLOBAL_NETWORK}
+
+#    sonarqube:
+#        hostname: sonarqube
+#        container_name: sonarqube
+#        image: sonarqube
+#        ports:
+#            -   "10000:9000"
+#            -   "10092:9092"
+#        networks:
+#            - ${GLOBAL_NETWORK}

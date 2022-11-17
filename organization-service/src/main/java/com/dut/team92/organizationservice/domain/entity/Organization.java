@@ -20,7 +20,7 @@ public class Organization extends BaseDomain {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "organization_id", unique = true, nullable = false)
+    @Column(name = "organization_id", unique = true, nullable = false, columnDefinition = "BINARY(16)")
     private UUID id;
 
     private String name;
@@ -29,5 +29,6 @@ public class Organization extends BaseDomain {
 
     private String logo;
 
+    @Column(columnDefinition = "BINARY(16)")
     private UUID userId;
 }

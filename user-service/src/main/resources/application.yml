@@ -50,5 +50,7 @@ resilience4j:
 user-service:
     organization-request-topic-name: organization-request-value
     organization-response-topic-name: organization-response-value
+    member-request-topic-name: member-request-topic-name
+    member-response-topic-name: member-response-topic-name
 
 

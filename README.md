@@ -20,4 +20,6 @@
     - api signin: http://localhost:8000/api/auth/signin
     - api validation token: http://localhost:8000/api/auth/validate/token
     - api refresh token when token expired: http://localhost:8000/api/auth/refresh-token
+  * If docker broker error permission nto writeable:
+    - <code>sudo chown -R 1000:1000 ./volumes/kafka</code>
     

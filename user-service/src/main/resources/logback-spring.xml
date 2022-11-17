@@ -128,7 +128,7 @@
         </root>
 
         <logger name="com.dut.team92.userservice" level="warn" additivity="false">
-            <appender-ref ref="console"/>
+            <appender-ref ref="logstash"/>
         </logger>
     </springProfile>
 

@@ -14,9 +14,8 @@
         <module>organization-service</module>
         <module>user-service</module>
         <module>member-service</module>
-        <module>infrastructure</module>
+<!--        <module>infrastructure</module>-->
         <module>issues-service</module>
-        <module>api-swagger</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -61,16 +60,11 @@
                 <artifactId>organization-service</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
-            <dependency>
-                <groupId>com.dut.team92</groupId>
-                <artifactId>api-swagger</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.dut.team92</groupId>
-                <artifactId>infrastructure</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.dut.team92</groupId>-->
+<!--                <artifactId>infrastructure</artifactId>-->
+<!--                <version>1.0-SNAPSHOT</version>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>com.dut.team92</groupId>
                 <artifactId>kafka</artifactId>

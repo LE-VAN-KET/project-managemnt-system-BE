@@ -21,7 +21,7 @@ public class Activity {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "activity_id", unique = true, nullable = false)
+    @Column(name = "activity_id", unique = true, nullable = false, columnDefinition = "BINARY(16)")
     private UUID id;
 
     @Enumerated(EnumType.STRING)

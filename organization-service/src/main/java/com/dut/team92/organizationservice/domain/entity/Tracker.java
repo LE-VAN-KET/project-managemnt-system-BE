@@ -17,28 +17,10 @@ public class Tracker {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "tracker_id", unique = true, nullable = false)
+    @Column(name = "tracker_id", unique = true, nullable = false, columnDefinition = "BINARY(16)")
     private UUID id;
     private String name;
     private String description;
 
     private UUID organizationId;
-
-    @Entity
-    @Table(name = "boards")
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    public static class Board {
-        @Id
-        @GeneratedValue(generator = "UUID")
-        @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-        @Column(name = "board_id", unique = true, nullable = false)
-        private UUID id;
-
-        private String name;
-        private String description;
-        private int position;
-
-    }
 }

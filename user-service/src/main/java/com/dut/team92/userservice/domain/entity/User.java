@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.Set;
 import java.util.UUID;
 
@@ -26,7 +27,7 @@ public class User {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "user_id", unique = true, nullable = false)
+    @Column(name = "user_id", unique = true, nullable = false, columnDefinition = "BINARY(16)")
     private UUID id;
 
     @Column(length = 50)
@@ -39,7 +40,11 @@ public class User {
     private UserStatus status;
 
     private Boolean isDelete;
+
+    @Email
     private String mailNotification;
+
+    @Column(columnDefinition = "BINARY(16)")
     private UUID organizationId;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

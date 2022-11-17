@@ -1,0 +1,64 @@
+spring:
+    datasource:
+        url: jdbc:mariadb://${DATABASE_HOST:localhost}:${MARIADB_PORT_NUMBER:3312}/organization_service?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC
+        username: auth
+        password: auth123
+        driver-class-name: org.mariadb.jdbc.Driver
+        hikari:
+            maximum-pool-size: 10
+    jpa:
+        show-sql: true
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MariaDB103Dialect
+
+keystore:
+    password: team92pass
+
+# Config Swagger  UI
+springdoc:
+    api-docs:
+        path: /v1/api-docs
+    swagger-ui:
+        path: /swagger-ui-custom.html
+        operationsSorter: method
+
+organization-service:
+    organization-request-topic-name: organization-request-value
+
+kafka-config:
+    bootstrap-servers: localhost:19092, localhost:29092, localhost:39092
+    num-of-partitions: 3
+    replication-factor: 3
+
+kafka-producer-config:
+    key-serializer-class: org.apache.kafka.common.serialization.StringSerializer
+    value-serializer-class: io.confluent.kafka.serializers.json.KafkaJsonSchemaSerializer
+    compression-type: snappy
+    acks: all
+    batch-size: 16384
+    batch-size-boost-factor: 100
+    linger-ms: 5
+    request-timeout-ms: 60000
+    retry-count: 5
+
+kafka-consumer-config:
+    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    organization-consumer-group-id: organization-topic-consumer
+    auto-offset-reset: earliest
+    batch-listener: true
+    auto-startup: true
+    concurrency-level: 3
+    session-timeout-ms: 10000
+    heartbeat-interval-ms: 3000
+    max-poll-interval-ms: 300000
+    max-poll-records: 500
+    max-partition-fetch-bytes-default: 1048576
+    max-partition-fetch-bytes-boost-factor: 1
+    poll-timeout-ms: 150
+
+logstash:
+    host: ${LOGSTASH_HOST_PORT:localhost:5044}

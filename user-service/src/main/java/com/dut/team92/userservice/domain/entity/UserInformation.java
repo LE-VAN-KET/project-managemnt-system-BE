@@ -21,7 +21,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class UserInformation extends BaseDomain {
     @Id
-    @Column(name = "user_information_id", unique = true, nullable = false)
+    @Column(name = "user_information_id", unique = true, nullable = false, columnDefinition = "BINARY(16)")
     private UUID id;
 
     @Column(length = 50)

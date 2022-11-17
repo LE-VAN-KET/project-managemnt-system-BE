@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/organizations")
@@ -23,5 +24,11 @@ public class OrganizationController {
     public CreateOrganizationResponse createOrganization(@Valid  @RequestBody CreateOrganizationCommand
                                                                  createOrganizationCommand) {
         return organizationService.createOrganization(createOrganizationCommand);
+    }
+
+    @GetMapping("/check/{organization_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean checkOrganizationExist(@PathVariable("organization_id") String organizationId) {
+        return organizationService.isExistOrganizationById(UUID.fromString(organizationId));
     }
 }

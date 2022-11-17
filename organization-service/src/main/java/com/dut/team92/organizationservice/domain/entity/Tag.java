@@ -19,9 +19,10 @@ public class Tag {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "tag_id", unique = true, nullable = false)
+    @Column(name = "tag_id", unique = true, nullable = false, columnDefinition = "BINARY(16)")
     private UUID id;
 
+    @Column(columnDefinition = "BINARY(16)")
     private UUID projectId;
     private String name;
     private String description;

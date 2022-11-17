@@ -65,11 +65,18 @@
             <version>3.17.7</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-csv -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.9.0</version>
+        </dependency>
+
 <!--        Kafka module-->
-<!--        <dependency>-->
-<!--            <groupId>com.dut.team92</groupId>-->
-<!--            <artifactId>kafka</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.dut.team92</groupId>
+            <artifactId>kafka</artifactId>
+        </dependency>
 
 <!--        Openfeign-->
         <dependency>

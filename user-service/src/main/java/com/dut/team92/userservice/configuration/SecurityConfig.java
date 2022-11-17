@@ -82,8 +82,10 @@ public class SecurityConfig {
 //                .contentSecurityPolicy("script-src 'self'");
 
         // enable cors and prevent CSRF
-//        http = http.cors().and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and();
-        http = http.cors().and().csrf().disable();
+//        http = http.cors().configurationSource(
+//                corsConfigurationSource()).csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and();
+        http = http.cors().configurationSource(
+                corsConfigurationSource()).and().csrf().disable();
         // set session management stateless
         http = http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
@@ -99,6 +101,7 @@ public class SecurityConfig {
         // set permission on endpoints
         http.authorizeHttpRequests()
                 .antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/api/users/**").permitAll()
                 .anyRequest().authenticated().and()
                 .logout().invalidateHttpSession(true).deleteCookies("JSESSIONID");
 
@@ -112,10 +115,11 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(Collections.singletonList("*"));
-        configuration.setAllowedHeaders(Collections.singletonList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+        configuration.setAllowedOrigins(Arrays.asList(
+                "https://6092-2402-800-6205-3bfb-6c75-1cfc-9b5d-1bf1.ap.ngrok.io/",
+                "http://localhost:8080"));
+        configuration.setAllowedMethods(Collections.singletonList("*"));
+        configuration.setExposedHeaders(Collections.singletonList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

@@ -10,4 +10,6 @@ import org.springframework.context.annotation.Configuration;
 public class UserServiceConfigData {
     private String organizationRequestTopicName;
     private String organizationResponseTopicName;
+    private String memberRequestTopicName;
+    private String memberResponseTopicName;
 }

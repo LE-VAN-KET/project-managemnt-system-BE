@@ -97,6 +97,16 @@ public class GlobalExceptionHandler extends CommonExceptionHandler {
                 HttpStatus.BAD_REQUEST,
                 exception.getMessage());
     }
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(FailedReadDataFileCSV.class)
+    public CommonErrorResponse handleUsernameAlreadyExistException(FailedReadDataFileCSV exception) {
+        return handleServerErrorException(exception, "FailedReadDataFileCSV");
+    }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(OrganizationNotFoundException.class)
+    public CommonErrorResponse handleOrganizationNotFoundException(OrganizationNotFoundException exception) {
+        return handleBadRequestException(exception, "OrganizationNotFoundException");
+    }
 
 }

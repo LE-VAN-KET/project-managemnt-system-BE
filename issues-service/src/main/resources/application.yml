@@ -3,7 +3,7 @@ server:
 
 spring:
     datasource:
-        url: jdbc:mariadb://${auth_service:localhost}:${MARIADB_PORT_NUMBER:3310}/issues_service?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC
+        url:
         username: auth
         password: auth123
         driver-class-name: org.mariadb.jdbc.Driver
@@ -16,3 +16,6 @@ spring:
         properties:
             hibernate:
                 dialect: org.hibernate.dialect.MariaDB103Dialect
+
+keystore:
+    password: team92pass
