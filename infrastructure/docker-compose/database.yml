@@ -1,0 +1,79 @@
+version: '3'
+services:
+    db_auth:
+        container_name: db_auth
+        image: mariadb:latest
+        restart: always
+        ports:
+            - "3307:3306"
+        environment:
+            MARIADB_USER: auth
+            MARIADB_PASSWORD: auth123
+            MARIADB_ROOT_PASSWORD: root
+            MARIADB_DATABASE: auth_service
+            MARIADB_PORT_NUMBER: 3307
+        volumes:
+            - './volumes/database/auth/mysql:/var/lib/mysql'
+        networks:
+            - ${GLOBAL_NETWORK}
+
+    db_issues:
+        container_name: db_issues
+        image: mariadb:latest
+        restart: always
+        ports:
+            - "3310:3306"
+        environment:
+            MARIADB_USER: auth
+            MARIADB_PASSWORD: auth123
+            MARIADB_ROOT_PASSWORD: root
+            MARIADB_DATABASE: issues_service
+            MARIADB_PORT_NUMBER: 3310
+        volumes:
+            - './volumes/database/issues/mysql:/var/lib/mysql'
+        networks:
+            - ${GLOBAL_NETWORK}
+
+    db_member:
+        container_name: db_member
+        image: mariadb:latest
+        restart: always
+        ports:
+            - "3311:3306"
+        environment:
+            MARIADB_USER: auth
+            MARIADB_PASSWORD: auth123
+            MARIADB_ROOT_PASSWORD: root
+            MARIADB_DATABASE: members_service
+        volumes:
+            - './volumes/database/member/mysql:/var/lib/mysql'
+        networks:
+            - ${GLOBAL_NETWORK}
+
+    db_organization:
+        container_name: db_organization
+        image: mariadb:latest
+        restart: always
+        ports:
+            - "3312:3306"
+        environment:
+            MARIADB_USER: auth
+            MARIADB_PASSWORD: auth123
+            MARIADB_ROOT_PASSWORD: root
+            MARIADB_DATABASE: organization_service
+        volumes:
+            - './volumes/database/organization/mysql:/var/lib/mysql'
+        networks:
+            - ${GLOBAL_NETWORK}
+
+    redis:
+        image: redis:latest
+        hostname: redis
+        container_name: pds_redis
+        restart: always
+        volumes:
+            - ./volumes/redis/data:/data
+        ports:
+            - "6379:6379"
+        networks:
+            - ${GLOBAL_NETWORK}

@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.5.1
+        container_name: elasticsearch
+        restart: unless-stopped
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+        environment:
+            discovery.type: single-node
+            xpack.security.enabled: "false"
+            ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+        healthcheck:
+            test: "curl -f http://localhost:9200 || exit 1"
+        networks:
+            - ${GLOBAL_NETWORK}
+
+    logstash:
+        image: docker.elastic.co/logstash/logstash:8.5.1
+        container_name: logstash
+        restart: unless-stopped
+        ports:
+            - "5044:5044"
+            - "5000:5000/tcp"
+            - "5000:5000/udp"
+        environment:
+            ELASTICSEARCH_HOST: http://elasticsearch
+            ELASTICSEARCH_PORT: 9200
+        volumes:
+            - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+        depends_on:
+            - elasticsearch
+        healthcheck:
+            test: "curl -f http://localhost:5044 || exit 1"
+        networks:
+            - ${GLOBAL_NETWORK}
+
+    kibana:
+        image: docker.elastic.co/kibana/kibana:8.5.1
+        container_name: kibana
+        restart: unless-stopped
+        ports:
+            - "5601:5601"
+        environment:
+            ELASTICSEARCH_URL: http://elasticsearch:9200
+        depends_on:
+            - elasticsearch
+        healthcheck:
+            test: "curl -f http://localhost:5601 || exit 1"
+        networks:
+            - ${GLOBAL_NETWORK}

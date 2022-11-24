@@ -1,18 +1,56 @@
 server:
     port: 8182
+logging:
+    level:
+        ROOT: INFO
+        com.dut.team92: DEBUG
 
 spring:
-    datasource:
-        url: jdbc:mariadb://${auth_service:localhost}:${MARIADB_PORT_NUMBER:3307}/auth_service?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC
-        username: auth
-        password: auth123
-        driver-class-name: org.mariadb.jdbc.Driver
-        hikari:
-            maximum-pool-size: 10
-    jpa:
-        show-sql: true
-        hibernate:
-            ddl-auto: update
-        properties:
-            hibernate:
-                dialect: org.hibernate.dialect.MariaDB103Dialect
+    application:
+        name: user-service
+    profiles:
+        active: dev
+
+application:
+    security:
+        authentication:
+            access-token-validity-in-seconds: 360
+            refresh-token-validity-in-seconds: 1800
+
+
+feign:
+    circuitbreaker:
+        enabled: true
+
+#Resilience4j Properties
+resilience4j:
+    circuitbreaker:
+        instances:
+            organization:
+                register-health-indicator: true
+                event-consumer-buffer-size: 10
+                sliding-window-type: count_based
+                sliding-window-size: 5
+                failure-rate-threshold: 50
+                wait-duration-in-open-state: 5
+                permitted-number-of-calls-in-half-open-state: 3
+                automatic-transition-from-open-to-half-open-enabled: true
+    timelimiter:
+        instances:
+            organization:
+                timeout-duration:
+                    3s
+    retry:
+        instances:
+            organization:
+                max-attempts: 2
+                wait-duration: 3s
+
+
+user-service:
+    organization-request-topic-name: organization-request-value
+    organization-response-topic-name: organization-response-value
+    member-request-topic-name: member-request-topic-name
+    member-response-topic-name: member-response-topic-name
+
+

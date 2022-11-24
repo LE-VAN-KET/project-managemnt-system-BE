@@ -1,0 +1,93 @@
+version: '3'
+services:
+    organization-service:
+        hostname: organization-service
+        container_name: organization-service
+        image: vanket/microservice-pbl6:organization-service
+        restart: always
+        build:
+            context: ../../organization-service/
+            dockerfile: Dockerfile
+        ports:
+            - "8186:8186"
+        environment:
+            DATABASE_HOST: http://146.190.105.184
+            MARIADB_PORT_NUMBER: 3312
+            LOGSTASH_HOST_PORT: 146.190.105.184:5000
+            KAFKA_HOST: 146.190.105.184
+#        links:
+#            - db_organization
+#        depends_on:
+#            - db_organization
+        networks:
+            - ${GLOBAL_NETWORK}
+
+    user-service:
+        hostname: user-service
+        container_name: user-service
+        image: vanket/microservice-pbl6:user-service
+        restart: always
+        build:
+            context: ../../user-service/
+            dockerfile: Dockerfile
+        ports:
+            - "8182:8182"
+        environment:
+            DATABASE_HOST: http://146.190.105.184
+            MARIADB_PORT_NUMBER: 3307
+            REDIS_HOST: http://146.190.105.184
+            REDIS_PORT: 6379
+            LOGSTASH_HOST_PORT: 146.190.105.184:5000
+            ORGANIZATION_HOST: organization-service
+            KAFKA_HOST: 146.190.105.184
+#        links:
+#            - db_auth
+#        depends_on:
+#            - db_auth
+#            - redis
+        networks:
+            - ${GLOBAL_NETWORK}
+
+    member-service:
+        hostname: member-service
+        container_name: member-service
+        image: vanket/microservice-pbl6:member-service
+        restart: always
+        build:
+            context: ../../member-service/
+            dockerfile: Dockerfile
+        ports:
+            - "8185:8185"
+        environment:
+            DATABASE_HOST: http://146.190.105.184
+            MARIADB_PORT_NUMBER: 3311
+            LOGSTASH_HOST_PORT: 146.190.105.184:5000
+            KAFKA_HOST: 146.190.105.184
+#        links:
+#            - db_member
+#        depends_on:
+#            - db_member
+        networks:
+            - ${GLOBAL_NETWORK}
+
+    issues-service:
+        hostname: issues-service
+        container_name: issues-service
+        image: vanket/microservice-pbl6:issues-service
+        restart: always
+        build:
+            context: ../../issues-service/
+            dockerfile: Dockerfile
+        ports:
+            - "8184:8184"
+        environment:
+            DATABASE_HOST: http://146.190.105.184
+            MARIADB_PORT_NUMBER: 3312
+            LOGSTASH_HOST_PORT: 146.190.105.184:5000
+#        links:
+#            - db_organization
+#        depends_on:
+#            - db_organization
+        networks:
+            - ${GLOBAL_NETWORK}
+

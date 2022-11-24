@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+
+<configuration scan="true">
+    <property resource="application.yml"/>
+    <springProperty scope="context" name="port" source="server.port"/>
+    <springProperty scope="context" name="host_port_logstash" source="logstash.host"/>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <param name="Encoding" value="UTF-8"/>
+        <destination>${host_port_logstash:-localhost:5044}</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"app_name":"user-service", "app_port": "${port}"}</customFields>
+            <providers>
+                <pattern>
+                    <pattern>
+                        {
+                        "trace": "%X{traceId:-}",
+                        "span": "%X{spanId:-}",
+                        "parent": "%X{parentId:-}",
+                        "exportable": "%X{sampled:-}",
+                        "pid": "${PID:-}"
+                        }
+                    </pattern>
+                </pattern>
+                <contextName>
+                    <fieldName>app</fieldName>
+                </contextName>
+                <timestamp>
+                    <fieldName>ts</fieldName>
+                    <timeZone>UTC</timeZone>
+                </timestamp>
+                <loggerName>
+                    <fieldName>logger</fieldName>
+                </loggerName>
+                <logLevel>
+                    <fieldName>level</fieldName>
+                </logLevel>
+                <callerData>
+                    <classFieldName>class</classFieldName>
+                    <methodFieldName>method</methodFieldName>
+                    <lineFieldName>line</lineFieldName>
+                    <fileFieldName>file</fileFieldName>
+                </callerData>
+                <threadName>
+                    <fieldName>thread</fieldName>
+                </threadName>
+                <mdc/>
+                <arguments>
+                    <includeNonStructuredArguments>false</includeNonStructuredArguments>
+                </arguments>
+                <stackTrace>
+                    <fieldName>stack</fieldName>
+                </stackTrace>
+                <message>
+                    <fieldName>msg</fieldName>
+                </message>
+            </providers>
+        </encoder>
+    </appender>
+
+    <springProfile name="dev">
+        <root>
+            <appender-ref ref="logstash"/>
+        </root>
+
+        <logger name="com.dut.team92.userservice" level="debug" additivity="false">
+            <appender-ref ref="logstash"/>
+        </logger>
+    </springProfile>
+
+    <springProfile name="test">
+        <root>
+            <appender-ref ref="logstash"/>
+        </root>
+
+        <logger name="com.dut.team92.organizationservice" level="warn" additivity="false">
+            <appender-ref ref="logstash"/>
+        </logger>
+    </springProfile>
+
+</configuration>
