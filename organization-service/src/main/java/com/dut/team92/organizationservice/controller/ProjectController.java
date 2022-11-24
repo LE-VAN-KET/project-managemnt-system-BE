@@ -3,7 +3,9 @@ package com.dut.team92.organizationservice.controller;
 import com.dut.team92.organizationservice.domain.dto.ProjectDto;
 import com.dut.team92.organizationservice.domain.dto.request.CreateProjectCommand;
 import com.dut.team92.organizationservice.domain.dto.request.UpdateProjectCommand;
+import com.dut.team92.organizationservice.domain.dto.response.CheckProjectExistResponse;
 import com.dut.team92.organizationservice.services.ProjectService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/organizations/{organization_id}/projects")
+@Slf4j
 public class ProjectController {
     @Autowired
     private ProjectService projectService;
@@ -56,5 +59,14 @@ public class ProjectController {
         projectService.removeProject(UUID.fromString(organizationId), UUID.fromString(projectId));
     }
 
+    @GetMapping("/check/{project_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public CheckProjectExistResponse existProjectByIdAndOrganizationId(@PathVariable("organization_id") @NotNull String organizationId,
+                                                                       @PathVariable("project_id") @NotNull String projectId) {
+        boolean existProject = projectService.isExistProjectByProjectIdAndOrganizationId(
+                UUID.fromString(projectId),
+                UUID.fromString(organizationId));
+        return CheckProjectExistResponse.builder().isExistProject(existProject).build();
+    }
 
 }

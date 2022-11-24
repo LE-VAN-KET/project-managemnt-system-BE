@@ -1,24 +1,28 @@
-package com.dut.team92.userservice.proxy;
+package com.dut.team92.issuesservice.proxy;
 
-import com.dut.team92.userservice.configuration.CustomFeignClientConfiguration;
-import com.dut.team92.userservice.domain.dto.request.CreateOrganizationCommand;
-import com.dut.team92.userservice.domain.dto.response.CreateOrganizationResponse;
+import com.dut.team92.issuesservice.configuration.CustomFeignClientConfiguration;
+import com.dut.team92.issuesservice.domain.dto.response.CheckBoardExistResponse;
+import com.dut.team92.issuesservice.domain.dto.response.CheckProjectExistResponse;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+
+import javax.validation.constraints.NotNull;
 
 @FeignClient(name = "${app.feign.config.organization-client.name}", url = "${app.feign.config.organization-client.url}",
         configuration = CustomFeignClientConfiguration.class)
 @Retry(name = "organization")
 public interface OrganizationServiceProxy {
-    @PostMapping("/api/organizations")
-    CreateOrganizationResponse createOrganization(@RequestBody CreateOrganizationCommand
-                                                          createOrganizationCommand);
-    @GetMapping("/api/organizations/check/{organization_id}")
-    boolean checkOrganizationExist(@PathVariable("organization_id") String organizationId);
+    @GetMapping("/api/organizations/{organization_id}/projects/check/{project_id}")
+    CheckProjectExistResponse existProjectByIdAndOrganizationId(
+            @PathVariable("organization_id") @NotNull String organizationId,
+            @PathVariable("project_id") @NotNull String projectId);
 
+    @GetMapping("/api/boards/check/{board_id}")
+    CheckBoardExistResponse existBoardByBoardId(@PathVariable("board_id") @NotNull String boardId,
+                                                @RequestHeader(value = "Authorization", required = true)
+                                                String authorizationHeader);
 }
 

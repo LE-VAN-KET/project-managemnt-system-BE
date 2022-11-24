@@ -13,4 +13,5 @@ public interface ProjectService {
     ProjectDto getOneProjectById(UUID projectId, UUID organizationId);
     ProjectDto editProject(UUID organizationId, UpdateProjectCommand command);
     void removeProject(UUID organizationId, UUID projectId);
+    boolean isExistProjectByProjectIdAndOrganizationId(UUID projectId, UUID organizationId);
 }

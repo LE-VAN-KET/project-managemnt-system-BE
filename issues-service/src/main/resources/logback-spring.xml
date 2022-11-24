@@ -65,7 +65,7 @@
             <appender-ref ref="logstash"/>
         </root>
 
-        <logger name="com.dut.team92.memberservice" level="debug" additivity="false">
+        <logger name="com.dut.team92.issuesservice" level="debug" additivity="false">
             <appender-ref ref="logstash"/>
         </logger>
     </springProfile>
@@ -75,7 +75,7 @@
             <appender-ref ref="logstash"/>
         </root>
 
-        <logger name="com.dut.team92.memberservice" level="warn" additivity="false">
+        <logger name="com.dut.team92.issuesservice" level="warn" additivity="false">
             <appender-ref ref="logstash"/>
         </logger>
     </springProfile>

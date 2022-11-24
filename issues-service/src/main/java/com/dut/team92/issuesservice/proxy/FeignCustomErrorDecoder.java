@@ -1,4 +1,4 @@
-package com.dut.team92.userservice.proxy;
+package com.dut.team92.issuesservice.proxy;
 
 import com.dut.team92.common.exception.model.CommonErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;

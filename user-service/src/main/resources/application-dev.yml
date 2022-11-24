@@ -6,7 +6,7 @@ spring:
             max-file-size: 10MB
             max-request-size: 10MB
     datasource:
-        url: jdbc:mariadb://${DATABASE_HOST:localhost}:${MARIADB_PORT_NUMBER:3307}/auth_service?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC
+        url: jdbc:mariadb://${DATABASE_HOST:146.190.105.184}:${MARIADB_PORT_NUMBER:3307}/auth_service?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC
         username: auth
         password: auth123
         driver-class-name: org.mariadb.jdbc.Driver
@@ -22,7 +22,7 @@ spring:
 
     redis:
         database: 0
-        address: redis://${REDIS_HOST:localhost}:${REDIS_PORT:6379}
+        address: redis://${REDIS_HOST:146.190.105.184}:${REDIS_PORT:6379}
         connection-pool-size: 4
         connection-minimum-idle-size: 2
         token-prefix: project-management:token
@@ -57,11 +57,11 @@ app:
         config:
             organization-client:
                 name: organization-service
-                url: http://localhost:8186
+                url: http://${ORGANIZATION_HOST:localhost}:8186
 
 # Config kafka
 kafka-config:
-    bootstrap-servers: localhost:19092, localhost:29092, localhost:39092
+    bootstrap-servers: ${KAFKA_HOST:146.190.105.184}:19092, ${KAFKA_HOST:146.190.105.184}:29092, ${KAFKA_HOST:146.190.105.184}:39092
     num-of-partitions: 3
     replication-factor: 3
 
@@ -94,4 +94,4 @@ kafka-consumer-config:
     poll-timeout-ms: 150
 
 logstash:
-    host: ${LOGSTASH_HOST_PORT:localhost:5044}
+    host: ${LOGSTASH_HOST_PORT:146.190.105.184:5000}

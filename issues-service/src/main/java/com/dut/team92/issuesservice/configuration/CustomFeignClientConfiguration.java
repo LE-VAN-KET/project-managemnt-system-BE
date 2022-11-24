@@ -1,6 +1,6 @@
-package com.dut.team92.userservice.configuration;
+package com.dut.team92.issuesservice.configuration;
 
-import com.dut.team92.userservice.proxy.FeignCustomErrorDecoder;
+import com.dut.team92.issuesservice.proxy.FeignCustomErrorDecoder;
 import feign.Logger;
 import feign.codec.ErrorDecoder;
 import org.springframework.context.annotation.Bean;

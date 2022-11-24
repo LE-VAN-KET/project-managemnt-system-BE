@@ -6,6 +6,8 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.OffsetDateTime;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -21,14 +23,15 @@ public class Sprint {
     @Column(name = "sprint_id", unique = true, nullable = false, columnDefinition = "BINARY(16)")
     private UUID id;
 
+    @Column(columnDefinition = "BINARY(16)", nullable = false)
     private UUID projectId;
     private String name;
     private String description;
-    private Date startDate;
-    private Date endDate;
+    private Calendar startDate;
+    private Calendar endDate;
 
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID statusId;
+    @Enumerated(EnumType.ORDINAL)
+    private SprintStatus status;
     private Boolean isDelete;
     private int position;
 

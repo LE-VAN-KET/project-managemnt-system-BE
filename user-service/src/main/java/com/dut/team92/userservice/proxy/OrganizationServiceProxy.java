@@ -2,6 +2,7 @@ package com.dut.team92.userservice.proxy;
 
 import com.dut.team92.userservice.configuration.CustomFeignClientConfiguration;
 import com.dut.team92.userservice.domain.dto.request.CreateOrganizationCommand;
+import com.dut.team92.userservice.domain.dto.response.CheckOrganizationExistResponse;
 import com.dut.team92.userservice.domain.dto.response.CreateOrganizationResponse;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -18,7 +19,7 @@ public interface OrganizationServiceProxy {
     CreateOrganizationResponse createOrganization(@RequestBody CreateOrganizationCommand
                                                           createOrganizationCommand);
     @GetMapping("/api/organizations/check/{organization_id}")
-    boolean checkOrganizationExist(@PathVariable("organization_id") String organizationId);
+    CheckOrganizationExistResponse checkOrganizationExist(@PathVariable("organization_id") String organizationId);
 
 }
 

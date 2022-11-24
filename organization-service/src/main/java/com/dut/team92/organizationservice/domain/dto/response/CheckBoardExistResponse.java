@@ -1,13 +1,12 @@
-package com.dut.team92.issuesservice.domain.dto.response;
+package com.dut.team92.organizationservice.domain.dto.response;
 
-import com.dut.team92.common.exception.model.CommonErrorResponse;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
-@Getter
+@Builder
 @Setter
-public class CheckBoardExistResponse extends CommonErrorResponse {
-    private boolean isExistBoard;
+@Getter
+public class CheckBoardExistResponse {
+    private Boolean isExistBoard;
 }

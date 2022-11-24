@@ -9,13 +9,10 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>common</module>
-        <module>kafka</module>
-        <module>organization-service</module>
         <module>user-service</module>
-        <module>member-service</module>
-<!--        <module>infrastructure</module>-->
         <module>issues-service</module>
+        <module>member-service</module>
+        <module>organization-service</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -29,55 +26,10 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-cloud.version>2021.0.4</spring-cloud.version>
     </properties>
 
     <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.dut.team92</groupId>
-                <artifactId>common</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.dut.team92</groupId>
-                <artifactId>user-service</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.dut.team92</groupId>
-                <artifactId>member-service</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.dut.team92</groupId>
-                <artifactId>issues-service</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.dut.team92</groupId>
-                <artifactId>organization-service</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-            </dependency>
-<!--            <dependency>-->
-<!--                <groupId>com.dut.team92</groupId>-->
-<!--                <artifactId>infrastructure</artifactId>-->
-<!--                <version>1.0-SNAPSHOT</version>-->
-<!--            </dependency>-->
-            <dependency>
-                <groupId>com.dut.team92</groupId>
-                <artifactId>kafka</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
+
     </dependencyManagement>
 
     <build>

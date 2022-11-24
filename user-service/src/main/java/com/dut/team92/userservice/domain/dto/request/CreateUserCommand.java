@@ -38,5 +38,5 @@ public class CreateUserCommand {
     @NotNull
     @Email
     private String mailNotification;
-    private UUID organizationId;
+//    private UUID organizationId;
 }

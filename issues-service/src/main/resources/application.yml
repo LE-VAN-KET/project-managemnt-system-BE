@@ -2,20 +2,5 @@ server:
     port: 8184
 
 spring:
-    datasource:
-        url:
-        username: auth
-        password: auth123
-        driver-class-name: org.mariadb.jdbc.Driver
-        hikari:
-            maximum-pool-size: 10
-    jpa:
-        show-sql: true
-        hibernate:
-            ddl-auto: update
-        properties:
-            hibernate:
-                dialect: org.hibernate.dialect.MariaDB103Dialect
-
-keystore:
-    password: team92pass
+    profiles:
+        active: dev

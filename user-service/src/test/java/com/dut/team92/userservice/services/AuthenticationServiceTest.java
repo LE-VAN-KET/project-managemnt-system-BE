@@ -2,7 +2,6 @@ package com.dut.team92.userservice.services;
 
 import com.dut.team92.userservice.configuration.properties.TokenProperties;
 import com.dut.team92.userservice.domain.dto.response.LoginResponse;
-import com.dut.team92.userservice.exception.UserNotFoundException;
 import com.dut.team92.userservice.services.handler.TokenCreateAndSaveHandler;
 import lombok.var;
 import org.junit.jupiter.api.Test;
@@ -11,12 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import static com.dut.team92.userservice.constants.TestConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)

@@ -24,6 +24,9 @@ public class IssuesAssign {
     @Column(columnDefinition = "BINARY(16)")
     private UUID memberId;
 
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID issuesId;
+
     @Enumerated(EnumType.ORDINAL)
     private IssuesAssignStatus status;
 }

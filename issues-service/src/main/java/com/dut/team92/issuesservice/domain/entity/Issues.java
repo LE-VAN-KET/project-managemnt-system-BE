@@ -5,12 +5,12 @@ import com.dut.team92.common.enums.Priority;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.util.Calendar;
 import java.util.Set;
 import java.util.UUID;
 
@@ -22,14 +22,10 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Issues extends BaseDomain {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
     @Column(name = "issues_id", unique = true, nullable = false, columnDefinition = "BINARY(16)")
     private UUID id;
 
+    @NotNull
     private String name;
 
     private String description;
@@ -39,8 +35,8 @@ public class Issues extends BaseDomain {
 
     @Column(columnDefinition = "BINARY(16)")
     private UUID trackerId;
-    private Instant startDate;
-    private Instant dueDate;
+    private Calendar startDate;
+    private Calendar dueDate;
 
     @Column(name = "estimated_hours")
     private BigDecimal estimatedHours;
@@ -52,6 +48,7 @@ public class Issues extends BaseDomain {
     @JoinColumn(name = "issues_status_id")
     private IssuesStatus issuesStatus;
 
+    @Column(columnDefinition = "BINARY(16)")
     private UUID authorId;
     private Integer doneRatio;
 
@@ -68,4 +65,8 @@ public class Issues extends BaseDomain {
 
     @OneToMany(mappedBy = "parent")
     private Set<Issues> children;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "issues_type_id")
+    private IssuesType issuesType;
 }

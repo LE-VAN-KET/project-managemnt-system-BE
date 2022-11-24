@@ -12,6 +12,7 @@ import java.util.UUID;
 public interface ProjectRepository extends IJpaRepository<Project, UUID> {
     List<Project> findAllByOrganizationId(UUID organizationId);
     boolean existsByDomain(String domain);
-
+    boolean existsById(UUID projectId);
+    boolean existsByIdAndOrganizationId(UUID projectId, UUID organizationId);
     Optional<Project> findByIdAndOrganizationId(UUID uuid, UUID organizationId);
 }

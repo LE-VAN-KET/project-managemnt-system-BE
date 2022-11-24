@@ -7,56 +7,6 @@
     <springProperty scope="context" name="host_port_logstash" source="logstash.host"/>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
-    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
-            <providers>
-                <pattern>
-                    <pattern>
-                        {
-                        "trace": "%X{traceId:-}",
-                        "span": "%X{spanId:-}",
-                        "parent": "%X{parentId:-}",
-                        "exportable": "%X{sampled:-}",
-                        "pid": "${PID:-}"
-                        }
-                    </pattern>
-                </pattern>
-                <contextName>
-                    <fieldName>app</fieldName>
-                </contextName>
-                <timestamp>
-                    <fieldName>ts</fieldName>
-                    <timeZone>UTC</timeZone>
-                </timestamp>
-                <loggerName>
-                    <fieldName>logger</fieldName>
-                </loggerName>
-                <logLevel>
-                    <fieldName>level</fieldName>
-                </logLevel>
-                <callerData>
-                    <classFieldName>class</classFieldName>
-                    <methodFieldName>method</methodFieldName>
-                    <lineFieldName>line</lineFieldName>
-                    <fileFieldName>file</fileFieldName>
-                </callerData>
-                <threadName>
-                    <fieldName>thread</fieldName>
-                </threadName>
-                <mdc/>
-                <arguments>
-                    <includeNonStructuredArguments>false</includeNonStructuredArguments>
-                </arguments>
-                <stackTrace>
-                    <fieldName>stack</fieldName>
-                </stackTrace>
-                <message>
-                    <fieldName>msg</fieldName>
-                </message>
-            </providers>
-        </encoder>
-    </appender>
-
     <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <param name="Encoding" value="UTF-8"/>
         <destination>${host_port_logstash:-localhost:5044}</destination>
@@ -79,7 +29,7 @@
                 </contextName>
                 <timestamp>
                     <fieldName>ts</fieldName>
-                    <timeZone>UTC</timeZone>
+                    <timeZone>GMT+7</timeZone>
                 </timestamp>
                 <loggerName>
                     <fieldName>logger</fieldName>
@@ -112,13 +62,11 @@
 
     <springProfile name="dev">
         <root>
-<!--            <appender-ref ref="console"/>-->
             <appender-ref ref="logstash"/>
         </root>
 
         <logger name="com.dut.team92.userservice" level="debug" additivity="false">
             <appender-ref ref="logstash"/>
-<!--            <appender-ref ref="console"/>-->
         </logger>
     </springProfile>
 

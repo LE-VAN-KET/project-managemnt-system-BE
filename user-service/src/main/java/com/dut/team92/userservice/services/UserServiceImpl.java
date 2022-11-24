@@ -4,6 +4,7 @@ import com.dut.team92.common.enums.UserStatus;
 import com.dut.team92.userservice.domain.dto.UserDto;
 import com.dut.team92.userservice.domain.dto.event.UserCreatedEvent;
 import com.dut.team92.userservice.domain.dto.request.CreateMemberDto;
+import com.dut.team92.userservice.domain.dto.response.CheckOrganizationExistResponse;
 import com.dut.team92.userservice.domain.entity.User;
 import com.dut.team92.userservice.domain.entity.UserInformation;
 import com.dut.team92.userservice.exception.EmailAlreadyExistsException;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -102,11 +104,13 @@ public class UserServiceImpl implements UserService{
     @Override
     public List<UserDto> addListUserMemberToOrganization(MultipartFile file, UUID organizationId) {
         try {
-//            boolean isOrganizationExist = organizationServiceProxy.checkOrganizationExist(
-//                    organizationId.toString());
-//            if (!isOrganizationExist) {
-//                throw new OrganizationNotFoundException("Organization not found with id " + organizationId);
-//            }
+            CheckOrganizationExistResponse organizationExist = organizationServiceProxy.checkOrganizationExist(
+                    organizationId.toString());
+            if (!organizationExist.getIsExistOrganization()) {
+                log.warn("Call Organization Service ERROR Status: {}, Message: {}", organizationExist.getCode(),
+                        organizationExist.getMessage());
+                throw new OrganizationNotFoundException("Organization not found with id " + organizationId);
+            }
             // check file isFormat CSV
             CSVHelper.hasCSVFormat(file);
             List<CreateMemberDto> createMemberDtos = CSVHelper.csvToMembers(file.getInputStream(), organizationId);
@@ -129,7 +133,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    private void validateUser(User user) {
+    private void validateUser(@Valid User user) {
         if (this.isUsernameExist(user.getUsername())) {
             throw new UsernameAlreadyExistsException();
         }

@@ -1,6 +1,8 @@
 package com.dut.team92.userservice.domain.entity;
 
 import com.dut.team92.common.enums.UserStatus;
+import com.dut.team92.userservice.util.validator.ValidPassword;
+import com.dut.team92.userservice.util.validator.ValidUsername;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +33,10 @@ public class User {
     private UUID id;
 
     @Column(length = 50)
+    @ValidUsername
     private String username;
+
+    @ValidPassword
     private String password;
     private Boolean isOrganizerAdmin;
     private Boolean isSystemAdmin;

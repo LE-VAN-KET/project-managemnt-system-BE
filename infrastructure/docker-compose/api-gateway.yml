@@ -44,13 +44,13 @@ services:
             KONG_ADMIN_ERROR_LOG: /dev/stderr
             KONG_LOG_LEVEL: debug
             #KONG_ADMIN_LISTEN_SSL: 0.0.0.0:8444
-            KONG_DECLARATIVE_CONFIG: /usr/local/kong/declarative/kong.yml
+            KONG_DECLARATIVE_CONFIG: "/opt/kong/kong.yaml"
         depends_on:
             - kong_database
         links:
             - kong_database
         volumes:
-            -   ./kong/config/kong.yml:/usr/local/kong/declarative
+            -   ./kong/config:/opt/kong
         healthcheck:
             test: [ "CMD", "curl", "-f", "http://kong:8001" ]
             interval: 5s
