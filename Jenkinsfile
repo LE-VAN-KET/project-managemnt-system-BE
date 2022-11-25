@@ -40,7 +40,7 @@ pipeline{
         stage('Testing') {
             agent {
                 docker {
-                    image 'jenkins/jnlp-agent-maven:jdk11'
+                    image 'eclipse-temurin:8-jdk-alpine'
                     args '-v /root/.m2:/root/.m2'
                 }
             }
@@ -48,6 +48,8 @@ pipeline{
                 echo 'Test stage'
                 script {
                     sh "echo 'JUnit testing...'"
+                    sh "cd user-service"
+                    sh "./mvnw -s settings.xml test"
                     sh "mvn -s settings.xml test -s settings.xml"
                     jacoco(execPattern: 'target/jacoco.exec')
                 }
