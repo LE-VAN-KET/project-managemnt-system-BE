@@ -55,7 +55,10 @@ pipeline{
             }
         }
 
-        stage('SonarQube Analysis') {
+        stages {
+        }
+
+        stage('SonarQube User-service') {
             agent {
                 docker {
                     image 'jenkins/jnlp-agent-maven:jdk11'
@@ -67,7 +70,7 @@ pipeline{
             }
             steps {
                 withSonarQubeEnv(installationName: 'SonarQube') {
-                    sh """mvn -s settings.xml clean verify sonar:sonar -Dsonar.projectKey=api-microservice-pbl6" \
+                    sh """cd ./user-service && mvn -s settings.xml clean verify sonar:sonar -Dsonar.projectKey=user-service" \
                     -Dsonar.host.url=http://146.190.105.184:10000 -Dsonar.login=sqa_13efc056525ae8add04170822913d63831329f84
                     """
                 }
@@ -80,9 +83,111 @@ pipeline{
                     def sonar = waitForQualityGate()
                     if (sonar.status != 'OK') {
                         if (sonar.status == 'WARN') {
-                            currentBuild.result = 'UNSTABLE'
+                            currentBuild.result = 'UNSTABLE User-service'
                         } else {
-                            error "Quality gate is broken"
+                            error "Quality gate User-service is broken"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('SonarQube Organization-service') {
+            agent {
+                docker {
+                    image 'jenkins/jnlp-agent-maven:jdk11'
+                    args '-v /root/.m2:/root/.m2'
+                }
+            }
+            environment {
+                scannerHome = tool 'SonarQube'
+            }
+            steps {
+                withSonarQubeEnv(installationName: 'SonarQube') {
+                    sh """cd ./organization-service && mvn -s settings.xml clean verify sonar:sonar -Dsonar.projectKey=organization-service" \
+                    -Dsonar.host.url=http://146.190.105.184:10000 -Dsonar.login=sqa_13efc056525ae8add04170822913d63831329f84
+                    """
+                }
+
+                timeout(time: 60, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+
+                script {
+                    def sonar = waitForQualityGate()
+                    if (sonar.status != 'OK') {
+                        if (sonar.status == 'WARN') {
+                            currentBuild.result = 'UNSTABLE  Organization-service'
+                        } else {
+                            error "Quality gate Organization-service is broken"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('SonarQube Member-service') {
+            agent {
+                docker {
+                    image 'jenkins/jnlp-agent-maven:jdk11'
+                    args '-v /root/.m2:/root/.m2'
+                }
+            }
+            environment {
+                scannerHome = tool 'SonarQube'
+            }
+            steps {
+                withSonarQubeEnv(installationName: 'SonarQube') {
+                    sh """cd ./member-service && mvn -s settings.xml clean verify sonar:sonar -Dsonar.projectKey=member-service" \
+                    -Dsonar.host.url=http://146.190.105.184:10000 -Dsonar.login=sqa_13efc056525ae8add04170822913d63831329f84
+                    """
+                }
+
+                timeout(time: 60, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+
+                script {
+                    def sonar = waitForQualityGate()
+                    if (sonar.status != 'OK') {
+                        if (sonar.status == 'WARN') {
+                            currentBuild.result = 'UNSTABLE Member-service'
+                        } else {
+                            error "Quality gate Member-service is broken"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('SonarQube Issues-service') {
+            agent {
+                docker {
+                    image 'jenkins/jnlp-agent-maven:jdk11'
+                    args '-v /root/.m2:/root/.m2'
+                }
+            }
+            environment {
+                scannerHome = tool 'SonarQube'
+            }
+            steps {
+                withSonarQubeEnv(installationName: 'SonarQube') {
+                    sh """cd ./issues-service && mvn -s settings.xml clean verify sonar:sonar -Dsonar.projectKey=issues-service" \
+                    -Dsonar.host.url=http://146.190.105.184:10000 -Dsonar.login=sqa_13efc056525ae8add04170822913d63831329f84
+                    """
+                }
+
+                timeout(time: 60, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+
+                script {
+                    def sonar = waitForQualityGate()
+                    if (sonar.status != 'OK') {
+                        if (sonar.status == 'WARN') {
+                            currentBuild.result = 'UNSTABLE Issues-service'
+                        } else {
+                            error "Quality gate Issues-service is broken"
                         }
                     }
                 }
@@ -98,13 +203,22 @@ pipeline{
             steps{
                 echo "========Build And Push image to test environment========"
                 script {
-                    sh "cd infrastructure/docker-compose"
-                    sh "docker-compose -f common.yml -f service.yml build"
+                    sh "cd infrastructure/docker-compose && docker-compose -f common.yml -f service.yml build"
                     sh "docker login -u vanket -p dckr_pat_V1ZSZ0lJu4IESrxEJz_45ClFc60"
-                    sh "docker push vanket/microservice-pbl6:user-service"
-                    sh "docker push vanket/microservice-pbl6:member-service"
-                    sh "docker push vanket/microservice-pbl6:organization-service"
-                    sh "docker push vanket/microservice-pbl6:issues-service"
+                    sh "docker tag user-service:v1.0.0 vanket/user-service:v1.0.0"
+                    sh "docker tag member-service:v1.0.0 vanket/member-service:v1.0.0"
+                    sh "docker tag organization-service:v1.0.0 vanket/organization-service:v1.0.0"
+                    sh "docker tag issues-service:v1.0.0 vanket/issues-service:v1.0.0"
+                    sh "docker push vanket/user-service:v1.0.0"
+                    sh "docker push vanket/issues-service:v1.0.0"
+                    sh "docker push vanket/member-service:v1.0.0"
+                    sh "docker push vanket/organization-service:v1.0.0"
+
+                    echo "remove all image"
+                    sh """docker rmi vanket/issues-service:v1.0.0 vanket/member-service:v1.0.0 \
+                    vanket/user-service:v1.0.0  vanket/organization-service:v1.0.0 user-service:v1.0.0 \
+                    member-service:v1.0.0 organization-service:v1.0.0 issues-service:v1.0.0 -f
+                    """
 
                     echo "Login into server restart container"
                 }
