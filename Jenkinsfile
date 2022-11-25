@@ -38,18 +38,13 @@ pipeline{
         }
 
         stage('Testing') {
-            agent {
-                docker {
-                    image 'maven:3-alpine'
-                    args '-v /root/.m2:/root/.m2'
-                }
-            }
             steps {
                 echo 'Test stage'
                 script {
                     sh "echo 'JUnit testing...'"
-                    sh "mvn -s settings.xml test -s settings.xml"
-                    jacoco(execPattern: 'target/jacoco.exec')
+                    sh "cd infrastructure/docker-compose"
+                    sh "docker-compose -f common.yml -f service.yml build"
+//                     jacoco(execPattern: 'target/jacoco.exec')
                 }
             }
         }
