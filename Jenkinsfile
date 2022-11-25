@@ -55,9 +55,6 @@ pipeline{
             }
         }
 
-        stages {
-        }
-
         stage('SonarQube User-service') {
             agent {
                 docker {
