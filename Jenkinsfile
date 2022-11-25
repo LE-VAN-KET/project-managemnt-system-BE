@@ -42,7 +42,7 @@ pipeline{
                 echo 'Test stage'
                 script {
                     sh "echo 'JUnit testing...'"
-                    sh "cd infrastructure/docker-compose"
+                    sh "cd ./infrastructure/docker-compose && ls"
                     sh "docker-compose -f common.yml -f service.yml build"
 //                     jacoco(execPattern: 'target/jacoco.exec')
                 }
