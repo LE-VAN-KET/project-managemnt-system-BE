@@ -162,9 +162,6 @@
                     <source>1.8</source>
                     <target>1.8</target>
                     <verbose>true</verbose>
-                    <excludes>
-                        <exclude>*.jks</exclude>
-                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
