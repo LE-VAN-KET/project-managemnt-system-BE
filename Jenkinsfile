@@ -42,9 +42,15 @@ pipeline{
                 echo 'Test stage'
                 script {
                     sh "echo 'JUnit testing...'"
-                    sh "cd ./infrastructure/docker-compose"
-                    sh "pwd"
-//                     jacoco(execPattern: 'target/jacoco.exec')
+                    sh "cd ./user-service && ./mvnw -s settings.xml test"
+                    jacoco(execPattern: 'user-service/target/jacoco.exec')
+                    sh "cd ./organization-service && ./mvnw -s settings.xml test"
+                    jacoco(execPattern: 'organization-service/target/jacoco.exec')
+                    sh "cd ./issues-service && ./mvnw -s settings.xml test"
+                    jacoco(execPattern: 'issues-service/target/jacoco.exec')
+                    sh "cd ./member-service && ./mvnw -s settings.xml test"
+                    jacoco(execPattern: 'member-service/target/jacoco.exec')
+
                 }
             }
         }
