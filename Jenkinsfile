@@ -40,7 +40,7 @@ pipeline{
         stage('Testing') {
             agent {
                 docker {
-                    image 'maven:3-alpine'
+                    image 'jenkins/jnlp-agent-maven:jdk11'
                     args '-v /root/.m2:/root/.m2'
                 }
             }
