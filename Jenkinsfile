@@ -58,7 +58,7 @@ pipeline{
             agent {
                 docker {
                     image 'jenkins/jnlp-agent-maven:jdk11'
-                    args '-v /root/.m2:/root/.m2'
+//                     args '-v /root/.m2:/root/.m2'
                 }
             }
             environment {
