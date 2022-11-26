@@ -50,7 +50,6 @@ pipeline{
                     jacoco(execPattern: 'issues-service/target/jacoco.exec')
                     sh "cd ./member-service && ./mvnw -s settings.xml test"
                     jacoco(execPattern: 'member-service/target/jacoco.exec')
-
                 }
             }
         }
@@ -67,7 +66,7 @@ pipeline{
             }
             steps {
                 withSonarQubeEnv(installationName: 'SonarQube') {
-                    sh """cd ./user-service && ./mvnw -s settings.xml clean verify sonar:sonar -Dsonar.projectKey=user-service" \
+                    sh """cd ./user-service && ./mvnw -s settings.xml clean verify sonar:sonar -Dsonar.projectKey=user-service \
                     -Dsonar.host.url=http://146.190.105.184:10000 -Dsonar.login=sqa_13efc056525ae8add04170822913d63831329f84
                     """
                 }
@@ -101,7 +100,7 @@ pipeline{
             }
             steps {
                 withSonarQubeEnv(installationName: 'SonarQube') {
-                    sh """cd ./organization-service && ./mvnw -s settings.xml clean verify sonar:sonar -Dsonar.projectKey=organization-service" \
+                    sh """cd ./organization-service && ./mvnw -s settings.xml clean verify sonar:sonar -Dsonar.projectKey=organization-service \
                     -Dsonar.host.url=http://146.190.105.184:10000 -Dsonar.login=sqa_13efc056525ae8add04170822913d63831329f84
                     """
                 }
@@ -135,7 +134,7 @@ pipeline{
             }
             steps {
                 withSonarQubeEnv(installationName: 'SonarQube') {
-                    sh """cd ./member-service && ./mvnw -s settings.xml clean verify sonar:sonar -Dsonar.projectKey=member-service" \
+                    sh """cd ./member-service && ./mvnw -s settings.xml clean verify sonar:sonar -Dsonar.projectKey=member-service \
                     -Dsonar.host.url=http://146.190.105.184:10000 -Dsonar.login=sqa_13efc056525ae8add04170822913d63831329f84
                     """
                 }
@@ -169,7 +168,7 @@ pipeline{
             }
             steps {
                 withSonarQubeEnv(installationName: 'SonarQube') {
-                    sh """cd ./issues-service && ./mvnw -s settings.xml clean verify sonar:sonar -Dsonar.projectKey=issues-service" \
+                    sh """cd ./issues-service && ./mvnw -s settings.xml clean verify sonar:sonar -Dsonar.projectKey=issues-service \
                     -Dsonar.host.url=http://146.190.105.184:10000 -Dsonar.login=sqa_13efc056525ae8add04170822913d63831329f84
                     """
                 }
