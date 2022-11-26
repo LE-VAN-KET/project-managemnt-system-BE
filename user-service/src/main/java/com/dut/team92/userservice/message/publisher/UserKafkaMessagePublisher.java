@@ -27,9 +27,8 @@ public class UserKafkaMessagePublisher implements UserMessagePublisher {
     public void publish(List<User> users) {
         log.info("Publishing create list member event for organization id: {}",
                 users.get(0).getOrganizationId());
-        try{
+        try(ListMemberRequestModel listMemberRequestModel = new ListMemberRequestModel()) {
             var memberRequestModels = userMessagingDataMapper.userToMember(users);
-            ListMemberRequestModel listMemberRequestModel = new ListMemberRequestModel();
             listMemberRequestModel.setMemberRequestModels(memberRequestModels);
             var callback =
                     kafkaMessageHelper.getKafkaCallBack(userServiceConfigData.getOrganizationRequestTopicName(),
