@@ -1,0 +1,67 @@
+version: '3'
+services:
+    organization-service:
+        hostname: organization-service
+        container_name: organization-service
+        image: vanket/organization-service:v1.0.0
+        restart: always
+        ports:
+            - "8186:8186"
+        environment:
+            DATABASE_HOST: 146.190.105.184
+            MARIADB_PORT_NUMBER: 3312
+            LOGSTASH_HOST_PORT: 146.190.105.184:5000
+            KAFKA_HOST: 146.190.105.184
+        networks:
+            - ${GLOBAL_NETWORK}
+
+    user-service:
+        hostname: user-service
+        container_name: user-service
+        image: vanket/user-service:v1.0.0
+        restart: always
+        build:
+            context: ../../user-service/
+            dockerfile: Dockerfile
+        ports:
+            - "8182:8182"
+        environment:
+            DATABASE_HOST: 146.190.105.184
+            MARIADB_PORT_NUMBER: 3307
+            REDIS_HOST: 146.190.105.184
+            REDIS_PORT: 6379
+            LOGSTASH_HOST_PORT: 146.190.105.184:5000
+            ORGANIZATION_HOST: organization-service
+            KAFKA_HOST: 146.190.105.184
+        networks:
+            - ${GLOBAL_NETWORK}
+
+    member-service:
+        hostname: member-service
+        container_name: member-service
+        image: vanket/member-service:v1.0.0
+        restart: always
+        ports:
+            - "8185:8185"
+        environment:
+            DATABASE_HOST: 146.190.105.184
+            MARIADB_PORT_NUMBER: 3311
+            LOGSTASH_HOST_PORT: 146.190.105.184:5000
+            KAFKA_HOST: 146.190.105.184
+        networks:
+            - ${GLOBAL_NETWORK}
+
+    issues-service:
+        hostname: issues-service
+        container_name: issues-service
+        image: vanket/issues-service:v1.0.0
+        restart: always
+        ports:
+            - "8184:8184"
+        environment:
+            DATABASE_HOST: 146.190.105.184
+            MARIADB_PORT_NUMBER: 3312
+            LOGSTASH_HOST_PORT: 146.190.105.184:5000
+        networks:
+            - ${GLOBAL_NETWORK}
+
