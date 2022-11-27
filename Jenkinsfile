@@ -222,8 +222,10 @@ pipeline{
                     echo "SSH remote to server to run docker-compose"
                     sh "ssh -i ~/.ssh/id_rsa_microservice root@146.190.105.184"
 
-                    echo "remove all unused images"
-                    sh "docker image prune -a"
+                    echo "update micro-service images"
+                    sh """docker pull vanket/issues-service:v1.0.0 vanket/member-service:v1.0.0 \
+                        vanket/user-service:v1.0.0  vanket/organization-service:v1.0.0 -f
+                        """
                     sh "cd ./docker-compose && docker-compose -f common.yml -f micro-service-dev-v1.0.0.yml up -d"
 
                     echo "Exit remote server"
