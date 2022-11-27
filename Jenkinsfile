@@ -217,7 +217,7 @@ pipeline{
                     """
 
                     echo "Login into server restart container"
-                    sh """scp -r ./infrastructure/docker-compose/micro-service-dev-v1.0.0.yml \
+                    sh """scp -i ~/.ssh/id_rsa_microservice -r ./infrastructure/docker-compose/micro-service-dev-v1.0.0.yml \
                      root@146.190.105.184:/root/docker-compose"""
                     echo "SSH remote to server to run docker-compose"
                     sh "ssh -i ~/.ssh/id_rsa_microservice root@146.190.105.184"
