@@ -85,8 +85,11 @@ public class IssuesServiceImpl implements IssuesService{
             }
 
             return issuesMapper.convertToDto(savedIssues.get());
-        } catch (ExecutionException | InterruptedException e) {
-            throw new SaveIssuesFailedException(e.getMessage());
+        } catch (ExecutionException e) {
+            throw new SaveIssuesFailedException("ExecutionException: " + e.getMessage());
+        } catch (InterruptedException interruptedException) {
+            Thread.currentThread().interrupt();
+            throw new SaveIssuesFailedException("InterruptedException: " + interruptedException.getMessage());
         }
 
     }
