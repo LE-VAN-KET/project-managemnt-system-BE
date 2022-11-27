@@ -245,3 +245,11 @@ pipeline{
         }
     }
 }
+
+def custom_msg_notification(MSG_TYPE) {
+    def JOB_NAME = env.JOB_NAME
+    def BUILD_NUMBER = env.BUILD_NUMBER
+    def USER_ID = env.BUILD_USER_ID
+    def JENKINS_LOG= " ${MSG_TYPE}: Job [${JOB_NAME}] build ${BUILD_NUMBER} by ${USER_ID} \n More info at ${env.BUILD_URL}"
+    return JENKINS_LOG
+}
