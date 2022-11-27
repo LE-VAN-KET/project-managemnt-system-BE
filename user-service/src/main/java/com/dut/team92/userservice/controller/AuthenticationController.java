@@ -19,8 +19,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@CrossOrigin(origins = { "https://8c01-2402-800-6205-3bfb-ed1c-5ffd-35f2-b461.ap.ngrok.io",
-        "http://localhost:8080" }, maxAge = 4800, allowCredentials = "true")
 @RestController
 @RequestMapping(value = "/api/auth")
 public class AuthenticationController {

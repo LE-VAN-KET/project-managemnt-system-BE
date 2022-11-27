@@ -8,14 +8,17 @@ import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,10 +35,10 @@ import java.util.Collections;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-    private UnauthorizedEntryPoint unauthorizedEntryPoint;
-    private AccessDeniedHandlerResolver accessDeniedHandlerResolver;
-    private CustomUserDetailsService customUserDetailsService;
-    private AuthenticationTokenFilter authenticationJwtTokenFilter;
+    private final UnauthorizedEntryPoint unauthorizedEntryPoint;
+    private final AccessDeniedHandlerResolver accessDeniedHandlerResolver;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final AuthenticationTokenFilter authenticationJwtTokenFilter;
 
     @Autowired
     public SecurityConfig(UnauthorizedEntryPoint unauthorizedEntryPoint,
@@ -78,14 +81,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http.headers()
-//                .contentSecurityPolicy("script-src 'self'");
+        http.headers()
+                .contentSecurityPolicy("script-src 'self'");
 
         // enable cors and prevent CSRF
 //        http = http.cors().configurationSource(
 //                corsConfigurationSource()).csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and();
-        http = http.cors().configurationSource(
-                corsConfigurationSource()).and().csrf().disable();
+        http = http.cors().and().csrf().disable();
         // set session management stateless
         http = http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and();
@@ -115,11 +117,11 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(Arrays.asList(
-                "https://6092-2402-800-6205-3bfb-6c75-1cfc-9b5d-1bf1.ap.ngrok.io/",
-                "http://localhost:8080"));
-        configuration.setAllowedMethods(Collections.singletonList("*"));
-        configuration.setExposedHeaders(Collections.singletonList("*"));
+        configuration.setMaxAge(3600L);
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
+        configuration.setExposedHeaders(Arrays.asList("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
