@@ -8,9 +8,9 @@ services:
         ports:
             - "8186:8186"
         environment:
-            DATABASE_HOST: 146.190.105.184
-            MARIADB_PORT_NUMBER: 3312
-            LOGSTASH_HOST_PORT: localhost:5000
+            DATABASE_HOST: db_organization
+            MARIADB_PORT_NUMBER: 3306
+            LOGSTASH_HOST_PORT: logstash:5000
             KAFKA_HOST: 146.190.105.184
         networks:
             - ${GLOBAL_NETWORK}
@@ -23,11 +23,11 @@ services:
         ports:
             - "8182:8182"
         environment:
-            DATABASE_HOST: 146.190.105.184
-            MARIADB_PORT_NUMBER: 3307
-            REDIS_HOST: 146.190.105.184
+            DATABASE_HOST: db_auth
+            MARIADB_PORT_NUMBER: 3306
+            REDIS_HOST: redis_auth
             REDIS_PORT: 6379
-            LOGSTASH_HOST_PORT: localhost:5000
+            LOGSTASH_HOST_PORT: logstash:5000
             ORGANIZATION_HOST: organization-service
             KAFKA_HOST: 146.190.105.184
         networks:
@@ -41,9 +41,9 @@ services:
         ports:
             - "8185:8185"
         environment:
-            DATABASE_HOST: 146.190.105.184
-            MARIADB_PORT_NUMBER: 3311
-            LOGSTASH_HOST_PORT: localhost:5000
+            DATABASE_HOST: db_member
+            MARIADB_PORT_NUMBER: 3306
+            LOGSTASH_HOST_PORT: logstash:5000
             KAFKA_HOST: 146.190.105.184
         networks:
             - ${GLOBAL_NETWORK}
@@ -56,9 +56,9 @@ services:
         ports:
             - "8184:8184"
         environment:
-            DATABASE_HOST: 146.190.105.184
-            MARIADB_PORT_NUMBER: 3312
-            LOGSTASH_HOST_PORT: localhost:5000
+            DATABASE_HOST: db_issues
+            MARIADB_PORT_NUMBER: 3306
+            LOGSTASH_HOST_PORT: logstash:5000
         networks:
             - ${GLOBAL_NETWORK}
 
