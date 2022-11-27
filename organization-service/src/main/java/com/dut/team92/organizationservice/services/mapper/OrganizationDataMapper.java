@@ -23,8 +23,11 @@ public class OrganizationDataMapper {
         CreateOrganizationResponse createOrganizationResponse = new CreateOrganizationResponse();
         if (Objects.nonNull(organization)) {
             BeanUtils.copyProperties(organization, createOrganizationResponse);
+            if (organization.getId() != null) {
+                createOrganizationResponse.setOrganizationId(organization.getId());
+            }
         }
-        createOrganizationResponse.setOrganizationId(organization.getId());
+
         return createOrganizationResponse;
     }
 }
