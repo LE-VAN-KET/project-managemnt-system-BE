@@ -20,9 +20,6 @@ services:
         container_name: user-service
         image: vanket/user-service:v1.0.0
         restart: always
-        build:
-            context: ../../user-service/
-            dockerfile: Dockerfile
         ports:
             - "8182:8182"
         environment:
