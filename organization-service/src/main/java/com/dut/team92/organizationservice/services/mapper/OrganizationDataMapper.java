@@ -24,7 +24,10 @@ public class OrganizationDataMapper {
         if (Objects.nonNull(organization)) {
             BeanUtils.copyProperties(organization, createOrganizationResponse);
         }
-        createOrganizationResponse.setOrganizationId(organization.getId());
+
+        if (organization.getId() != null) {
+            createOrganizationResponse.setOrganizationId(organization.getId());
+        }
         return createOrganizationResponse;
     }
 }

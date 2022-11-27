@@ -16,11 +16,10 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public void createDefaultBoard(UUID sprintId) {
-        List<Board> boards = new ArrayList<Board>(){{
-            add(initializationBoard("TO DO", 1, sprintId));
-            add(initializationBoard("IN PROGRESS", 2, sprintId));
-            add(initializationBoard("DONE", 3, sprintId));
-        }};
+        List<Board> boards = new ArrayList<Board>();
+        boards.add(initializationBoard("TO DO", 1, sprintId));
+        boards.add(initializationBoard("IN PROGRESS", 2, sprintId));
+        boards.add(initializationBoard("DONE", 3, sprintId));
 
         boardRepository.saveAll(boards);
     }
