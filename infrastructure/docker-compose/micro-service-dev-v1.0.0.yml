@@ -11,7 +11,9 @@ services:
             DATABASE_HOST: db_organization
             MARIADB_PORT_NUMBER: 3306
             LOGSTASH_HOST_PORT: logstash:5000
-            KAFKA_HOST: 146.190.105.184
+            KAFKA_BROKER_1: kafka-broker-1
+            KAFKA_BROKER_2: kafka-broker-2
+            KAFKA_BROKER_3: kafka-broker-3
         networks:
             - ${GLOBAL_NETWORK}
 
@@ -29,7 +31,9 @@ services:
             REDIS_PORT: 6379
             LOGSTASH_HOST_PORT: logstash:5000
             ORGANIZATION_HOST: organization-service
-            KAFKA_HOST: 146.190.105.184
+            KAFKA_BROKER_1: kafka-broker-1
+            KAFKA_BROKER_2: kafka-broker-2
+            KAFKA_BROKER_3: kafka-broker-3
         networks:
             - ${GLOBAL_NETWORK}
 
@@ -44,7 +48,9 @@ services:
             DATABASE_HOST: db_member
             MARIADB_PORT_NUMBER: 3306
             LOGSTASH_HOST_PORT: logstash:5000
-            KAFKA_HOST: 146.190.105.184
+            KAFKA_BROKER_1: kafka-broker-1
+            KAFKA_BROKER_2: kafka-broker-2
+            KAFKA_BROKER_3: kafka-broker-3
         networks:
             - ${GLOBAL_NETWORK}
 

@@ -29,7 +29,7 @@ organization-service:
     organization-request-topic-name: organization-request-value
 
 kafka-config:
-    bootstrap-servers: ${KAFKA_HOST:localhost}:19092, ${KAFKA_HOST:localhost}:29092, ${KAFKA_HOST:localhost}:39092
+    bootstrap-servers: ${KAFKA_BROKER_1:localhost}:19092, ${KAFKA_BROKER_2:localhost}:29092, ${KAFKA_BROKER_3:localhost}:39092
     num-of-partitions: 3
     replication-factor: 3
 

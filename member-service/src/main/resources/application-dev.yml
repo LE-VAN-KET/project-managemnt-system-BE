@@ -30,7 +30,7 @@ member-service:
     member-request-topic-name: member-request-topic-name
 
 kafka-config:
-    bootstrap-servers: ${KAFKA_HOST:146.190.105.184}:19092, ${KAFKA_HOST:146.190.105.184}:29092, ${KAFKA_HOST:146.190.105.184}:39092
+    bootstrap-servers: ${KAFKA_BROKER_1:146.190.105.184}:19092, ${KAFKA_BROKER_2:146.190.105.184}:29092, ${KAFKA_BROKER_3:146.190.105.184}:39092
     num-of-partitions: 3
     replication-factor: 3
 
