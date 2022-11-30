@@ -17,7 +17,6 @@ application:
             access-token-validity-in-seconds: 360
             refresh-token-validity-in-seconds: 1800
 
-
 feign:
     circuitbreaker:
         enabled: true

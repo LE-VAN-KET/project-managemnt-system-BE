@@ -8,4 +8,5 @@ import java.util.UUID;
 
 public interface IssuesStatusService {
     List<IssuesStatusDto> getAllIssuesStatusByOrganizationId(UUID organizationId);
+    IssuesStatusDto getOneIssuesStatusByNameAndOrganizationId(String name, UUID organizationId);
 }

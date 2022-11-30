@@ -10,10 +10,10 @@ services:
         environment:
             DATABASE_HOST: db_organization
             MARIADB_PORT_NUMBER: 3306
-            LOGSTASH_HOST_PORT: logstash:5000
-            KAFKA_BROKER_1: kafka-broker-1
-            KAFKA_BROKER_2: kafka-broker-2
-            KAFKA_BROKER_3: kafka-broker-3
+#            LOGSTASH_HOST_PORT: logstash:5000
+#            KAFKA_BROKER_1: kafka-broker-1
+#            KAFKA_BROKER_2: kafka-broker-2
+#            KAFKA_BROKER_3: kafka-broker-3
         networks:
             - ${GLOBAL_NETWORK}
 
@@ -29,11 +29,11 @@ services:
             MARIADB_PORT_NUMBER: 3306
             REDIS_HOST: redis_auth
             REDIS_PORT: 6379
-            LOGSTASH_HOST_PORT: logstash:5000
+#            LOGSTASH_HOST_PORT: logstash:5000
             ORGANIZATION_HOST: organization-service
-            KAFKA_BROKER_1: kafka-broker-1
-            KAFKA_BROKER_2: kafka-broker-2
-            KAFKA_BROKER_3: kafka-broker-3
+#            KAFKA_BROKER_1: kafka-broker-1
+#            KAFKA_BROKER_2: kafka-broker-2
+#            KAFKA_BROKER_3: kafka-broker-3
         networks:
             - ${GLOBAL_NETWORK}
 
@@ -47,10 +47,10 @@ services:
         environment:
             DATABASE_HOST: db_member
             MARIADB_PORT_NUMBER: 3306
-            LOGSTASH_HOST_PORT: logstash:5000
-            KAFKA_BROKER_1: kafka-broker-1
-            KAFKA_BROKER_2: kafka-broker-2
-            KAFKA_BROKER_3: kafka-broker-3
+#            LOGSTASH_HOST_PORT: logstash:5000
+#            KAFKA_BROKER_1: kafka-broker-1
+#            KAFKA_BROKER_2: kafka-broker-2
+#            KAFKA_BROKER_3: kafka-broker-3
         networks:
             - ${GLOBAL_NETWORK}
 
@@ -64,7 +64,7 @@ services:
         environment:
             DATABASE_HOST: db_issues
             MARIADB_PORT_NUMBER: 3306
-            LOGSTASH_HOST_PORT: logstash:5000
+#            LOGSTASH_HOST_PORT: logstash:5000
         networks:
             - ${GLOBAL_NETWORK}
 

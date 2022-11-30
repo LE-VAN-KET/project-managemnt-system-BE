@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
@@ -16,10 +18,13 @@ import java.util.UUID;
 public class IssuesDto {
     private UUID id;
 
+    @NotNull
+    @NotEmpty
     private String name;
 
     private String description;
 
+    @NotNull
     private UUID projectId;
 
     private UUID trackerId;
@@ -43,4 +48,7 @@ public class IssuesDto {
     private List<IssuesDto> children;
 
     private IssuesTypeDto issuesTypeDto;
+
+    @NotNull
+    private String issuesKey;
 }

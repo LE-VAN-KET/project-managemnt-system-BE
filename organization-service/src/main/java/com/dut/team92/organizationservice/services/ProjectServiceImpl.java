@@ -72,9 +72,11 @@ public class ProjectServiceImpl implements ProjectService{
     @Transactional
     @Async("threadPoolTaskExecutor")
     public void createFirstSprintAfterCreateProject(UUID projectId) {
+        String projectKey = projectRepository.findProjectKeyByProjectId(projectId).orElseThrow(() ->
+                new ProjectIdNotFound("Project not found with id = " +projectId));
         CreateSprintCommand command = new CreateSprintCommand();
         command.setProjectId(projectId);
-        command.setName("Sprint 1");
+        command.setName(projectKey + " Sprint 1");
         command.setPosition(1);
         command.setStatus(SprintStatus.UNSTART);
         sprintService.createSprint(command);
@@ -83,5 +85,11 @@ public class ProjectServiceImpl implements ProjectService{
     @Override
     public boolean isExistProjectByProjectIdAndOrganizationId(UUID projectId, UUID organizationId) {
         return projectRepository.existsByIdAndOrganizationId(projectId, organizationId);
+    }
+
+    @Override
+    public String getProjectKeyByProjectId(UUID projectId) {
+        return projectRepository.findProjectKeyByProjectId(projectId).orElseThrow(() ->
+                new ProjectIdNotFound("Project not found with id = " + projectId));
     }
 }

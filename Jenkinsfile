@@ -218,16 +218,14 @@ pipeline{
 
                     echo "Login into server restart container"
                     sh """scp -i ~/.ssh/id_rsa_microservice -r ./infrastructure/docker-compose/micro-service-dev-v1.0.0.yml \
-                     root@146.190.105.184:/root/docker-compose"""
+                     root@139.59.96.208:/root/docker-compose"""
                     echo "SSH remote to server to run docker-compose"
-                    sh "ssh -i ~/.ssh/id_rsa_microservice root@146.190.105.184"
+                    sh """ssh -i ~/.ssh/id_rsa_microservice root@139.59.96. -yes && docker rmi vanket/issues-service:v1.0.0 \
+                    vanket/issues-service:v1.0.0 vanket/user-service:v1.0.0 vanket/organization-service:v1.0.0 -f
+                    """
 
-                    echo "update micro-service images"
-                    sh "docker rmi vanket/issues-service:v1.0.0 -f"
-                    sh "docker rmi vanket/member-service:v1.0.0 -f"
-                    sh "docker rmi vanket/user-service:v1.0.0 -f"
-                    sh "docker rmi vanket/organization-service:v1.0.0 -f"
-                    sh "cd ./docker-compose && docker-compose -f common.yml -f micro-service-dev-v1.0.0.yml up -d --remove-orphans"
+                    sh """ssh -i ~/.ssh/id_rsa_microservice -yes root@139.59.96.208 && cd ./docker-compose && \
+                    docker-compose -f common.yml -f micro-service-dev-v1.0.0.yml up -d"""
 
                     echo "Exit remote server"
                     sh "exit;"

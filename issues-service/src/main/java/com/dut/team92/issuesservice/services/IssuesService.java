@@ -10,4 +10,6 @@ public interface IssuesService {
     IssuesDto createIssues(CreateIssuesBacklogCommand command);
     IssuesDto get(UUID issuesId);
     List<IssuesDto> getAllIssuesBacklogByProjectId(UUID projectId);
+    IssuesDto updateIssues(CreateIssuesBacklogCommand command, UUID issuesId);
+    void deleteIssues(UUID issuesId);
 }

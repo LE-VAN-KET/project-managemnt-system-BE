@@ -11,10 +11,10 @@ services:
         ports:
             - "8186:8186"
         environment:
-            DATABASE_HOST: 146.190.105.184
+            DATABASE_HOST: 139.59.96.208
             MARIADB_PORT_NUMBER: 3312
             LOGSTASH_HOST_PORT: 146.190.105.184:5000
-            KAFKA_HOST: 146.190.105.184
+            KAFKA_HOST: 139.59.96.208
 #        links:
 #            - db_organization
 #        depends_on:
@@ -33,13 +33,13 @@ services:
         ports:
             - "8182:8182"
         environment:
-            DATABASE_HOST: 146.190.105.184
+            DATABASE_HOST: 139.59.96.208
             MARIADB_PORT_NUMBER: 3307
-            REDIS_HOST: 146.190.105.184
+            REDIS_HOST: 139.59.96.208
             REDIS_PORT: 6379
             LOGSTASH_HOST_PORT: 146.190.105.184:5000
             ORGANIZATION_HOST: organization-service
-            KAFKA_HOST: 146.190.105.184
+            KAFKA_HOST: 139.59.96.208
 #        links:
 #            - db_auth
 #        depends_on:
@@ -59,10 +59,10 @@ services:
         ports:
             - "8185:8185"
         environment:
-            DATABASE_HOST: 146.190.105.184
+            DATABASE_HOST: 139.59.96.208
             MARIADB_PORT_NUMBER: 3311
             LOGSTASH_HOST_PORT: 146.190.105.184:5000
-            KAFKA_HOST: 146.190.105.184
+            KAFKA_HOST: 139.59.96.208
 #        links:
 #            - db_member
 #        depends_on:
@@ -81,7 +81,7 @@ services:
         ports:
             - "8184:8184"
         environment:
-            DATABASE_HOST: 146.190.105.184
+            DATABASE_HOST: 139.59.96.208
             MARIADB_PORT_NUMBER: 3312
             LOGSTASH_HOST_PORT: 146.190.105.184:5000
 #        links:

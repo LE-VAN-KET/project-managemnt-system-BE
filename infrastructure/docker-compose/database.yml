@@ -71,6 +71,7 @@ services:
         hostname: redis
         container_name: redis_auth
         restart: always
+        command: redis-server --appendonly yes --replica-read-only no
         volumes:
             - ./volumes/redis/micro:/data
         ports:

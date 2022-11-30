@@ -53,4 +53,11 @@ public class IssuesTypeServiceImpl implements IssuesTypeService {
         return issuesTypes.isEmpty() ? Collections.emptyList()
                 : issuesTypeMapper.convertToDtoList(issuesTypes);
     }
+
+    @Override
+    public IssuesTypeDto getOneIssuesTypeByNameAndOrganizationId(String name, UUID organizationId) {
+        IssuesType issuesType = issuesTypeRepository.findByOrganizationIdOrSystem(organizationId, name).orElseThrow(() ->
+                new IssuesTypeNotFoundException("Issues Type not found with name = " + name));
+        return issuesTypeMapper.convertToDto(issuesType);
+    }
 }

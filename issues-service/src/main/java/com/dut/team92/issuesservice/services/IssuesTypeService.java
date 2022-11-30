@@ -9,4 +9,5 @@ import java.util.UUID;
 
 public interface IssuesTypeService extends RepositoryService<IssuesType> {
     List<IssuesTypeDto> getAllIssuesTypeByOrganizationId(UUID organizationId);
+    IssuesTypeDto getOneIssuesTypeByNameAndOrganizationId(String name, UUID organizationId);
 }

@@ -2,6 +2,8 @@ package com.dut.team92.organizationservice.repository;
 
 import com.dut.team92.common.repository.IJpaRepository;
 import com.dut.team92.organizationservice.domain.entity.Project;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,4 +17,7 @@ public interface ProjectRepository extends IJpaRepository<Project, UUID> {
     boolean existsById(UUID projectId);
     boolean existsByIdAndOrganizationId(UUID projectId, UUID organizationId);
     Optional<Project> findByIdAndOrganizationId(UUID uuid, UUID organizationId);
+
+    @Query("SELECT p.key FROM Project p WHERE p.id = :projectId")
+    Optional<String> findProjectKeyByProjectId(@Param("projectId") UUID projectId);
 }

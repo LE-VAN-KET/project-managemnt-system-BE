@@ -33,9 +33,23 @@ public class IssuesController {
         return issuesService.get(UUID.fromString(issuesId));
     }
 
-    @GetMapping
+    @GetMapping("/backlog")
     @ResponseStatus(HttpStatus.OK)
     public List<IssuesDto> getAllIssuesBacklogByProjectId(@RequestParam(name = "project_id") String projectId) {
         return issuesService.getAllIssuesBacklogByProjectId(UUID.fromString(projectId));
     }
+
+    @PutMapping("/{issues_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public IssuesDto updateDetailsIssues(@PathVariable("issues_id") String issuesId,
+                                         @RequestBody CreateIssuesBacklogCommand command) {
+        return issuesService.updateIssues(command, UUID.fromString(issuesId));
+    }
+
+    @DeleteMapping("/{issues_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteIssues(@PathVariable("issues_id") String issuesId) {
+        issuesService.deleteIssues(UUID.fromString(issuesId));
+    }
+
 }

@@ -3,6 +3,7 @@ package com.dut.team92.organizationservice.domain.dto.request;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -11,14 +12,18 @@ import java.util.UUID;
 @Getter
 @Setter
 public class CreateProjectCommand {
-    @NonNull
+    @NotNull
     @NotEmpty
     private String name;
 
     private String description;
     private String domain;
 
-    @NonNull
+    @NotNull
+    @NotEmpty
+    private String key;
+
+    @NotNull
     private Boolean isPublic;
     private UUID parentId = null;
 }
