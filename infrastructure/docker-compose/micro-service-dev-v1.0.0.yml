@@ -64,6 +64,8 @@ services:
         environment:
             DATABASE_HOST: db_issues
             MARIADB_PORT_NUMBER: 3306
+            ORGANIZATION_HOST: organization-service
+            MEMBER_HOST: member-service
 #            LOGSTASH_HOST_PORT: logstash:5000
         networks:
             - ${GLOBAL_NETWORK}

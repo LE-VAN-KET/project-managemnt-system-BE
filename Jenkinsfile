@@ -220,7 +220,7 @@ pipeline{
                     sh """scp -i ~/.ssh/id_rsa_microservice -r ./infrastructure/docker-compose/micro-service-dev-v1.0.0.yml \
                      root@139.59.96.208:/root/docker-compose"""
                     echo "SSH remote to server to run docker-compose"
-                    sh """ssh -i ~/.ssh/id_rsa_microservice root@139.59.96. -yes && docker rmi vanket/issues-service:v1.0.0 \
+                    sh """ssh -i ~/.ssh/id_rsa_microservice root@139.59.96.208 -yes && docker rmi vanket/issues-service:v1.0.0 \
                     vanket/issues-service:v1.0.0 vanket/user-service:v1.0.0 vanket/organization-service:v1.0.0 -f
                     """
 
