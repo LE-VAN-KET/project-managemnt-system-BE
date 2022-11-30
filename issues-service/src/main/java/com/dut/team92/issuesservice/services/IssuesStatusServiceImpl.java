@@ -2,6 +2,7 @@ package com.dut.team92.issuesservice.services;
 
 import com.dut.team92.issuesservice.domain.dto.IssuesStatusDto;
 import com.dut.team92.issuesservice.domain.entity.IssuesStatus;
+import com.dut.team92.issuesservice.exception.IssuesStatusNotFoundException;
 import com.dut.team92.issuesservice.repository.IssuesStatusRepository;
 import com.dut.team92.issuesservice.services.mapper.IssuesStatusMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,5 +25,12 @@ public class IssuesStatusServiceImpl implements IssuesStatusService{
         List<IssuesStatus> issuesStatuses = issuesStatusRepository.findAllByOrganizationIdOrSystem(organizationId);
         return issuesStatuses.isEmpty() ? Collections.emptyList()
                 : issuesStatusMapper.convertToDtoList(issuesStatuses);
+    }
+
+    @Override
+    public IssuesStatusDto getOneIssuesStatusByNameAndOrganizationId(String name, UUID organizationId) {
+        IssuesStatus issuesStatus = issuesStatusRepository.findByNameAndOrganizationIdOrSystem(organizationId, name)
+                .orElseThrow(() -> new IssuesStatusNotFoundException("Issues status not found by name " + name));
+        return issuesStatusMapper.convertToDto(issuesStatus);
     }
 }

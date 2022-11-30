@@ -3,6 +3,7 @@ package com.dut.team92.issuesservice.proxy;
 import com.dut.team92.issuesservice.configuration.CustomFeignClientConfiguration;
 import com.dut.team92.issuesservice.domain.dto.response.CheckBoardExistResponse;
 import com.dut.team92.issuesservice.domain.dto.response.CheckProjectExistResponse;
+import com.dut.team92.issuesservice.domain.dto.response.ProjectKeyResponse;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,5 +25,10 @@ public interface OrganizationServiceProxy {
     CheckBoardExistResponse existBoardByBoardId(@PathVariable("board_id") @NotNull String boardId,
                                                 @RequestHeader(value = "Authorization", required = true)
                                                 String authorizationHeader);
+    @GetMapping("/api/organizations/{organization_id}/projects/{project_id}/project-key")
+    ProjectKeyResponse getProjectKey(@PathVariable("project_id") String projectId,
+                                     @PathVariable String organization_id,
+                                     @RequestHeader(value = "Authorization", required = true)
+                         String authorizationHeader);
 }
 

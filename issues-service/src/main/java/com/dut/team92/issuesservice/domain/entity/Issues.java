@@ -28,6 +28,8 @@ public class Issues extends BaseDomain {
     @NotNull
     private String name;
 
+    private String issuesKey;
+
     private String description;
 
     @Column(columnDefinition = "BINARY(16)")

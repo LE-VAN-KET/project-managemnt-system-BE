@@ -33,6 +33,8 @@ public class CreateIssuesBacklogCommand {
     private Calendar dueDate;
     private BigDecimal estimatedHours;
     private Priority priority;
+
+    @NotNull
     private UUID issuesStatusId;
     private Integer doneRatio;
     private Boolean isPublic;

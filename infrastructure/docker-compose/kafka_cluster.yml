@@ -12,9 +12,9 @@ services:
             ZOOKEEPER_INIT_LIMIT: 5
             ZOOKEEPER_SYNC_LIMIT: 2
             ZOOKEEPER_SERVERS: zookeeper:2888:3888
-#            KAFKA_OPTS: "-Dzookeeper.4lw.commands.whitelist=ruok"
-            KAFKA_JMX_OPTS: "-Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false  -Dcom.sun.management.jmxremote.ssl=false"
-            KAFKA_JMX_PORT: 49999
+            KAFKA_OPTS: "-Dzookeeper.4lw.commands.whitelist=ruok"
+#            KAFKA_JMX_OPTS: "-Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false  -Dcom.sun.management.jmxremote.ssl=false"
+#            KAFKA_JMX_PORT: 49999
         volumes:
             - "./volumes/zookeeper/data:/var/lib/zookeeper/data"
             - "./volumes/zookeeper/transactions:/var/lib/zookeeper/log"

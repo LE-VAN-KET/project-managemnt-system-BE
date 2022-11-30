@@ -14,4 +14,5 @@ public interface ProjectService {
     ProjectDto editProject(UUID organizationId, UpdateProjectCommand command);
     void removeProject(UUID organizationId, UUID projectId);
     boolean isExistProjectByProjectIdAndOrganizationId(UUID projectId, UUID organizationId);
+    String getProjectKeyByProjectId(UUID projectId);
 }

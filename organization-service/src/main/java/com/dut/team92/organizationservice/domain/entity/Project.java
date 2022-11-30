@@ -24,6 +24,9 @@ public class Project {
     private UUID id;
 
     private String name;
+
+    @Column(name = "project_key")
+    private String key;
     private String description;
     private String domain;
     private Boolean isPublic;

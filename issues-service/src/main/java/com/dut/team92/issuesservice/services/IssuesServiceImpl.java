@@ -8,6 +8,7 @@ import com.dut.team92.issuesservice.domain.dto.request.CreateIssuesBacklogComman
 import com.dut.team92.issuesservice.domain.dto.response.CheckBoardExistResponse;
 import com.dut.team92.issuesservice.domain.dto.response.CheckExistMemberResponse;
 import com.dut.team92.issuesservice.domain.dto.response.CheckProjectExistResponse;
+import com.dut.team92.issuesservice.domain.dto.response.ProjectKeyResponse;
 import com.dut.team92.issuesservice.domain.entity.Issues;
 import com.dut.team92.issuesservice.domain.entity.IssuesAssign;
 import com.dut.team92.issuesservice.domain.entity.IssuesStatus;
@@ -21,6 +22,7 @@ import com.dut.team92.issuesservice.repository.IssuesStatusRepository;
 import com.dut.team92.issuesservice.services.mapper.IssuesMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -54,44 +56,20 @@ public class IssuesServiceImpl implements IssuesService{
     @Override
     @Transactional
     public IssuesDto createIssues(CreateIssuesBacklogCommand command) {
-        try {
-            IssuesType existIssuesType = issuesTypeService.get(command.getIssueTypeId());
-            Issues parent = null;
-            if (command.getParentId() != null) {
-                parent = issuesRepository.findById(command.getParentId()).orElseThrow(() ->
-                        new IssuesTypeNotFoundException("Issues not found with id equal " + command.getParentId()));
-            }
-
-            IssuesStatus issuesStatus = issuesStatusRepository.findById(command.getIssuesStatusId())
-                    .orElseThrow(() -> new IssuesStatusNotFoundException("Issues status not found with id equal "
-                            + command.getIssuesStatusId()));
-
-            validateProjectAndAssignMember(command);
-            Issues issues = issuesMapper.createIssuesBacklogCommandToIssues(command);
-            UUID issuesId = UUID.randomUUID();
-            issues.setId(issuesId);
-            issues.setIssuesType(existIssuesType);
-            issues.setIssuesStatus(issuesStatus);
-            issues.setParent(parent);
-            String authorId = tokenProvider.extractClaim(tokenProvider.parseJwt(request))
-                    .get(TokenKey.SUB_ID, String.class);
-            issues.setAuthorId(UUID.fromString(authorId));
-
-            CompletableFuture<Issues> savedIssues = saveIssues(issues);
-            if (command.getAssignMemberId() != null) {
-                CompletableFuture<IssuesAssign> assignedMember = assignIssuesToMember(command.getAssignMemberId(),
-                        issuesId);
-                CompletableFuture.allOf(savedIssues, assignedMember).join();
-            }
-
-            return issuesMapper.convertToDto(savedIssues.get());
-        } catch (ExecutionException e) {
-            throw new SaveIssuesFailedException("ExecutionException: " + e.getMessage());
-        } catch (InterruptedException interruptedException) {
-            Thread.currentThread().interrupt();
-            throw new SaveIssuesFailedException("InterruptedException: " + interruptedException.getMessage());
+        Issues issues = issuesMapper.createIssuesBacklogCommandToIssues(command);
+        UUID issuesId = UUID.randomUUID();
+        issues.setId(issuesId);
+        long countIssuesOfProject = issuesRepository.countByProjectId(command.getProjectId());
+        ProjectKeyResponse projectKey = organizationServiceProxy.getProjectKey(
+                command.getProjectId().toString(),
+                command.getOrganizationId().toString(),
+                request.getHeader(HttpHeaders.AUTHORIZATION));
+        if (projectKey.getKey() == null) {
+            throw new ProjectKeyNotFoundException("Project key not found with project id = "
+                    + command.getProjectId());
         }
-
+        issues.setIssuesKey(StringUtils.join(projectKey.getKey(), countIssuesOfProject + 1, "-"));
+        return createOrUpdateIssues(issues, command);
     }
 
     @Override
@@ -108,6 +86,23 @@ public class IssuesServiceImpl implements IssuesService{
         List<Issues> issues = issuesRepository.findAllByProjectIdAndBoardIdIsNull(projectId);
         return issues.isEmpty() ? Collections.emptyList()
                 :issuesMapper.convertToDtoList(issues);
+    }
+
+    @Override
+    @Transactional
+    public IssuesDto updateIssues(CreateIssuesBacklogCommand command, UUID issuesId) {
+        Issues issuesExist = issuesRepository.findById(issuesId).orElseThrow(() ->
+                new IssuesNotFoundException("Issues not found incorrect id = " + issuesId));
+
+        assert command != null;
+        BeanUtils.copyProperties(command, issuesExist);
+        return createOrUpdateIssues(issuesExist, command);
+    }
+
+    @Override
+    @Transactional
+    public void deleteIssues(UUID issuesId) {
+        issuesRepository.deleteById(issuesId);
     }
 
     @Async("threadPoolTaskExecutor2")
@@ -175,5 +170,42 @@ public class IssuesServiceImpl implements IssuesService{
             }
         }
         return CompletableFuture.completedFuture(true);
+    }
+
+    private IssuesDto createOrUpdateIssues(Issues issues, CreateIssuesBacklogCommand command) {
+        try {
+            IssuesType existIssuesType = issuesTypeService.get(command.getIssueTypeId());
+            Issues parent = null;
+            if (command.getParentId() != null) {
+                parent = issuesRepository.findById(command.getParentId()).orElseThrow(() ->
+                        new IssuesTypeNotFoundException("Issues not found with id equal " + command.getParentId()));
+            }
+
+            IssuesStatus issuesStatus = issuesStatusRepository.findById(command.getIssuesStatusId())
+                    .orElseThrow(() -> new IssuesStatusNotFoundException("Issues status not found with id equal "
+                            + command.getIssuesStatusId()));
+
+            validateProjectAndAssignMember(command);
+            issues.setIssuesType(existIssuesType);
+            issues.setIssuesStatus(issuesStatus);
+            issues.setParent(parent);
+            String authorId = tokenProvider.extractClaim(tokenProvider.parseJwt(request))
+                    .get(TokenKey.SUB_ID, String.class);
+            issues.setAuthorId(UUID.fromString(authorId));
+
+            CompletableFuture<Issues> savedIssues = saveIssues(issues);
+            if (command.getAssignMemberId() != null) {
+                CompletableFuture<IssuesAssign> assignedMember = assignIssuesToMember(command.getAssignMemberId(),
+                        issues.getId());
+                CompletableFuture.allOf(savedIssues, assignedMember).join();
+            }
+
+            return issuesMapper.convertToDto(savedIssues.get());
+        } catch (ExecutionException e) {
+            throw new SaveIssuesFailedException("ExecutionException: " + e.getMessage());
+        } catch (InterruptedException interruptedException) {
+            Thread.currentThread().interrupt();
+            throw new SaveIssuesFailedException("InterruptedException: " + interruptedException.getMessage());
+        }
     }
 }

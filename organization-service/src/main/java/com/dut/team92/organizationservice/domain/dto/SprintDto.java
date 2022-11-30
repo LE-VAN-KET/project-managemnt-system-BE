@@ -4,6 +4,8 @@ import com.dut.team92.organizationservice.domain.entity.SprintStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,6 +19,7 @@ import java.util.UUID;
 public class SprintDto {
     private UUID id;
 
+    @NotNull
     private UUID projectId;
     private String name;
     private String description;
@@ -29,5 +32,7 @@ public class SprintDto {
 
     private SprintStatus status;
     private Boolean isDelete;
+
+    @Min(1)
     private int position;
 }

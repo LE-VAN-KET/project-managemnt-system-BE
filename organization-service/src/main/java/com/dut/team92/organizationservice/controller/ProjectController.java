@@ -4,6 +4,7 @@ import com.dut.team92.organizationservice.domain.dto.ProjectDto;
 import com.dut.team92.organizationservice.domain.dto.request.CreateProjectCommand;
 import com.dut.team92.organizationservice.domain.dto.request.UpdateProjectCommand;
 import com.dut.team92.organizationservice.domain.dto.response.CheckProjectExistResponse;
+import com.dut.team92.organizationservice.domain.dto.response.ProjectKeyResponse;
 import com.dut.team92.organizationservice.services.ProjectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,15 @@ public class ProjectController {
                 UUID.fromString(projectId),
                 UUID.fromString(organizationId));
         return CheckProjectExistResponse.builder().isExistProject(existProject).build();
+    }
+
+    @GetMapping("/{project_id}/project-key")
+    @ResponseStatus(HttpStatus.OK)
+    public ProjectKeyResponse getProjectKey(@PathVariable("project_id") String projectKey,
+                                            @PathVariable String organization_id) {
+        return ProjectKeyResponse.builder().key(
+                projectService.getProjectKeyByProjectId(UUID.fromString(projectKey))
+        ).build();
     }
 
 }

@@ -37,4 +37,9 @@ public class GlobalExceptionHandler extends CommonExceptionHandler {
     public CommonErrorResponse handleBoardNotFoundException(BoardNotFoundException ex) {
         return handleServerErrorException(ex, "BoardNotFoundException");
     }
+
+    @ExceptionHandler(ProjectKeyNotFoundException.class)
+    public CommonErrorResponse handleProjectKeyNotFoundException(ProjectKeyNotFoundException ex) {
+        return handleServerErrorException(ex, "ProjectKeyNotFoundException");
+    }
 }
