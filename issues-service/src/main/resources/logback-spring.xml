@@ -11,7 +11,7 @@
         <param name="Encoding" value="UTF-8"/>
         <destination>${host_port_logstash:-localhost:5044}</destination>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <customFields>{"app_name":"user-service", "app_port": "${port}"}</customFields>
+            <customFields>{"app_name":"issues-service", "app_port": "${port}"}</customFields>
             <providers>
                 <pattern>
                     <pattern>

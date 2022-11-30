@@ -70,6 +70,7 @@ public class SprintServiceImpl implements SprintService{
         Sprint sprint = createSprintAuto(projectKey, countSprintInProject, existSprint.getProjectId());
         switch (moveIssuesType) {
             case NEW_SPRINT:
+
                 // mai doing
         }
     }

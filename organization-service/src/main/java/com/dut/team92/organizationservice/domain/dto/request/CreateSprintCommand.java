@@ -14,7 +14,6 @@ import java.util.UUID;
 @Setter
 public class CreateSprintCommand {
     @NotNull
-    @NotEmpty
     private UUID projectId;
     @NotNull
     @NotEmpty
