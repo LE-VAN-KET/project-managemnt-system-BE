@@ -1,6 +1,5 @@
 package com.dut.team92.memberservice.services;
 
-import com.dut.team92.memberservice.domain.dto.MemberDto;
 import com.dut.team92.memberservice.domain.dto.request.AddMemberToProjectRequest;
 
 import java.util.UUID;

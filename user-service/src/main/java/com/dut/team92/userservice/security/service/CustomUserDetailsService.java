@@ -1,6 +1,5 @@
 package com.dut.team92.userservice.security.service;
 
-import antlr.collections.List;
 import com.dut.team92.common.enums.RoleType;
 import com.dut.team92.common.enums.UserStatus;
 import com.dut.team92.common.security.model.CustomUserPrincipal;
@@ -15,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;

@@ -1,16 +1,13 @@
 package com.dut.team92.memberservice.controller;
 
-import com.dut.team92.memberservice.domain.dto.MemberDto;
 import com.dut.team92.memberservice.domain.dto.request.AddMemberToProjectRequest;
 import com.dut.team92.memberservice.domain.dto.response.CheckExistMemberResponse;
 import com.dut.team92.memberservice.services.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @RestController

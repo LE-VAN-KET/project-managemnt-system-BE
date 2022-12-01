@@ -8,7 +8,6 @@ import com.dut.team92.organizationservice.domain.entity.Project;
 import com.dut.team92.organizationservice.domain.entity.SprintStatus;
 import com.dut.team92.organizationservice.exception.ProjectIdNotFound;
 import com.dut.team92.organizationservice.repository.ProjectRepository;
-import com.dut.team92.organizationservice.repository.SprintRepository;
 import com.dut.team92.organizationservice.services.handler.CreateProjectCommandHandler;
 import com.dut.team92.organizationservice.services.handler.UpdateProjectCommandHandler;
 import com.dut.team92.organizationservice.services.mapper.ProjectDataMapper;

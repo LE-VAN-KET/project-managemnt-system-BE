@@ -12,4 +12,5 @@ public interface IssuesService {
     List<IssuesDto> getAllIssuesBacklogByProjectId(UUID projectId);
     IssuesDto updateIssues(CreateIssuesBacklogCommand command, UUID issuesId);
     void deleteIssues(UUID issuesId);
+    List<IssuesDto> getAllIssuesByBoardIdIn(List<UUID> boardIs);
 }

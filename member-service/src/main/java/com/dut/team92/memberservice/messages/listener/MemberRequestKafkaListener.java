@@ -5,7 +5,6 @@ import com.dut.team92.kafka.model.ListMemberRequestModel;
 import com.dut.team92.memberservice.messages.listener.services.MemberRequestMessageListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;

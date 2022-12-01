@@ -8,7 +8,6 @@ import com.dut.team92.memberservice.exception.RoleNotFoundException;
 import com.dut.team92.memberservice.messages.listener.services.MemberRequestMessageListener;
 import com.dut.team92.memberservice.messages.mapper.MemberMessageMapper;
 import com.dut.team92.memberservice.repository.MemberRepository;
-import com.dut.team92.memberservice.repository.MemberRolesRepository;
 import com.dut.team92.memberservice.repository.RolesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

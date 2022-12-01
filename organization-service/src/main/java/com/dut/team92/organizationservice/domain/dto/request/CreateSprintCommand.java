@@ -1,7 +1,10 @@
 package com.dut.team92.organizationservice.domain.dto.request;
 
 import com.dut.team92.organizationservice.domain.entity.SprintStatus;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;

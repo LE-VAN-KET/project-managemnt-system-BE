@@ -2,7 +2,6 @@ package com.dut.team92.issuesservice.services.mapper;
 
 import com.dut.team92.common.domain.mapper.BaseMapper;
 import com.dut.team92.issuesservice.domain.dto.IssuesDto;
-import com.dut.team92.issuesservice.domain.dto.IssuesStatusDto;
 import com.dut.team92.issuesservice.domain.dto.request.CreateIssuesBacklogCommand;
 import com.dut.team92.issuesservice.domain.entity.Issues;
 import lombok.RequiredArgsConstructor;
