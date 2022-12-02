@@ -130,7 +130,6 @@ public class SprintServiceImpl implements SprintService{
     }
 
     @Cacheable(cacheNames = "keyProject", key = "#projectId")
-    @Transactional(readOnly = true)
     public String getKeyProject(UUID projectId) {
         return projectRepository.findProjectKeyByProjectId(projectId)
                 .orElseThrow(() -> new ProjectIdNotFound("Project not found with id = "
