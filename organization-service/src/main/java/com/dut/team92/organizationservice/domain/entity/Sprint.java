@@ -6,10 +6,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.time.OffsetDateTime;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "sprint")
@@ -35,4 +32,6 @@ public class Sprint {
     private Boolean isDelete;
     private int position;
 
+    @Transient
+    private List<UUID> boardIds = new ArrayList<>();
 }

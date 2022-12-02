@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -35,5 +36,11 @@ public class SprintController {
     public void completeSprint(@PathVariable("sprint_id") String sprintId,
                                @RequestParam MoveIssuesType moveIssuesType) {
 
+    }
+
+    @GetMapping("/backlog")
+    public List<SprintDto> getAllSprintStaringOrUnStart(@RequestParam(name = "project_id")
+                                                            String projectId) {
+        return sprintService.getAllSprintStartingOrUnStart(UUID.fromString(projectId));
     }
 }

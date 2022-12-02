@@ -2,9 +2,7 @@ package com.dut.team92.userservice.services.handler;
 
 import com.dut.team92.common.exception.CommonAuthException;
 import com.dut.team92.common.exception.CommonNotFoundException;
-import com.dut.team92.common.exception.model.CommonErrorResponse;
 import com.dut.team92.userservice.domain.dto.event.UserCreatedEvent;
-import com.dut.team92.userservice.domain.dto.request.CreateMemberDto;
 import com.dut.team92.userservice.domain.dto.request.CreateUserAdminOrganizationCommand;
 import com.dut.team92.userservice.domain.dto.request.CreateUserCommand;
 import com.dut.team92.userservice.domain.dto.response.CreateOrganizationResponse;
@@ -19,8 +17,6 @@ import com.dut.team92.userservice.services.UserInformationService;
 import com.dut.team92.userservice.services.UserService;
 import com.dut.team92.userservice.services.mapper.UserDataMapper;
 import com.dut.team92.userservice.services.mapper.UserInformationDataMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,8 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Objects;
 
 @Component
 @Slf4j

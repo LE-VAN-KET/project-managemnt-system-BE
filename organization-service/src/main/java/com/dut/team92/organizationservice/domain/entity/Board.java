@@ -26,6 +26,6 @@ public class Board {
     private int position;
 
     @NotNull
+    @Column(columnDefinition = "BINARY(16)")
     private UUID sprintId;
-
 }

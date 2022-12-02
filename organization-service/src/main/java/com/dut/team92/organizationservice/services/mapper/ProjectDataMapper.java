@@ -5,7 +5,6 @@ import com.dut.team92.organizationservice.domain.dto.ProjectDto;
 import com.dut.team92.organizationservice.domain.dto.request.CreateProjectCommand;
 import com.dut.team92.organizationservice.domain.entity.Project;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;

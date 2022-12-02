@@ -1,7 +1,6 @@
 package com.dut.team92.organizationservice.services.handler;
 
 import com.dut.team92.common.enums.ProjectStatus;
-import com.dut.team92.organizationservice.domain.dto.ProjectDto;
 import com.dut.team92.organizationservice.domain.dto.request.CreateProjectCommand;
 import com.dut.team92.organizationservice.domain.entity.Project;
 import com.dut.team92.organizationservice.exception.OrganizationIdNotFound;

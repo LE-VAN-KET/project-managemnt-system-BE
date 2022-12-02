@@ -1,9 +1,6 @@
 package com.dut.team92.userservice.util.validator;
 
 import com.dut.team92.userservice.domain.dto.request.CreateUserCommand;
-import com.dut.team92.userservice.domain.dto.request.LoginUserRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

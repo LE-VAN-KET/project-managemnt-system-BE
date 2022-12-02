@@ -25,6 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -40,6 +44,7 @@ import java.util.concurrent.ExecutionException;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@CacheConfig(cacheNames = "issuesCache")
 public class IssuesServiceImpl implements IssuesService{
     private final IssuesRepository issuesRepository;
     private final IssuesTypeService issuesTypeService;
@@ -53,6 +58,7 @@ public class IssuesServiceImpl implements IssuesService{
     @Autowired
     private HttpServletRequest request;
 
+    @CacheEvict(cacheNames = "issues", allEntries = true)
     @Override
     @Transactional
     public IssuesDto createIssues(CreateIssuesBacklogCommand command) {
@@ -68,10 +74,12 @@ public class IssuesServiceImpl implements IssuesService{
             throw new ProjectKeyNotFoundException("Project key not found with project id = "
                     + command.getProjectId());
         }
-        issues.setIssuesKey(StringUtils.join(projectKey.getKey(), countIssuesOfProject + 1, "-"));
+
+        issues.setIssuesKey(StringUtils.join(projectKey.getKey(), "-", countIssuesOfProject + 1));
         return createOrUpdateIssues(issues, command);
     }
 
+    @Cacheable(cacheNames = "issues", key = "#issuesId", unless = "#result == null")
     @Override
     @Transactional(readOnly = true)
     public IssuesDto get(UUID issuesId) {
@@ -80,6 +88,7 @@ public class IssuesServiceImpl implements IssuesService{
         return issuesMapper.convertToDto(issues);
     }
 
+    @Cacheable(cacheNames = "issues", key = "#projectId", unless = "#result.size() == 0")
     @Override
     @Transactional(readOnly = true)
     public List<IssuesDto> getAllIssuesBacklogByProjectId(UUID projectId) {
@@ -88,6 +97,7 @@ public class IssuesServiceImpl implements IssuesService{
                 :issuesMapper.convertToDtoList(issues);
     }
 
+    @CacheEvict(cacheNames = "issues", key = "#issuesId")
     @Override
     @Transactional
     public IssuesDto updateIssues(CreateIssuesBacklogCommand command, UUID issuesId) {
@@ -99,10 +109,19 @@ public class IssuesServiceImpl implements IssuesService{
         return createOrUpdateIssues(issuesExist, command);
     }
 
+    @Caching(evict = { @CacheEvict(cacheNames = "issues", key = "#issuesId"),
+            @CacheEvict(cacheNames = "issues", allEntries = true) })
     @Override
     @Transactional
     public void deleteIssues(UUID issuesId) {
         issuesRepository.deleteById(issuesId);
+    }
+
+    @Cacheable(cacheNames = "issues_in_boards")
+    @Override
+    public List<IssuesDto> getAllIssuesByBoardIdIn(List<UUID> boardIs) {
+        List<Issues> issues = issuesRepository.findAllByBoardIdIn(boardIs);
+        return issuesMapper.convertToDtoList(issues);
     }
 
     @Async("threadPoolTaskExecutor2")

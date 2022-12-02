@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.validator.internal.util.stereotypes.Lazy;
 
 import javax.persistence.*;
 import java.util.Set;

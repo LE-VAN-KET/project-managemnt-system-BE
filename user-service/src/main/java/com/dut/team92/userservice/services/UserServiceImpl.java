@@ -2,7 +2,6 @@ package com.dut.team92.userservice.services;
 
 import com.dut.team92.common.enums.UserStatus;
 import com.dut.team92.userservice.domain.dto.UserDto;
-import com.dut.team92.userservice.domain.dto.event.UserCreatedEvent;
 import com.dut.team92.userservice.domain.dto.request.CreateMemberDto;
 import com.dut.team92.userservice.domain.dto.response.CheckOrganizationExistResponse;
 import com.dut.team92.userservice.domain.entity.User;
@@ -15,11 +14,9 @@ import com.dut.team92.userservice.message.publisher.UserKafkaMessagePublisher;
 import com.dut.team92.userservice.proxy.OrganizationServiceProxy;
 import com.dut.team92.userservice.repository.UserInformationRepository;
 import com.dut.team92.userservice.repository.UserRepository;
-import com.dut.team92.userservice.services.handler.UserCreateCommandHandler;
 import com.dut.team92.userservice.services.mapper.UserDataMapper;
 import com.dut.team92.userservice.services.mapper.UserInformationDataMapper;
 import com.dut.team92.userservice.util.CSVHelper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,8 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

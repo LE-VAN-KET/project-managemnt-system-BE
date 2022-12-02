@@ -1,6 +1,5 @@
 package com.dut.team92.userservice.domain.dto.request;
 
-import com.dut.team92.common.enums.TokenType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

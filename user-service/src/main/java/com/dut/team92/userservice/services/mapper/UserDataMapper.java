@@ -9,7 +9,6 @@ import com.dut.team92.userservice.domain.dto.response.CreateOrganizationResponse
 import com.dut.team92.userservice.domain.dto.response.CreateUserAdminOrganizationResponse;
 import com.dut.team92.userservice.domain.dto.response.CreateUserResponse;
 import com.dut.team92.userservice.domain.entity.User;
-import com.dut.team92.userservice.domain.entity.UserInformation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
