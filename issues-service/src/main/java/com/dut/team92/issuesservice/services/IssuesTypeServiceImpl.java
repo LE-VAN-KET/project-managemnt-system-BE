@@ -29,7 +29,6 @@ public class IssuesTypeServiceImpl implements IssuesTypeService {
     }
 
     @Override
-    @Cacheable(cacheNames = "issues_type", key = "#id")
     public IssuesType get(Long id) {
         return issuesTypeRepository.findById(id).orElseThrow(() ->
                 new IssuesTypeNotFoundException("Issues not found with id equal " + id));
