@@ -28,7 +28,7 @@ spring:
         connection-pool-size: 4
         connection-minimum-idle-size: 2
         token-prefix: project-management:token
-        token-time-to-live: 1800
+        token-time-to-live: 7200
 
 
 keystore:

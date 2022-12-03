@@ -88,7 +88,7 @@ public class IssuesServiceImpl implements IssuesService{
         return issuesMapper.convertToDto(issues);
     }
 
-    @Cacheable(cacheNames = "issues", key = "#projectId", unless = "#result.size() == 0")
+    @Cacheable(cacheNames = "issues_backlogs", key = "#projectId", unless = "#result.size() == 0")
     @Override
     @Transactional(readOnly = true)
     public List<IssuesDto> getAllIssuesBacklogByProjectId(UUID projectId) {
