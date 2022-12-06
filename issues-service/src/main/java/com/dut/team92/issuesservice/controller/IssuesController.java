@@ -2,6 +2,7 @@ package com.dut.team92.issuesservice.controller;
 
 import com.dut.team92.issuesservice.domain.dto.IssuesDto;
 import com.dut.team92.issuesservice.domain.dto.request.CreateIssuesBacklogCommand;
+import com.dut.team92.issuesservice.domain.dto.request.MoveIssuesCommand;
 import com.dut.team92.issuesservice.services.IssuesService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +58,8 @@ public class IssuesController {
         return issuesService.getAllIssuesInProject(UUID.fromString(projectId));
     }
 
-    @PostMapping("/")
-    public void moveIssuesBacklogToBacklog() {
+    @PostMapping("/move")
+    public void moveIssuesBacklogToBacklog(@Valid @RequestBody MoveIssuesCommand command) {
 
     }
 

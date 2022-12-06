@@ -5,6 +5,7 @@ import com.dut.team92.common.security.TokenKey;
 import com.dut.team92.common.security.TokenProvider;
 import com.dut.team92.issuesservice.domain.dto.IssuesDto;
 import com.dut.team92.issuesservice.domain.dto.request.CreateIssuesBacklogCommand;
+import com.dut.team92.issuesservice.domain.dto.request.MoveIssuesCommand;
 import com.dut.team92.issuesservice.domain.dto.response.CheckBoardExistResponse;
 import com.dut.team92.issuesservice.domain.dto.response.CheckExistMemberResponse;
 import com.dut.team92.issuesservice.domain.dto.response.CheckProjectExistResponse;
@@ -130,6 +131,12 @@ public class IssuesServiceImpl implements IssuesService{
     public List<IssuesDto> getAllIssuesInProject(UUID projectId) {
         List<Issues> issuesList = issuesRepository.findAllByProjectId(projectId);
         return issuesList.isEmpty() ? Collections.emptyList() : issuesMapper.convertToDtoList(issuesList);
+    }
+
+    @Override
+    public List<IssuesDto> moveIssues(MoveIssuesCommand command) {
+//        if (command.getBacklogs().isEmpty())
+        return null;
     }
 
     @Async("threadPoolTaskExecutor2")
