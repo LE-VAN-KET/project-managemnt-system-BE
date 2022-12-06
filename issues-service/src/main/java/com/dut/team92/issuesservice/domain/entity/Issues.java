@@ -2,6 +2,7 @@ package com.dut.team92.issuesservice.domain.entity;
 
 import com.dut.team92.common.domain.BaseDomain;
 import com.dut.team92.common.enums.Priority;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Issues extends BaseDomain {
     @Id
     @Column(name = "issues_id", unique = true, nullable = false, columnDefinition = "BINARY(16)")
@@ -61,16 +63,37 @@ public class Issues extends BaseDomain {
     private UUID boardId;
     private Boolean isPublic;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id", nullable = true)
     private Issues parent;
 
     @OneToMany(mappedBy = "parent")
     private Set<Issues> children;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "issues_type_id")
     private IssuesType issuesType;
 
     private int position;
+
+    public Issues(UUID id, String name, String issuesKey, String description, UUID projectId, UUID trackerId, Calendar startDate, Calendar dueDate, BigDecimal estimatedHours, Priority priority, IssuesStatus issuesStatus, UUID authorId, Integer doneRatio, UUID tagId, UUID boardId, Boolean isPublic, IssuesType issuesType, int position) {
+        this.id = id;
+        this.name = name;
+        this.issuesKey = issuesKey;
+        this.description = description;
+        this.projectId = projectId;
+        this.trackerId = trackerId;
+        this.startDate = startDate;
+        this.dueDate = dueDate;
+        this.estimatedHours = estimatedHours;
+        this.priority = priority;
+        this.issuesStatus = issuesStatus;
+        this.authorId = authorId;
+        this.doneRatio = doneRatio;
+        this.tagId = tagId;
+        this.boardId = boardId;
+        this.isPublic = isPublic;
+        this.issuesType = issuesType;
+        this.position = position;
+    }
 }

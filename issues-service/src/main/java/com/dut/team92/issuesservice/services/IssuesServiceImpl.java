@@ -117,11 +117,19 @@ public class IssuesServiceImpl implements IssuesService{
         issuesRepository.deleteById(issuesId);
     }
 
-    @Cacheable(cacheNames = "issues_in_boards")
     @Override
+    @Transactional(readOnly = true)
     public List<IssuesDto> getAllIssuesByBoardIdIn(List<UUID> boardIs) {
         List<Issues> issues = issuesRepository.findAllByBoardIdIn(boardIs);
-        return issuesMapper.convertToDtoList(issues);
+        return issues.isEmpty() ? Collections.emptyList() : issuesMapper.convertToDtoList(issues);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "issues_in_project", key = "#projectId")
+    public List<IssuesDto> getAllIssuesInProject(UUID projectId) {
+        List<Issues> issuesList = issuesRepository.findAllByProjectId(projectId);
+        return issuesList.isEmpty() ? Collections.emptyList() : issuesMapper.convertToDtoList(issuesList);
     }
 
     @Async("threadPoolTaskExecutor2")

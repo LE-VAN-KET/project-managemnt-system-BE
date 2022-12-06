@@ -11,7 +11,11 @@ import java.util.UUID;
 
 @Repository
 public interface IssuesRepository extends IJpaRepository<Issues, UUID> {
-    @Query("SELECT iss FROM Issues  iss WHERE iss.boardId IS NULL AND iss.projectId = :projectId")
+    @Query("SELECT new Issues(iss.id, iss.name, iss.issuesKey, iss.description, iss.projectId, iss.trackerId," +
+            " iss.startDate, iss.dueDate, iss.estimatedHours, iss.priority, iss.issuesStatus, iss.authorId," +
+            " iss.doneRatio, iss.tagId, iss.boardId, iss.isPublic, iss_type, iss.position) from Issues iss " +
+            "inner join IssuesType iss_type on iss.issuesType.id = iss_type.id WHERE iss.boardId IS NULL " +
+            "AND iss.projectId = :projectId")
     List<Issues> findAllByProjectIdAndBoardIdIsNull(@Param("projectId") UUID projectId);
     @Query("select coalesce(max(iss.id), 0) From Issues iss where iss.projectId = :projectId AND iss.boardId = :boardId")
     int maxPositionByProjectIdAndBoardId(@Param("projectId") UUID projectId,
@@ -21,4 +25,10 @@ public interface IssuesRepository extends IJpaRepository<Issues, UUID> {
 
     List<Issues> findAllByBoardIdIn(List<UUID> boardIds);
     int countByProjectId(UUID projectId);
+
+    @Query("select new Issues(iss.id, iss.name, iss.issuesKey, iss.description, iss.projectId, iss.trackerId," +
+            " iss.startDate, iss.dueDate, iss.estimatedHours, iss.priority, iss.issuesStatus, iss.authorId," +
+            " iss.doneRatio, iss.tagId, iss.boardId, iss.isPublic, iss_type, iss.position) from Issues iss " +
+            "inner join IssuesType iss_type on iss.issuesType.id = iss_type.id where iss.projectId = ?1")
+    List<Issues> findAllByProjectId(UUID projectId);
 }

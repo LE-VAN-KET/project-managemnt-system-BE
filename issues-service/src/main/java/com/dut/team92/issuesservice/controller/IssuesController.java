@@ -52,6 +52,11 @@ public class IssuesController {
         issuesService.deleteIssues(UUID.fromString(issuesId));
     }
 
+    @GetMapping
+    public List<IssuesDto> getAllIssuesInProject(@RequestParam("project_id") String projectId) {
+        return issuesService.getAllIssuesInProject(UUID.fromString(projectId));
+    }
+
     @PostMapping("/")
     public void moveIssuesBacklogToBacklog() {
 

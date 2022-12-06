@@ -2,6 +2,7 @@ package com.dut.team92.issuesservice.domain.entity;
 
 import com.dut.team92.common.domain.converter.ColorConverter;
 import com.dut.team92.common.enums.Color;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
