@@ -5,11 +5,9 @@ import com.dut.team92.common.security.TokenKey;
 import com.dut.team92.common.security.TokenProvider;
 import com.dut.team92.issuesservice.domain.dto.IssuesDto;
 import com.dut.team92.issuesservice.domain.dto.request.CreateIssuesBacklogCommand;
+import com.dut.team92.issuesservice.domain.dto.request.IssuesMovedRequest;
 import com.dut.team92.issuesservice.domain.dto.request.MoveIssuesCommand;
-import com.dut.team92.issuesservice.domain.dto.response.CheckBoardExistResponse;
-import com.dut.team92.issuesservice.domain.dto.response.CheckExistMemberResponse;
-import com.dut.team92.issuesservice.domain.dto.response.CheckProjectExistResponse;
-import com.dut.team92.issuesservice.domain.dto.response.ProjectKeyResponse;
+import com.dut.team92.issuesservice.domain.dto.response.*;
 import com.dut.team92.issuesservice.domain.entity.Issues;
 import com.dut.team92.issuesservice.domain.entity.IssuesAssign;
 import com.dut.team92.issuesservice.domain.entity.IssuesStatus;
@@ -36,11 +34,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -134,9 +131,50 @@ public class IssuesServiceImpl implements IssuesService{
     }
 
     @Override
-    public List<IssuesDto> moveIssues(MoveIssuesCommand command) {
-//        if (command.getBacklogs().isEmpty())
-        return null;
+    @Transactional
+    public MoveIssuesResponse moveIssues(MoveIssuesCommand command) {
+        List<UUID> issuesIds = new ArrayList<>();
+        Map<UUID, IssuesMovedRequest> issuesMovedRequestMap = new HashMap<>();
+        issuesIds.addAll(getListIssuesIdBacklogChange(command, issuesMovedRequestMap));
+        issuesIds.addAll(getListIssuesIdSprintChange(command, issuesMovedRequestMap));
+        List<Issues> issuesList = issuesRepository.findAllById(issuesIds);
+        if (!issuesIds.isEmpty()) {
+            List<Issues> issuesListUpdate = issuesList.stream().map(iss -> {
+                IssuesMovedRequest issuesMove = issuesMovedRequestMap.get(iss.getId());
+                iss.setPosition(issuesMove.getPosition());
+                iss.setBoardId(issuesMove.getBoardId());
+                return iss;
+            }).collect(Collectors.toList());
+
+            issuesRepository.saveAll(issuesListUpdate);
+        }
+        return MoveIssuesResponse.builder().code(200).message("You are moved issues successfully!").build();
+    }
+
+    private List<UUID> getListIssuesIdBacklogChange(MoveIssuesCommand command,
+                                                    Map<UUID, IssuesMovedRequest> issuesMovedRequestMap) {
+        if (command.getBacklogs() != null && !command.getBacklogs().isEmpty()) {
+            return command.getBacklogs().stream().map(iss -> {
+                issuesMovedRequestMap.put(iss.getId(), iss);
+                return iss.getId();
+            }).collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
+
+    private List<UUID> getListIssuesIdSprintChange(MoveIssuesCommand command,
+                                                   Map<UUID, IssuesMovedRequest> issuesMovedRequestMap) {
+        if (command.getSprints() != null && !command.getSprints().isEmpty()) {
+            List<UUID> issuesIds = new ArrayList<>();
+            command.getSprints().stream().filter(sp -> !sp.getIssuesList().isEmpty()).forEach(sp -> {
+                issuesIds.addAll(sp.getIssuesList().stream().map(iss -> {
+                    issuesMovedRequestMap.put(iss.getId(), iss);
+                    return iss.getId();
+                }).collect(Collectors.toList()));
+            });
+            return issuesIds;
+        }
+        return Collections.emptyList();
     }
 
     @Async("threadPoolTaskExecutor2")
@@ -245,7 +283,7 @@ public class IssuesServiceImpl implements IssuesService{
     }
 
     private int calculationPositionIssues(CreateIssuesBacklogCommand command) {
-        if (command.getPosition() <= 0) {
+        if (command.getPosition() > 0) {
             return command.getPosition();
         } else if (command.getBoardId() != null){
             int maxPositionSprint = issuesRepository.maxPositionByProjectIdAndBoardId(command.getProjectId(),

@@ -3,6 +3,7 @@ package com.dut.team92.issuesservice.services;
 import com.dut.team92.issuesservice.domain.dto.IssuesDto;
 import com.dut.team92.issuesservice.domain.dto.request.CreateIssuesBacklogCommand;
 import com.dut.team92.issuesservice.domain.dto.request.MoveIssuesCommand;
+import com.dut.team92.issuesservice.domain.dto.response.MoveIssuesResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,5 +16,5 @@ public interface IssuesService {
     void deleteIssues(UUID issuesId);
     List<IssuesDto> getAllIssuesByBoardIdIn(List<UUID> boardIs);
     List<IssuesDto> getAllIssuesInProject(UUID projectId);
-    List<IssuesDto> moveIssues(MoveIssuesCommand command);
+    MoveIssuesResponse moveIssues(MoveIssuesCommand command);
 }
