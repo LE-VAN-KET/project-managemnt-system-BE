@@ -25,8 +25,6 @@ pipeline{
             steps {
                 echo 'Dependency stage'
                 script {
-                    sh "rm -r ~/.m2/repository/com/dut/team92/kafka"
-                    sh "rm -r ~/.m2/repository/com/dut/team92/common"
                     sh "echo 'Downloading dependencies...'"
                     sh "mvn -s settings.xml clean install -DskipTests=true"
                 }
