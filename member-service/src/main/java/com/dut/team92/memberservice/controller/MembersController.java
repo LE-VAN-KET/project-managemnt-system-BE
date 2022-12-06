@@ -1,5 +1,7 @@
 package com.dut.team92.memberservice.controller;
 
+import com.dut.team92.memberservice.domain.dto.MemberDto;
+import com.dut.team92.memberservice.domain.dto.UserDto;
 import com.dut.team92.memberservice.domain.dto.request.AddMemberToProjectRequest;
 import com.dut.team92.memberservice.domain.dto.response.CheckExistMemberResponse;
 import com.dut.team92.memberservice.services.MemberService;
@@ -8,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -27,8 +30,22 @@ public class MembersController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.OK)
-    public void addMemberToProject(@Valid @RequestBody AddMemberToProjectRequest command) {
-        memberService.addMemberToProject(command);
+    public MemberDto addMemberToProject(@Valid @RequestBody AddMemberToProjectRequest command) {
+        return memberService.addMemberToProject(command);
+    }
+
+    @GetMapping("/organization/{organization_id}/search")
+    public List<UserDto> searchMemberInOrganization(@PathVariable("organization_id") String organizationId,
+                                                       @RequestParam(value = "keyword", required = false)
+                                                       String keyword) {
+        return memberService.searchMemberInOrganization(UUID.fromString(organizationId), keyword);
+    }
+
+    @GetMapping("/projects/{project_id}/search")
+    public List<MemberDto> searchMemberInProject(@PathVariable("project_id") String projectId,
+                                                       @RequestParam(value = "keyword", required = false)
+                                                       String keyword) {
+        return memberService.searchMemberInProject(UUID.fromString(projectId), keyword);
     }
 
 }

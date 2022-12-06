@@ -31,7 +31,7 @@ public class UserKafkaMessagePublisher implements UserMessagePublisher {
             var memberRequestModels = userMessagingDataMapper.userToMember(users);
             listMemberRequestModel.setMemberRequestModels(memberRequestModels);
             var callback =
-                    kafkaMessageHelper.getKafkaCallBack(userServiceConfigData.getOrganizationRequestTopicName(),
+                    kafkaMessageHelper.getKafkaCallBack(userServiceConfigData.getMemberRequestTopicName(),
                         listMemberRequestModel,
                         users.get(0).getOrganizationId().toString(),
                         "ListMemberRequestModel");

@@ -5,6 +5,7 @@ import com.dut.team92.common.security.TokenKey;
 import com.dut.team92.common.security.TokenProvider;
 import com.dut.team92.issuesservice.domain.dto.IssuesDto;
 import com.dut.team92.issuesservice.domain.dto.request.CreateIssuesBacklogCommand;
+import com.dut.team92.issuesservice.domain.dto.request.MoveIssuesCommand;
 import com.dut.team92.issuesservice.domain.dto.response.CheckBoardExistResponse;
 import com.dut.team92.issuesservice.domain.dto.response.CheckExistMemberResponse;
 import com.dut.team92.issuesservice.domain.dto.response.CheckProjectExistResponse;
@@ -117,11 +118,25 @@ public class IssuesServiceImpl implements IssuesService{
         issuesRepository.deleteById(issuesId);
     }
 
-    @Cacheable(cacheNames = "issues_in_boards")
     @Override
+    @Transactional(readOnly = true)
     public List<IssuesDto> getAllIssuesByBoardIdIn(List<UUID> boardIs) {
         List<Issues> issues = issuesRepository.findAllByBoardIdIn(boardIs);
-        return issuesMapper.convertToDtoList(issues);
+        return issues.isEmpty() ? Collections.emptyList() : issuesMapper.convertToDtoList(issues);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "issues_in_project", key = "#projectId")
+    public List<IssuesDto> getAllIssuesInProject(UUID projectId) {
+        List<Issues> issuesList = issuesRepository.findAllByProjectId(projectId);
+        return issuesList.isEmpty() ? Collections.emptyList() : issuesMapper.convertToDtoList(issuesList);
+    }
+
+    @Override
+    public List<IssuesDto> moveIssues(MoveIssuesCommand command) {
+//        if (command.getBacklogs().isEmpty())
+        return null;
     }
 
     @Async("threadPoolTaskExecutor2")
@@ -211,6 +226,7 @@ public class IssuesServiceImpl implements IssuesService{
             String authorId = tokenProvider.extractClaim(tokenProvider.parseJwt(request))
                     .get(TokenKey.SUB_ID, String.class);
             issues.setAuthorId(UUID.fromString(authorId));
+            issues.setPosition(calculationPositionIssues(command));
 
             CompletableFuture<Issues> savedIssues = saveIssues(issues);
             if (command.getAssignMemberId() != null) {
@@ -225,6 +241,19 @@ public class IssuesServiceImpl implements IssuesService{
         } catch (InterruptedException interruptedException) {
             Thread.currentThread().interrupt();
             throw new SaveIssuesFailedException("InterruptedException: " + interruptedException.getMessage());
+        }
+    }
+
+    private int calculationPositionIssues(CreateIssuesBacklogCommand command) {
+        if (command.getPosition() <= 0) {
+            return command.getPosition();
+        } else if (command.getBoardId() != null){
+            int maxPositionSprint = issuesRepository.maxPositionByProjectIdAndBoardId(command.getProjectId(),
+                    command.getBoardId());
+            return maxPositionSprint + 1;
+        } else {
+            int maxPositionBacklog = issuesRepository.maxPositionByProjectIdAndBoardIdIsNull(command.getProjectId());
+            return maxPositionBacklog + 1;
         }
     }
 }

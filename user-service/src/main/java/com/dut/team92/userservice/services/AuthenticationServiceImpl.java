@@ -11,6 +11,7 @@ import com.dut.team92.userservice.domain.entity.TokenPair;
 import com.dut.team92.userservice.exception.InvalidAccessTokenException;
 import com.dut.team92.userservice.exception.InvalidRefreshTokenException;
 import com.dut.team92.userservice.exception.UserNotFoundException;
+import com.dut.team92.userservice.message.publisher.UserMessagePublisher;
 import com.dut.team92.userservice.proxy.OrganizationServiceProxy;
 import com.dut.team92.userservice.repository.RedisTokenRepository;
 import com.dut.team92.userservice.services.handler.TokenCreateAndSaveHandler;
@@ -30,6 +31,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -47,6 +50,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final RedisTokenRepository redisTokenRepository;
     private final TokenCreateAndUpdateHandler tokenCreateAndUpdateHandler;
     private final OrganizationServiceProxy proxy;
+    private final UserMessagePublisher userMessagePublisher;
 
     @Override
     public CreateUserResponse signup(CreateUserCommand createUserCommand) {
@@ -117,6 +121,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var response = proxy.createOrganization(createOrganizationCommand);
 
         if (response.getCode() == null) {
+            userMessagePublisher.publish(Collections.singletonList(userCreatedEvent.getUser()));
             return userDataMapper.userToCreateUserAdminOrganizationResponse(userCreatedEvent.getUser(),
                     "User saved successfully!", response);
         } else {

@@ -6,4 +6,7 @@ public class UsernameAlreadyExistsException extends CommonBadRequestException {
     public UsernameAlreadyExistsException() {
         super(400, "Username already exists!");
     }
+    public UsernameAlreadyExistsException(String username) {
+        super(400, "Username already exists with " + username);
+    }
 }

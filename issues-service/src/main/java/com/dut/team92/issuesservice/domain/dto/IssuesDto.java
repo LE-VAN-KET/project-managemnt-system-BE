@@ -51,4 +51,6 @@ public class IssuesDto {
 
     @NotNull
     private String issuesKey;
+
+    private int position;
 }

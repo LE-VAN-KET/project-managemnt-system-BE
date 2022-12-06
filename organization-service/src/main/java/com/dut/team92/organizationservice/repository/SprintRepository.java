@@ -13,7 +13,7 @@ import java.util.UUID;
 @Repository
 public interface SprintRepository extends IJpaRepository<Sprint, UUID> {
     long countByProjectId(UUID projectId);
-    @Query("SELECT MAX(position) FROM Sprint")
+    @Query("SELECT coalesce(MAX(position), 0) FROM Sprint")
     int maxPosition();
 
 }

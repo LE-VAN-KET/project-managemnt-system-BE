@@ -61,13 +61,17 @@
     </appender>
 
     <springProfile name="dev">
-        <root>
+        <logger name="org.apache.kafka"  level="warn" additivity="false">
             <appender-ref ref="logstash"/>
-        </root>
+        </logger>
 
         <logger name="com.dut.team92.memberservice" level="debug" additivity="false">
             <appender-ref ref="logstash"/>
         </logger>
+
+        <root>
+            <appender-ref ref="logstash"/>
+        </root>
     </springProfile>
 
     <springProfile name="test">

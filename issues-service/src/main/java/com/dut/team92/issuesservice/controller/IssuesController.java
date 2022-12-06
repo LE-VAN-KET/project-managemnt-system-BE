@@ -2,6 +2,7 @@ package com.dut.team92.issuesservice.controller;
 
 import com.dut.team92.issuesservice.domain.dto.IssuesDto;
 import com.dut.team92.issuesservice.domain.dto.request.CreateIssuesBacklogCommand;
+import com.dut.team92.issuesservice.domain.dto.request.MoveIssuesCommand;
 import com.dut.team92.issuesservice.services.IssuesService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,16 @@ public class IssuesController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteIssues(@PathVariable("issues_id") String issuesId) {
         issuesService.deleteIssues(UUID.fromString(issuesId));
+    }
+
+    @GetMapping
+    public List<IssuesDto> getAllIssuesInProject(@RequestParam("project_id") String projectId) {
+        return issuesService.getAllIssuesInProject(UUID.fromString(projectId));
+    }
+
+    @PostMapping("/move")
+    public void moveIssuesBacklogToBacklog(@Valid @RequestBody MoveIssuesCommand command) {
+
     }
 
 }

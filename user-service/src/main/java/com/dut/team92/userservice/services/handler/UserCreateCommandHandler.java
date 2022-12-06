@@ -64,8 +64,9 @@ public class UserCreateCommandHandler {
         }
 
         userInformation.setUser(savedUser);
-        userInformationService.create(userInformation);
-
+        UserInformation savedUserInformation = userInformationService.create(userInformation);
+        user.setUserInformation(savedUserInformation);
+        userCreatedEvent.setUser(user);
         userCreatedEvent.getUser().setId(savedUser.getId());
         return userCreatedEvent;
     }

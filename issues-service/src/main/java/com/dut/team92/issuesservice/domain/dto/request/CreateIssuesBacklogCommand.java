@@ -45,4 +45,5 @@ public class CreateIssuesBacklogCommand {
     @NotNull
     private UUID organizationId;
     private UUID boardId;
+    private int position;
 }
