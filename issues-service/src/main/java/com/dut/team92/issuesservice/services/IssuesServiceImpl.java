@@ -211,6 +211,7 @@ public class IssuesServiceImpl implements IssuesService{
             String authorId = tokenProvider.extractClaim(tokenProvider.parseJwt(request))
                     .get(TokenKey.SUB_ID, String.class);
             issues.setAuthorId(UUID.fromString(authorId));
+            issues.setPosition(calculationPositionIssues(command));
 
             CompletableFuture<Issues> savedIssues = saveIssues(issues);
             if (command.getAssignMemberId() != null) {
@@ -225,6 +226,19 @@ public class IssuesServiceImpl implements IssuesService{
         } catch (InterruptedException interruptedException) {
             Thread.currentThread().interrupt();
             throw new SaveIssuesFailedException("InterruptedException: " + interruptedException.getMessage());
+        }
+    }
+
+    private int calculationPositionIssues(CreateIssuesBacklogCommand command) {
+        if (command.getPosition() <= 0) {
+            return command.getPosition();
+        } else if (command.getBoardId() != null){
+            int maxPositionSprint = issuesRepository.maxPositionByProjectIdAndBoardId(command.getProjectId(),
+                    command.getBoardId());
+            return maxPositionSprint + 1;
+        } else {
+            int maxPositionBacklog = issuesRepository.maxPositionByProjectIdAndBoardIdIsNull(command.getProjectId());
+            return maxPositionBacklog + 1;
         }
     }
 }

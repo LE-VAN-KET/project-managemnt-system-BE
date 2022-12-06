@@ -29,7 +29,7 @@ public class MemberRequestKafkaListener implements KafkaConsumer<ListMemberReque
         log.info("{} number of member requests received with keys:{}, partitions:{} and offsets: {}",
             messages.size(), keys.toString(), partitions.toString(), offSets.toString());
         messages.forEach(message -> {
-            memberRequestMessageListener.completeAddMemberToOrganization(message.getMemberRequestModels());
+            memberRequestMessageListener.completeAddUserToOrganization(message.getMemberRequestModels());
         });
     }
 }

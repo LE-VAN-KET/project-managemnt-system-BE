@@ -6,4 +6,7 @@ public class EmailAlreadyExistsException extends CommonBadRequestException {
     public EmailAlreadyExistsException() {
         super(400, "Email already exists!");
     }
+    public EmailAlreadyExistsException(String email) {
+        super(400, "Email already exists with " + email);
+    }
 }

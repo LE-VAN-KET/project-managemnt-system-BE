@@ -1,8 +1,6 @@
-package com.dut.team92.userservice.domain.entity;
+package com.dut.team92.memberservice.domain.entity;
 
 import com.dut.team92.common.enums.UserStatus;
-import com.dut.team92.userservice.util.validator.ValidPassword;
-import com.dut.team92.userservice.util.validator.ValidUsername;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,34 +13,24 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "username")
-})
+@Table(name = "user")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
     @Column(name = "user_id", unique = true, nullable = false, columnDefinition = "BINARY(16)")
     private UUID id;
 
     @Column(length = 50)
-    @ValidUsername
     private String username;
 
-    @ValidPassword
-    private String password;
     private Boolean isOrganizerAdmin = false;
     private Boolean isSystemAdmin = false;
 
     @Enumerated(EnumType.STRING)
-    private UserStatus status;
+    private UserStatus status = UserStatus.ACTIVE;
 
     private Boolean isDelete = false;
 
@@ -52,10 +40,15 @@ public class User {
     @Column(columnDefinition = "BINARY(16)")
     private UUID organizationId;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    private UserInformation userInformation;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private Set<Members> members;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private Set<Activity> activities;
+    @Column(length = 50)
+    private String firstName;
+
+    @Column(length = 50)
+    private String lastName;
+
+    @Column(length = 50)
+    private String displayName;
 }

@@ -30,7 +30,7 @@ public class MembersRoles extends BaseDomain {
     @JoinColumn(name = "member_id", referencedColumnName = "member_id")
     private Members member;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "role_id")
     private Roles role;
 }

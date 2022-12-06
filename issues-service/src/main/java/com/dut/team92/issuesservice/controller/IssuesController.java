@@ -52,4 +52,9 @@ public class IssuesController {
         issuesService.deleteIssues(UUID.fromString(issuesId));
     }
 
+    @PostMapping("/")
+    public void moveIssuesBacklogToBacklog() {
+
+    }
+
 }

@@ -1,9 +1,9 @@
-package com.dut.team92.issuesservice.domain.dto;
+package com.dut.team92.issuesservice.domain.dto.request;
 
 import com.dut.team92.common.enums.Priority;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.dut.team92.issuesservice.domain.dto.IssuesDto;
+import com.dut.team92.issuesservice.domain.dto.IssuesStatusDto;
+import com.dut.team92.issuesservice.domain.dto.IssuesTypeDto;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -12,10 +12,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
-@Getter
-@Setter
-@NoArgsConstructor
-public class IssuesDto {
+public class IssuesRequest {
     private UUID id;
 
     @NotNull
@@ -45,12 +42,5 @@ public class IssuesDto {
     private UUID boardId;
     private Boolean isPublic;
 
-    private List<IssuesDto> children;
-
-    private IssuesTypeDto issuesTypeDto;
-
-    @NotNull
     private String issuesKey;
-
-    private int position;
 }

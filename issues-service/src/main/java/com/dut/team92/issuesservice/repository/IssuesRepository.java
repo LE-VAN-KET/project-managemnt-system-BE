@@ -13,7 +13,12 @@ import java.util.UUID;
 public interface IssuesRepository extends IJpaRepository<Issues, UUID> {
     @Query("SELECT iss FROM Issues  iss WHERE iss.boardId IS NULL AND iss.projectId = :projectId")
     List<Issues> findAllByProjectIdAndBoardIdIsNull(@Param("projectId") UUID projectId);
-    long countByProjectId(UUID projectId);
+    @Query("select coalesce(max(iss.id), 0) From Issues iss where iss.projectId = :projectId AND iss.boardId = :boardId")
+    int maxPositionByProjectIdAndBoardId(@Param("projectId") UUID projectId,
+                                          @Param("boardId") UUID boardId);
+    @Query("select coalesce(max(iss.id), 0) From Issues iss where iss.projectId = :projectId and iss.boardId is null")
+    int maxPositionByProjectIdAndBoardIdIsNull(@Param("projectId") UUID projectId);
 
     List<Issues> findAllByBoardIdIn(List<UUID> boardIds);
+    int countByProjectId(UUID projectId);
 }

@@ -25,10 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -115,13 +112,9 @@ public class UserServiceImpl implements UserService{
             Map<String, User> userMap = new HashMap<>();
             savedUsers.forEach(u -> userMap.put(u.getUsername(), u));
             List<UserInformation> userInformations = userInformationDataMapper
-                    .createMemberDtoToUserInformation(createMemberDtos)
-                    .stream().map(infor -> {
-                        infor.setUser(userMap.get(infor.getUser().getUsername()));
-                        return infor;
-                    }).collect(Collectors.toList());
+                    .createMemberDtoToUserInformation(createMemberDtos, userMap);
             userInformationRepository.saveAll(userInformations);
-            userKafkaMessagePublisher.publish(savedUsers);
+            userKafkaMessagePublisher.publish(new ArrayList<>(userMap.values()));
             return userDataMapper.userListToUserDtoList(savedUsers);
         } catch (IOException e) {
             throw new FailedReadDataFileCSV("Fail save csv data: " + e.getMessage());
@@ -130,11 +123,11 @@ public class UserServiceImpl implements UserService{
 
     private void validateUser(@Valid User user) {
         if (this.isUsernameExist(user.getUsername())) {
-            throw new UsernameAlreadyExistsException();
+            throw new UsernameAlreadyExistsException(user.getUsername());
         }
 
         if (this.isMailNotification(user.getMailNotification())) {
-            throw new EmailAlreadyExistsException();
+            throw new EmailAlreadyExistsException(user.getMailNotification());
         }
     }
 }

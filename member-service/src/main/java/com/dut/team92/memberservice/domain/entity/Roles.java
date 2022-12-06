@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -30,6 +31,6 @@ public class Roles extends BaseDomain {
     @Column(columnDefinition = "BINARY(16)")
     private UUID assignable;
 
-    @OneToOne(mappedBy = "role")
-    private MembersRoles membersRoles;
+    @OneToMany(mappedBy = "role")
+    private Set<MembersRoles> membersRoles;
 }

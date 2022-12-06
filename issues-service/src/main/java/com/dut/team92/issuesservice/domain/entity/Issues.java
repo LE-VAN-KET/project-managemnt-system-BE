@@ -71,4 +71,6 @@ public class Issues extends BaseDomain {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "issues_type_id")
     private IssuesType issuesType;
+
+    private int position;
 }
