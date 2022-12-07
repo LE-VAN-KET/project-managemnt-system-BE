@@ -17,10 +17,10 @@ public interface IssuesRepository extends IJpaRepository<Issues, UUID> {
             "inner join IssuesType iss_type on iss.issuesType.id = iss_type.id WHERE iss.boardId IS NULL " +
             "AND iss.projectId = :projectId")
     List<Issues> findAllByProjectIdAndBoardIdIsNull(@Param("projectId") UUID projectId);
-    @Query("select coalesce(max(iss.id), 0) From Issues iss where iss.projectId = :projectId AND iss.boardId = :boardId")
+    @Query("select coalesce(max(iss.position), 0) From Issues iss where iss.projectId = :projectId AND iss.boardId = :boardId")
     int maxPositionByProjectIdAndBoardId(@Param("projectId") UUID projectId,
                                           @Param("boardId") UUID boardId);
-    @Query("select coalesce(max(iss.id), 0) From Issues iss where iss.projectId = :projectId and iss.boardId is null")
+    @Query("select coalesce(max(iss.position), 0) From Issues iss where iss.projectId = :projectId and iss.boardId is null")
     int maxPositionByProjectIdAndBoardIdIsNull(@Param("projectId") UUID projectId);
 
     List<Issues> findAllByBoardIdIn(List<UUID> boardIds);
