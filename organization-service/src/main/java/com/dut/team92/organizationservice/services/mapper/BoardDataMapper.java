@@ -8,6 +8,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BoardDataMapper extends BaseMapper<Board, BoardDto> {
+
+    public BoardDataMapper() {
+    }
+
     @Override
     public Board convertToEntity(BoardDto dto, Object... args) {
         Board board = new Board();

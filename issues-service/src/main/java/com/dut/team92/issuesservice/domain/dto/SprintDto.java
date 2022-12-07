@@ -36,6 +36,7 @@ public class SprintDto {
 
     @Min(1)
     private int position;
-    private List<IssuesDto> issuesList = new ArrayList<>();
+    private List<IssuesDto> issuesList;
     private List<UUID> boardIds;
+    private List<BoardDto> boardDtoList;
 }

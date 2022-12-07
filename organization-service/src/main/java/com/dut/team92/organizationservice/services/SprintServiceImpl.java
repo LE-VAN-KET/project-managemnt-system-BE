@@ -87,11 +87,10 @@ public class SprintServiceImpl implements SprintService{
         }
     }
 
-    @Cacheable(cacheNames = "sprintsByStatusStartingOrUnStart", key = "#projectId")
     @Override
-    public List<SprintDto> getAllSprintStartingOrUnStart(UUID projectId) {
+    public List<SprintDto> getAllSprintByListStatus(UUID projectId, SprintStatus... statuses) {
         List<SprintWithBoard> sprintWithBoards = boardRepository.findAllBySprintStatusInAndProjectId(
-                Arrays.asList(SprintStatus.UNSTART, SprintStatus.STARTING), projectId);
+        Arrays.asList(statuses), projectId);
         Map<UUID, Sprint> sprintMap = new HashMap<>();
         sprintWithBoards.forEach(sprintWithBoard -> {
             UUID sprintId = sprintWithBoard.getSprint().getId();
@@ -99,7 +98,7 @@ public class SprintServiceImpl implements SprintService{
                 sprintMap.put(sprintId, sprintWithBoard.getSprint());
             }
             Sprint sprint = sprintMap.get(sprintId);
-            sprint.getBoardIds().add(sprintWithBoard.getBoardId());
+            sprint.getBoardList().add(sprintWithBoard.getBoard());
         });
 
         return sprintDataMapper.convertToDtoList(sprintMap.values());

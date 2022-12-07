@@ -6,5 +6,5 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.UUID;
 
 public interface BacklogService {
-    BacklogDto getAllIssuesInBacklogAndInSprintStartingOrUnStart(UUID projectId) throws JsonProcessingException;
+    BacklogDto getAllIssuesInBacklogAndInSprintStartingOrUnStart(UUID projectId);
 }

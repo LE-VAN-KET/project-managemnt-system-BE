@@ -48,7 +48,7 @@ public class Issues extends BaseDomain {
     @Enumerated(EnumType.ORDINAL)
     private Priority priority;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "issues_status_id")
     private IssuesStatus issuesStatus;
 
@@ -76,21 +76,14 @@ public class Issues extends BaseDomain {
 
     private int position;
 
-    public Issues(UUID id, String name, String issuesKey, String description, UUID projectId, UUID trackerId, Calendar startDate, Calendar dueDate, BigDecimal estimatedHours, Priority priority, IssuesStatus issuesStatus, UUID authorId, Integer doneRatio, UUID tagId, UUID boardId, Boolean isPublic, IssuesType issuesType, int position) {
+    public Issues(UUID id, String name, String issuesKey, UUID projectId, Priority priority, IssuesStatus issuesStatus, UUID authorId, UUID boardId, Boolean isPublic, IssuesType issuesType, int position) {
         this.id = id;
         this.name = name;
         this.issuesKey = issuesKey;
-        this.description = description;
         this.projectId = projectId;
-        this.trackerId = trackerId;
-        this.startDate = startDate;
-        this.dueDate = dueDate;
-        this.estimatedHours = estimatedHours;
         this.priority = priority;
         this.issuesStatus = issuesStatus;
         this.authorId = authorId;
-        this.doneRatio = doneRatio;
-        this.tagId = tagId;
         this.boardId = boardId;
         this.isPublic = isPublic;
         this.issuesType = issuesType;
