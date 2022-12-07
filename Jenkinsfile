@@ -194,7 +194,7 @@ pipeline{
                 echo "========Build And Push image to test environment========"
                 script {
                     sh "cd infrastructure/docker-compose && docker-compose -f common.yml -f service.yml build"
-                    sh "docker login -u vanket -p dckr_pat_V1ZSZ0lJu4IESrxEJz_45ClFc60"
+                    sh "docker login -u vanket -p dckr_pat_UmbJKWkJzdr_xJ02OpXAEamaUrY"
                     sh "docker tag user-service:v1.0.0 vanket/user-service:v1.0.0"
                     sh "docker tag member-service:v1.0.0 vanket/member-service:v1.0.0"
                     sh "docker tag organization-service:v1.0.0 vanket/organization-service:v1.0.0"
