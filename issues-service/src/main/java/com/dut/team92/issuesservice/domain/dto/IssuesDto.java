@@ -1,6 +1,7 @@
 package com.dut.team92.issuesservice.domain.dto;
 
 import com.dut.team92.common.enums.Priority;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class IssuesDto {
     private UUID id;
 

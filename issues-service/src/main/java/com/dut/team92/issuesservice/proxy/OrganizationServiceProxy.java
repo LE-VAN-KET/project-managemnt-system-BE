@@ -33,8 +33,13 @@ public interface OrganizationServiceProxy {
                          String authorizationHeader);
 
     @GetMapping("/api/sprints/backlog")
-    public Object getAllSprintStaringOrUnStart(@RequestParam(name = "project_id") String projectId,
+    Object getAllSprintStaringOrUnStart(@RequestParam(name = "project_id") String projectId,
                                                @RequestHeader(value = "Authorization", required = true)
                                                String authorizationHeader);
+
+    @GetMapping("/api/sprints/boards")
+    Object getAllSprintRunning(@RequestParam(name = "project_id") String projectId,
+                               @RequestHeader(value = "Authorization", required = true)
+                               String authorizationHeader);
 }
 

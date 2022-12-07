@@ -11,10 +11,11 @@ import java.util.UUID;
 
 @Repository
 public interface IssuesRepository extends IJpaRepository<Issues, UUID> {
-    @Query("SELECT new Issues(iss.id, iss.name, iss.issuesKey, iss.description, iss.projectId, iss.trackerId," +
-            " iss.startDate, iss.dueDate, iss.estimatedHours, iss.priority, iss.issuesStatus, iss.authorId," +
-            " iss.doneRatio, iss.tagId, iss.boardId, iss.isPublic, iss_type, iss.position) from Issues iss " +
-            "inner join IssuesType iss_type on iss.issuesType.id = iss_type.id WHERE iss.boardId IS NULL " +
+
+    @Query("SELECT new Issues(iss.id, iss.name, iss.issuesKey, iss.projectId, iss.priority, iss_status, " +
+            "iss.authorId, iss.boardId, iss.isPublic, iss_type, iss.position)  from Issues iss inner join " +
+            "IssuesType iss_type on iss.issuesType.id = iss_type.id inner join IssuesStatus as iss_status " +
+            "on iss.issuesStatus.id = iss_status.id  WHERE iss.boardId IS NULL " +
             "AND iss.projectId = :projectId")
     List<Issues> findAllByProjectIdAndBoardIdIsNull(@Param("projectId") UUID projectId);
     @Query("select coalesce(max(iss.position), 0) From Issues iss where iss.projectId = :projectId AND iss.boardId = :boardId")
@@ -23,12 +24,16 @@ public interface IssuesRepository extends IJpaRepository<Issues, UUID> {
     @Query("select coalesce(max(iss.position), 0) From Issues iss where iss.projectId = :projectId and iss.boardId is null")
     int maxPositionByProjectIdAndBoardIdIsNull(@Param("projectId") UUID projectId);
 
-    List<Issues> findAllByBoardIdIn(List<UUID> boardIds);
+    @Query("SELECT new Issues(iss.id, iss.name, iss.issuesKey, iss.projectId, iss.priority, iss_status, " +
+            "iss.authorId, iss.boardId, iss.isPublic, iss_type, iss.position) from Issues iss inner join " +
+            "IssuesType iss_type on iss.issuesType.id = iss_type.id inner join IssuesStatus as iss_status " +
+            "on iss.issuesStatus.id = iss_status.id where iss.boardId in (:boardIds)")
+    List<Issues> findAllByBoardIdIn(@Param("boardIds") List<UUID> boardIds);
     int countByProjectId(UUID projectId);
 
-    @Query("select new Issues(iss.id, iss.name, iss.issuesKey, iss.description, iss.projectId, iss.trackerId," +
-            " iss.startDate, iss.dueDate, iss.estimatedHours, iss.priority, iss.issuesStatus, iss.authorId," +
-            " iss.doneRatio, iss.tagId, iss.boardId, iss.isPublic, iss_type, iss.position) from Issues iss " +
-            "inner join IssuesType iss_type on iss.issuesType.id = iss_type.id where iss.projectId = ?1")
+    @Query("SELECT new Issues(iss.id, iss.name, iss.issuesKey, iss.projectId, iss.priority, iss.issuesStatus, " +
+            "iss.authorId, iss.boardId, iss.isPublic, iss_type, iss.position) from Issues iss inner join " +
+            "IssuesType iss_type on iss.issuesType.id = iss_type.id inner join IssuesStatus as iss_status " +
+            "on iss.issuesStatus.id = iss_status.id where iss.projectId = ?1")
     List<Issues> findAllByProjectId(UUID projectId);
 }

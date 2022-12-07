@@ -33,5 +33,5 @@ public class Sprint {
     private int position;
 
     @Transient
-    private List<UUID> boardIds = new ArrayList<>();
+    private List<Board> boardList = new ArrayList<>();
 }

@@ -3,7 +3,9 @@ package com.dut.team92.issuesservice.services;
 import com.dut.team92.common.enums.IssuesAssignStatus;
 import com.dut.team92.common.security.TokenKey;
 import com.dut.team92.common.security.TokenProvider;
+import com.dut.team92.issuesservice.domain.dto.BoardDto;
 import com.dut.team92.issuesservice.domain.dto.IssuesDto;
+import com.dut.team92.issuesservice.domain.dto.SprintDto;
 import com.dut.team92.issuesservice.domain.dto.request.CreateIssuesBacklogCommand;
 import com.dut.team92.issuesservice.domain.dto.request.IssuesMovedRequest;
 import com.dut.team92.issuesservice.domain.dto.request.MoveIssuesCommand;
@@ -19,6 +21,9 @@ import com.dut.team92.issuesservice.repository.IssuesAssignRepository;
 import com.dut.team92.issuesservice.repository.IssuesRepository;
 import com.dut.team92.issuesservice.repository.IssuesStatusRepository;
 import com.dut.team92.issuesservice.services.mapper.IssuesMapper;
+import com.dut.team92.issuesservice.services.mapper.ObjectDataMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -52,6 +57,7 @@ public class IssuesServiceImpl implements IssuesService{
     private final IssuesStatusRepository issuesStatusRepository;
     private final TokenProvider tokenProvider;
     private final IssuesAssignRepository issuesAssignRepository;
+    private final ObjectDataMapper objectDataMapper;
 
     @Autowired
     private HttpServletRequest request;
@@ -149,6 +155,41 @@ public class IssuesServiceImpl implements IssuesService{
             issuesRepository.saveAll(issuesListUpdate);
         }
         return MoveIssuesResponse.builder().code(200).message("You are moved issues successfully!").build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "issues_boards", key = "#projectId", unless = "#result.size() == 0")
+    public List<SprintDto> getAllIssuesInBoardOfSprintStatusRunningByProjectId(UUID projectId) {
+        Object response = organizationServiceProxy.getAllSprintRunning(projectId.toString(),
+                request.getHeader(HttpHeaders.AUTHORIZATION));
+        List<SprintDto> sprintDtos = objectDataMapper.convertObjectToSprintDto(response);
+        Map<UUID, BoardDto> boardDtoMap = new HashMap<>();
+        Map<UUID, SprintDto> sprintDtoMap = new HashMap<>();
+        List<UUID> boardIds = new ArrayList<>();
+        sprintDtos.forEach(sprint -> {
+            sprintDtoMap.put(sprint.getId(), sprint);
+            List<UUID> boardIdListInSprint = sprint.getBoardDtoList().stream().map(BoardDto::getId)
+                    .collect(Collectors.toList());
+            boardIds.addAll(boardIdListInSprint);
+            sprint.getBoardDtoList().forEach(board -> boardDtoMap.put(board.getId(), board));
+        });
+        // get all issues in list boardId
+        // after that, add issues to board dto
+        getAllIssuesByBoardIdIn(boardIds).forEach(issuesDto -> {
+            List<IssuesDto> issuesDtoList = boardDtoMap.get(issuesDto.getBoardId()).getIssuesDtoList();
+            if (Objects.isNull(issuesDtoList)) {
+                boardDtoMap.get(issuesDto.getBoardId()).setIssuesDtoList(new ArrayList<>());
+            }
+            boardDtoMap.get(issuesDto.getBoardId()).getIssuesDtoList().add(issuesDto);
+        });
+
+        boardDtoMap.values().forEach(board -> {
+            sprintDtoMap.get(board.getSprintId()).getBoardDtoList().stream()
+                    .filter(boardDto -> boardDto.getId().equals(board.getId()))
+                    .findFirst().ifPresent(b -> b.setIssuesDtoList(board.getIssuesDtoList()));
+        });
+        return new ArrayList<>(sprintDtoMap.values());
     }
 
     private List<UUID> getListIssuesIdBacklogChange(MoveIssuesCommand command,

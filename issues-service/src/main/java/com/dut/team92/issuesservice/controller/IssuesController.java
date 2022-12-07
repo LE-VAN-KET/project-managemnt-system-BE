@@ -1,6 +1,7 @@
 package com.dut.team92.issuesservice.controller;
 
 import com.dut.team92.issuesservice.domain.dto.IssuesDto;
+import com.dut.team92.issuesservice.domain.dto.SprintDto;
 import com.dut.team92.issuesservice.domain.dto.request.CreateIssuesBacklogCommand;
 import com.dut.team92.issuesservice.domain.dto.request.MoveIssuesCommand;
 import com.dut.team92.issuesservice.domain.dto.response.MoveIssuesResponse;
@@ -64,6 +65,11 @@ public class IssuesController {
     @ResponseStatus(HttpStatus.OK)
     public MoveIssuesResponse moveIssuesBacklogToBacklog(@Valid @RequestBody MoveIssuesCommand command) {
         return issuesService.moveIssues(command);
+    }
+
+    @GetMapping("/boards")
+    public List<SprintDto> getAllIssuesInBoardAndSprintStatusRunning(@RequestParam("project_id") String projectId) {
+        return issuesService.getAllIssuesInBoardOfSprintStatusRunningByProjectId(UUID.fromString(projectId));
     }
 
 }

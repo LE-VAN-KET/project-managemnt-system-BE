@@ -34,5 +34,5 @@ public class SprintDto {
 
     @Min(1)
     private int position;
-    private List<UUID> boardIds;
+    private List<BoardDto> boardDtoList;
 }

@@ -16,10 +16,7 @@ import java.util.UUID;
 public interface BoardRepository extends IJpaRepository<Board, UUID> {
     List<Board> findALlBySprintId(UUID sprintId);
 
-    @Query("SELECT b.id, b.sprintId, b.name From Board b where b.sprintId IN (:sprintIds)")
-    List<Board> findAllBySprintIdIn(@Param("sprintIds")List<UUID> sprintIds);
-
-    @Query("select b.id as boardId, s as sprint From Board b INNER JOIN Sprint s ON b.sprintId = s.id " +
+    @Query("select b as board, s as sprint From Board b INNER JOIN Sprint s ON b.sprintId = s.id " +
             "WHERE s.projectId = :projectId and s.status IN (:sprintStatus)")
     List<SprintWithBoard> findAllBySprintStatusInAndProjectId(@Param(("sprintStatus")) List<SprintStatus> status,
                                                         @Param("projectId") UUID projectId);
