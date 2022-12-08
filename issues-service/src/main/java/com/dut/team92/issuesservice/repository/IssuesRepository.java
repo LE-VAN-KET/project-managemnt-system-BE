@@ -29,7 +29,10 @@ public interface IssuesRepository extends IJpaRepository<Issues, UUID> {
             "IssuesType iss_type on iss.issuesType.id = iss_type.id inner join IssuesStatus as iss_status " +
             "on iss.issuesStatus.id = iss_status.id where iss.boardId in (:boardIds)")
     List<Issues> findAllByBoardIdIn(@Param("boardIds") List<UUID> boardIds);
-    int countByProjectId(UUID projectId);
+
+    @Query("select coalesce(max(cast(trim(substring(iss.issuesKey, locate('-', iss.issuesKey) + 1)) as int) ), 0) " +
+            "from Issues iss")
+    int maxIssuesKeyByProjectId(UUID projectId);
 
     @Query("SELECT new Issues(iss.id, iss.name, iss.issuesKey, iss.projectId, iss.priority, iss.issuesStatus, " +
             "iss.authorId, iss.boardId, iss.isPublic, iss_type, iss.position) from Issues iss inner join " +

@@ -69,7 +69,7 @@ public class IssuesServiceImpl implements IssuesService{
         Issues issues = issuesMapper.createIssuesBacklogCommandToIssues(command);
         UUID issuesId = UUID.randomUUID();
         issues.setId(issuesId);
-        long countIssuesOfProject = issuesRepository.countByProjectId(command.getProjectId());
+        long countIssuesOfProject = issuesRepository.maxIssuesKeyByProjectId(command.getProjectId());
         ProjectKeyResponse projectKey = organizationServiceProxy.getProjectKey(
                 command.getProjectId().toString(),
                 command.getOrganizationId().toString(),
@@ -152,7 +152,7 @@ public class IssuesServiceImpl implements IssuesService{
                 return iss;
             }).collect(Collectors.toList());
 
-            issuesRepository.saveAll(issuesListUpdate);
+            issuesRepository.saveAllAndFlush(issuesListUpdate);
         }
         return MoveIssuesResponse.builder().code(200).message("You are moved issues successfully!").build();
     }
