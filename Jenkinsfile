@@ -1,5 +1,8 @@
 pipeline{
     agent any
+    environment {
+        dockerhub=credentials('dockerhub_vanket')
+    }
 
     stages{
         stage('Prepare workspace') {
@@ -194,7 +197,7 @@ pipeline{
                 echo "========Build And Push image to test environment========"
                 script {
                     sh "cd infrastructure/docker-compose && docker-compose -f common.yml -f service.yml build"
-                    sh "docker login -u vanket -p dckr_pat_UmbJKWkJzdr_xJ02OpXAEamaUrY"
+                    sh "echo $dockerhub_PSW | docker login -u $dockerhub_USR --password-stdin"
                     sh "docker tag user-service:v1.0.0 vanket/user-service:v1.0.0"
                     sh "docker tag member-service:v1.0.0 vanket/member-service:v1.0.0"
                     sh "docker tag organization-service:v1.0.0 vanket/organization-service:v1.0.0"
