@@ -23,4 +23,5 @@ public interface UserRepository extends IJpaRepository<User, UUID> {
     @Query("select u from User u where u.organizationId = ?1 and (u.username like %?2% or u.mailNotification like %?2%)")
     List<User> searchAllByUsernameOrMailNotification(UUID organizationId,
                                                      String keyword);
+
 }

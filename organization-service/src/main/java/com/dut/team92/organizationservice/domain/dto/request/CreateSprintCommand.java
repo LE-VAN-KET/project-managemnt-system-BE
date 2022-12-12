@@ -23,9 +23,9 @@ public class CreateSprintCommand {
     private String name;
     private String description;
 
-    @NotNull
-    @Min(1)
-    private int position;
+//    @NotNull
+//    @Min(1)
+//    private int position;
 
     @NotNull
     private SprintStatus status;

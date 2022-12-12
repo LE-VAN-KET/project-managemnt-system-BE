@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class UserMessagingDataMapper {
-    public List<MemberRequestModel> userToMember(List<User> users) {
+    public List<MemberRequestModel> userToMember(List<User> users, UUID organizationId) {
         return users.stream().filter(Objects::nonNull).map(u -> {
             MemberRequestModel memberRequestModel = new MemberRequestModel();
             memberRequestModel.setId(UUID.randomUUID());
@@ -23,6 +23,7 @@ public class UserMessagingDataMapper {
             memberRequestModel.setFirstName(u.getUserInformation().getFirstName());
             memberRequestModel.setLastName(u.getUserInformation().getLastName());
             memberRequestModel.setDisplayName(u.getUserInformation().getDisplayName());
+            memberRequestModel.setOrganizationId(organizationId);
             return memberRequestModel;
             }).collect(Collectors.toList());
     }

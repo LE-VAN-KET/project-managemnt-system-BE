@@ -19,13 +19,13 @@ public class BoardServiceImpl implements BoardService{
     private final BoardDataMapper boardDataMapper;
 
     @Override
-    public void createDefaultBoard(UUID sprintId) {
+    public List<Board> createDefaultBoard(UUID sprintId) {
         List<Board> boards = new ArrayList<Board>();
         boards.add(initializationBoard("TO DO", 1, sprintId));
         boards.add(initializationBoard("IN PROGRESS", 2, sprintId));
         boards.add(initializationBoard("DONE", 3, sprintId));
 
-        boardRepository.saveAll(boards);
+        return boardRepository.saveAll(boards);
     }
 
     @Override

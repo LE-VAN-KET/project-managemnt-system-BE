@@ -12,6 +12,7 @@ import lombok.var;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @Slf4j
@@ -24,30 +25,29 @@ public class UserKafkaMessagePublisher implements UserMessagePublisher {
 
 
     @Override
-    public void publish(List<User> users) {
-        log.info("Publishing create list member event for organization id: {}",
-                users.get(0).getOrganizationId());
+    public void publish(List<User> users, String key) {
+        log.info("Publishing create list member event for organization id: {}", key);
         try(ListMemberRequestModel listMemberRequestModel = new ListMemberRequestModel()) {
-            var memberRequestModels = userMessagingDataMapper.userToMember(users);
+            var memberRequestModels = userMessagingDataMapper.userToMember(users, UUID.fromString(key));
             listMemberRequestModel.setMemberRequestModels(memberRequestModels);
             var callback =
                     kafkaMessageHelper.getKafkaCallBack(userServiceConfigData.getMemberRequestTopicName(),
                         listMemberRequestModel,
-                        users.get(0).getOrganizationId().toString(),
+                        key,
                         "ListMemberRequestModel");
 
             kafkaProducer.send(
                     userServiceConfigData.getMemberRequestTopicName(),
-                    users.get(0).getOrganizationId().toString(),
+                    key,
                     listMemberRequestModel,
                     callback
                    );
             log.info("Published create list member event for organization id: {}",
-                    users.get(0).getOrganizationId());
+                    key);
         }
         catch(Exception e){
             log.error("Error publishing create list member event for organization id: {} and message is {}",
-                    users.get(0).getOrganizationId(), e.getMessage(),  e);
+                    key, e.getMessage(),  e);
         }
     }
 }

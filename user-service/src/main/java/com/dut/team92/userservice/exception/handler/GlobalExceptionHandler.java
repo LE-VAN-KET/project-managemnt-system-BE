@@ -109,4 +109,10 @@ public class GlobalExceptionHandler extends CommonExceptionHandler {
         return handleBadRequestException(exception, "OrganizationNotFoundException");
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(RoleNotFoundException.class)
+    public CommonErrorResponse handleRoleNotFoundException(RoleNotFoundException exception) {
+        return handleBadRequestException(exception, "RoleNotFoundException");
+    }
+
 }

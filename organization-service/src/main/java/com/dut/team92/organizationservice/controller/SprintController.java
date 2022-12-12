@@ -37,7 +37,7 @@ public class SprintController {
     @PutMapping("/{sprint_id}/complete")
     public void completeSprint(@PathVariable("sprint_id") String sprintId,
                                @RequestParam MoveIssuesType moveIssuesType) {
-
+        sprintService.completedSprint(UUID.fromString(sprintId), moveIssuesType);
     }
 
     @GetMapping("/backlog")

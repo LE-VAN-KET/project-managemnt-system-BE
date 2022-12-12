@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -70,14 +71,14 @@ public class UserDataMapper {
         }).collect(Collectors.toList());
     }
 
-    public List<UserDto> userListToUserDtoList(List<User> users) {
+    public List<UserDto> userListToUserDtoList(List<User> users, UUID organizationId) {
         return users.stream().map(u -> UserDto.builder()
                 .id(u.getId())
                 .username(u.getUsername())
                 .mailNotification(u.getMailNotification())
                 .status(u.getStatus())
                 .isDelete(u.getIsDelete())
-                .organizationId(u.getOrganizationId())
+                .organizationId(organizationId)
                 .build()).collect(Collectors.toList());
     }
 }

@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface UserMessagePublisher {
 //    void publish(UserCreatedEvent userCreatedEvent);
-    void publish(List<User> userList);
+    void publish(List<User> userList, String key);
 }

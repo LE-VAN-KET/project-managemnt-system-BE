@@ -1,5 +1,6 @@
 package com.dut.team92.issuesservice.services;
 
+import com.dut.team92.issuesservice.domain.dto.BoardDto;
 import com.dut.team92.issuesservice.domain.dto.IssuesDto;
 import com.dut.team92.issuesservice.domain.dto.SprintDto;
 import com.dut.team92.issuesservice.domain.dto.request.CreateIssuesBacklogCommand;
@@ -20,4 +21,6 @@ public interface IssuesService {
     List<IssuesDto> getAllIssuesInProject(UUID projectId);
     MoveIssuesResponse moveIssues(MoveIssuesCommand command);
     List<SprintDto> getAllIssuesInBoardOfSprintStatusRunningByProjectId(UUID projectId);
+    void updateIssuesToSPrint(List<BoardDto> oldBoardList, List<BoardDto> newBoardList);
+    void updateIssuesToBacklog(List<UUID> boardIdList);
 }
