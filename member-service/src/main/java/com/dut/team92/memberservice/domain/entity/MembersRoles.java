@@ -26,11 +26,15 @@ public class MembersRoles extends BaseDomain {
     @Column(name = "member_role_id", unique = true, nullable = false, columnDefinition = "BINARY(16)")
     private UUID id;
 
-    @OneToOne
-    @JoinColumn(name = "member_id", referencedColumnName = "member_id")
-    private Members member;
+//    private UUID memberId;
+//
+//    private Long roleId;
 
     @OneToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
+    @JoinColumn(name = "memberId", referencedColumnName = "member_id")
+    private Members member;
+
+    @ManyToOne
+    @JoinColumn(name = "roleId", referencedColumnName = "role_id")
     private Roles role;
 }

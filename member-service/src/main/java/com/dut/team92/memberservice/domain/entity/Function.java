@@ -47,7 +47,7 @@ public class Function extends BaseDomain {
     @Column(length = 50)
     private String endpoint;
 
-    private Boolean dependonFunction;
+    private UUID dependonFunction;
 
     private Boolean isHidden;
 
@@ -58,5 +58,9 @@ public class Function extends BaseDomain {
     @Enumerated(EnumType.STRING)
     private Methods method;
 
-    private Long groupId; // cancel constrains relationship with entity Group
+    private UUID screenId;
+
+//    @ManyToOne
+//    @JoinColumn(name = "screenId", referencedColumnName = "screen_Id")
+//    private Screens screen;
 }
