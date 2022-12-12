@@ -33,6 +33,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.context.expression.MapAccessor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -190,6 +191,23 @@ public class IssuesServiceImpl implements IssuesService{
                     .findFirst().ifPresent(b -> b.setIssuesDtoList(board.getIssuesDtoList()));
         });
         return new ArrayList<>(sprintDtoMap.values());
+    }
+    @Override
+    @Transactional
+    public void updateIssuesToSPrint(List<BoardDto> oldBoardList, List<BoardDto> newBoardList) {
+        Map<String, BoardDto> boardDtoMap = new HashMap<>();
+        oldBoardList.forEach(board -> boardDtoMap.put(board.getName(), board));
+        newBoardList.forEach(board -> {
+            if (boardDtoMap.containsKey(board.getName())) {
+                issuesRepository.updateIssuesToOtherSprint(board.getId(), boardDtoMap.get(board.getName()).getId());
+            }
+        });
+    }
+
+    @Override
+    @Transactional
+    public void updateIssuesToBacklog(List<UUID> boardIdList) {
+        issuesRepository.updateIssuesToBacklog(boardIdList);
     }
 
     private List<UUID> getListIssuesIdBacklogChange(MoveIssuesCommand command,

@@ -114,8 +114,8 @@ public class UserServiceImpl implements UserService{
             List<UserInformation> userInformations = userInformationDataMapper
                     .createMemberDtoToUserInformation(createMemberDtos, userMap);
             userInformationRepository.saveAll(userInformations);
-            userKafkaMessagePublisher.publish(new ArrayList<>(userMap.values()));
-            return userDataMapper.userListToUserDtoList(savedUsers);
+            userKafkaMessagePublisher.publish(new ArrayList<>(userMap.values()), organizationId.toString());
+            return userDataMapper.userListToUserDtoList(savedUsers, organizationId);
         } catch (IOException e) {
             throw new FailedReadDataFileCSV("Fail save csv data: " + e.getMessage());
         }

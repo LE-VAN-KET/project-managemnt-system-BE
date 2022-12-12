@@ -28,13 +28,13 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,11 +66,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     loginUserRequest.getPassword());
             Authentication authentication = authenticationManager.authenticate(authToken);
             TokenPair tokenPair = tokenCreateAndSaveHandler.createAndSaveToken(authentication);
+            List<String> roleNameList = authentication.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
             return LoginResponse.builder()
                     .accessToken(tokenPair.getAccessToken())
                     .expiresIn(tokenProperties.getAccessTokenValidityInSeconds())
                     .refreshToken(tokenPair.getRefreshToken())
                     .refreshExpiresIn(tokenProperties.getRefreshTokenValidityInSeconds())
+                    .roles(roleNameList)
                     .tokenType("Bearer").build();
         } catch (UserNotFoundException exception) {
             throw new UserNotFoundException(exception.getMessage());
@@ -114,6 +117,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     ) {
         UserCreatedEvent userCreatedEvent = userCreateCommandHandler
                 .createAdminForOrganization(createUserAdminOrganizationCommand);
+
         CreateOrganizationCommand createOrganizationCommand = convertUserCommandToCreateOrganizationCommand(
                 createUserAdminOrganizationCommand);
         createOrganizationCommand.setUserId(userCreatedEvent.getUser().getId());
@@ -121,7 +125,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var response = proxy.createOrganization(createOrganizationCommand);
 
         if (response.getCode() == null) {
-            userMessagePublisher.publish(Collections.singletonList(userCreatedEvent.getUser()));
+            userMessagePublisher.publish(Collections.singletonList(userCreatedEvent.getUser()),
+                    response.getOrganizationId().toString());
             return userDataMapper.userToCreateUserAdminOrganizationResponse(userCreatedEvent.getUser(),
                     "User saved successfully!", response);
         } else {

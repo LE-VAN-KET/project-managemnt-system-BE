@@ -2,6 +2,7 @@ package com.dut.team92.organizationservice.domain.dto;
 
 import com.dut.team92.organizationservice.domain.entity.SprintStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import javax.validation.constraints.Min;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SprintDto {
     private UUID id;
 

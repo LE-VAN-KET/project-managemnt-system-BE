@@ -33,5 +33,9 @@ public class GlobalHandlerException extends CommonExceptionHandler {
         return handleBadRequestException(ex, "SprintNotFoundException");
     }
 
+    @ExceptionHandler(CompleteSprintException.class)
+    public CommonErrorResponse handleCompleteSprintException(CompleteSprintException ex) {
+        return handleBadRequestException(ex, "CompleteSprintException");
+    }
 
 }

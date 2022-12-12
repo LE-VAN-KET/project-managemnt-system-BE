@@ -2,7 +2,9 @@ package com.dut.team92.issuesservice.repository;
 
 import com.dut.team92.common.repository.IJpaRepository;
 import com.dut.team92.issuesservice.domain.entity.Issues;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -39,4 +41,12 @@ public interface IssuesRepository extends IJpaRepository<Issues, UUID> {
             "IssuesType iss_type on iss.issuesType.id = iss_type.id inner join IssuesStatus as iss_status " +
             "on iss.issuesStatus.id = iss_status.id where iss.projectId = ?1")
     List<Issues> findAllByProjectId(UUID projectId);
+
+    @Modifying
+    @Query("update Issues iss set iss.boardId = :newBoardId where iss.boardId = :oldBoardId")
+    void updateIssuesToOtherSprint(@Param("newBoardId") UUID newBoardId, @Param("oldBoardId") UUID oldBoardId);
+
+    @Modifying
+    @Query("update Issues iss set iss.boardId = NULL where iss.boardId in (:boardIdList)")
+    void updateIssuesToBacklog(@Param("boardIdList") List<UUID> boardIdList);
 }
