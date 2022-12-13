@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -30,13 +31,13 @@ public class UserInformationDataMapper {
         return userInformation;
     }
 
-    public List<UserInformation> createMemberDtoToUserInformation(List<CreateMemberDto> createMemberDtoList){
+    public List<UserInformation> createMemberDtoToUserInformation(List<CreateMemberDto> createMemberDtoList,
+                                                                  Map<String, User> userMap){
         return createMemberDtoList.stream().filter(Objects::nonNull).map(m -> {
             UserInformation userInformation = new UserInformation();
             BeanUtils.copyProperties(m, userInformation);
-            User user = new User();
-            user.setUsername(m.getUsername().trim());
-            userInformation.setUser(user);
+            userInformation.setUser(userMap.get(m.getUsername()));
+            userMap.get(m.getUsername()).setUserInformation(userInformation);
             return userInformation;
         }).collect(Collectors.toList());
     }

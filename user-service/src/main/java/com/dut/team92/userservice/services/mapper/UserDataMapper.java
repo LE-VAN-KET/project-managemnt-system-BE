@@ -9,7 +9,6 @@ import com.dut.team92.userservice.domain.dto.response.CreateOrganizationResponse
 import com.dut.team92.userservice.domain.dto.response.CreateUserAdminOrganizationResponse;
 import com.dut.team92.userservice.domain.dto.response.CreateUserResponse;
 import com.dut.team92.userservice.domain.entity.User;
-import com.dut.team92.userservice.domain.entity.UserInformation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -72,14 +71,14 @@ public class UserDataMapper {
         }).collect(Collectors.toList());
     }
 
-    public List<UserDto> userListToUserDtoList(List<User> users) {
+    public List<UserDto> userListToUserDtoList(List<User> users, UUID organizationId) {
         return users.stream().map(u -> UserDto.builder()
                 .id(u.getId())
                 .username(u.getUsername())
                 .mailNotification(u.getMailNotification())
                 .status(u.getStatus())
                 .isDelete(u.getIsDelete())
-                .organizationId(u.getOrganizationId())
+                .organizationId(organizationId)
                 .build()).collect(Collectors.toList());
     }
 }

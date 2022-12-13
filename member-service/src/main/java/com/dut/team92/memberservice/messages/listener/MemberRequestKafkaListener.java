@@ -5,7 +5,6 @@ import com.dut.team92.kafka.model.ListMemberRequestModel;
 import com.dut.team92.memberservice.messages.listener.services.MemberRequestMessageListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
@@ -30,7 +29,7 @@ public class MemberRequestKafkaListener implements KafkaConsumer<ListMemberReque
         log.info("{} number of member requests received with keys:{}, partitions:{} and offsets: {}",
             messages.size(), keys.toString(), partitions.toString(), offSets.toString());
         messages.forEach(message -> {
-            memberRequestMessageListener.completeAddMemberToOrganization(message.getMemberRequestModels());
+            memberRequestMessageListener.completeAddUserToOrganization(message.getMemberRequestModels());
         });
     }
 }

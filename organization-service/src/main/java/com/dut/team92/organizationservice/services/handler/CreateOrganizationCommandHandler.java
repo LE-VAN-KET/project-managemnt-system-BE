@@ -4,7 +4,6 @@ import com.dut.team92.organizationservice.domain.dto.request.CreateOrganizationC
 import com.dut.team92.organizationservice.domain.entity.Organization;
 import com.dut.team92.organizationservice.exception.OrganizationNameExisted;
 import com.dut.team92.organizationservice.repository.OrganizationRepository;
-import com.dut.team92.organizationservice.services.OrganizationService;
 import com.dut.team92.organizationservice.services.mapper.OrganizationDataMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

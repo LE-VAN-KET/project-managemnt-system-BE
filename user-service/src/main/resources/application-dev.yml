@@ -28,7 +28,16 @@ spring:
         connection-pool-size: 4
         connection-minimum-idle-size: 2
         token-prefix: project-management:token
-        token-time-to-live: 1800
+        token-time-to-live: 7200
+#    zipkin:
+#        base-url: http://146.190.105.184:9411
+#        sender:
+#            type: web
+#        service:
+#            name: user-service
+#    sleuth:
+#        sampler:
+#            probability: 1.0
 
 
 keystore:
@@ -54,12 +63,42 @@ management:
         health:
             show-details: always
 
+feign:
+    circuitbreaker:
+        enabled: true
+
+#Resilience4j Properties
+resilience4j:
+    circuitbreaker:
+        instances:
+            organization:
+                register-health-indicator: true
+                event-consumer-buffer-size: 10
+                sliding-window-type: count_based
+                sliding-window-size: 5
+                failure-rate-threshold: 50
+                wait-duration-in-open-state: 5
+                permitted-number-of-calls-in-half-open-state: 3
+                automatic-transition-from-open-to-half-open-enabled: true
+    timelimiter:
+        instances:
+            organization:
+                timeout-duration:
+                    3s
+    retry:
+        instances:
+            organization:
+                max-attempts: 2
+                wait-duration: 3s
 app:
     feign:
         config:
             organization-client:
                 name: organization-service
                 url: http://${ORGANIZATION_HOST:localhost}:8186
+            member-client:
+                name: member-service
+                url: http://${MEMBER_HOST:localhost}:8185
 
 # Config kafka
 kafka-config:

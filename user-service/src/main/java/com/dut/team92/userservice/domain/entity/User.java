@@ -38,19 +38,19 @@ public class User {
 
     @ValidPassword
     private String password;
-    private Boolean isOrganizerAdmin;
-    private Boolean isSystemAdmin;
+    private Boolean isOrganizerAdmin = false;
+    private Boolean isSystemAdmin = false;
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    private Boolean isDelete;
+    private Boolean isDelete = false;
 
     @Email
     private String mailNotification;
 
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID organizationId;
+//    @Column(columnDefinition = "BINARY(16)")
+//    private UUID organizationId;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn

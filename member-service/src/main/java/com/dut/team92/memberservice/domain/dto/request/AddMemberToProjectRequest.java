@@ -17,5 +17,5 @@ public class AddMemberToProjectRequest {
     private UUID projectId;
 
     @NotNull
-    List<UUID> memberIds = new ArrayList<>();
+    private String usernames;
 }

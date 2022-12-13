@@ -11,7 +11,7 @@
         <param name="Encoding" value="UTF-8"/>
         <destination>${host_port_logstash:-localhost:5000}</destination>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <customFields>{"app_name":"user-service", "app_port": "${port}"}</customFields>
+            <customFields>{"app_name":"member-service", "app_port": "${port}"}</customFields>
             <providers>
                 <pattern>
                     <pattern>
@@ -61,13 +61,17 @@
     </appender>
 
     <springProfile name="dev">
-        <root>
+        <logger name="org.apache.kafka"  level="warn" additivity="false">
             <appender-ref ref="logstash"/>
-        </root>
+        </logger>
 
         <logger name="com.dut.team92.memberservice" level="debug" additivity="false">
             <appender-ref ref="logstash"/>
         </logger>
+
+        <root>
+            <appender-ref ref="logstash"/>
+        </root>
     </springProfile>
 
     <springProfile name="test">

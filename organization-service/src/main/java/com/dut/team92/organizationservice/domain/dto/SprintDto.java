@@ -2,13 +2,13 @@ package com.dut.team92.organizationservice.domain.dto;
 
 import com.dut.team92.organizationservice.domain.entity.SprintStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.time.OffsetDateTime;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -16,6 +16,7 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SprintDto {
     private UUID id;
 
@@ -35,4 +36,5 @@ public class SprintDto {
 
     @Min(1)
     private int position;
+    private List<BoardDto> boardDtoList;
 }

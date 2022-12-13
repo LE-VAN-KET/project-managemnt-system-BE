@@ -2,7 +2,6 @@ package com.dut.team92.userservice.services;
 
 import com.dut.team92.common.enums.UserStatus;
 import com.dut.team92.userservice.domain.dto.UserDto;
-import com.dut.team92.userservice.domain.dto.event.UserCreatedEvent;
 import com.dut.team92.userservice.domain.dto.request.CreateMemberDto;
 import com.dut.team92.userservice.domain.dto.response.CheckOrganizationExistResponse;
 import com.dut.team92.userservice.domain.entity.User;
@@ -15,11 +14,9 @@ import com.dut.team92.userservice.message.publisher.UserKafkaMessagePublisher;
 import com.dut.team92.userservice.proxy.OrganizationServiceProxy;
 import com.dut.team92.userservice.repository.UserInformationRepository;
 import com.dut.team92.userservice.repository.UserRepository;
-import com.dut.team92.userservice.services.handler.UserCreateCommandHandler;
 import com.dut.team92.userservice.services.mapper.UserDataMapper;
 import com.dut.team92.userservice.services.mapper.UserInformationDataMapper;
 import com.dut.team92.userservice.util.CSVHelper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,12 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -120,14 +112,10 @@ public class UserServiceImpl implements UserService{
             Map<String, User> userMap = new HashMap<>();
             savedUsers.forEach(u -> userMap.put(u.getUsername(), u));
             List<UserInformation> userInformations = userInformationDataMapper
-                    .createMemberDtoToUserInformation(createMemberDtos)
-                    .stream().map(infor -> {
-                        infor.setUser(userMap.get(infor.getUser().getUsername()));
-                        return infor;
-                    }).collect(Collectors.toList());
+                    .createMemberDtoToUserInformation(createMemberDtos, userMap);
             userInformationRepository.saveAll(userInformations);
-            userKafkaMessagePublisher.publish(savedUsers);
-            return userDataMapper.userListToUserDtoList(savedUsers);
+            userKafkaMessagePublisher.publish(new ArrayList<>(userMap.values()), organizationId.toString());
+            return userDataMapper.userListToUserDtoList(savedUsers, organizationId);
         } catch (IOException e) {
             throw new FailedReadDataFileCSV("Fail save csv data: " + e.getMessage());
         }
@@ -135,11 +123,11 @@ public class UserServiceImpl implements UserService{
 
     private void validateUser(@Valid User user) {
         if (this.isUsernameExist(user.getUsername())) {
-            throw new UsernameAlreadyExistsException();
+            throw new UsernameAlreadyExistsException(user.getUsername());
         }
 
         if (this.isMailNotification(user.getMailNotification())) {
-            throw new EmailAlreadyExistsException();
+            throw new EmailAlreadyExistsException(user.getMailNotification());
         }
     }
 }

@@ -14,4 +14,8 @@ public class UserCreatedEvent {
         this.user = user;
         this.createAt = createAt;
     }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

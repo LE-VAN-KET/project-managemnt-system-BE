@@ -1,6 +1,7 @@
 package com.dut.team92.memberservice.services;
 
 
+import com.dut.team92.memberservice.domain.dto.request.permission.AddUpdateRoleRequest;
 import com.dut.team92.memberservice.domain.dto.request.permission.RolesPermissionDto;
 import com.dut.team92.memberservice.domain.dto.response.Permission.GroupsOfScreenResponse;
 import com.dut.team92.memberservice.domain.dto.response.Permission.RolesResponse;
@@ -16,5 +17,7 @@ public interface PermissionService {
     List<GroupsOfScreenResponse> getListPermission(Long roleId);
 
     /// save permission receive from client and return status of database change
-    boolean savePermission(RolesPermissionDto data);
+    boolean savePermission(long role_id,RolesPermissionDto data);
+    boolean addNewRoles(AddUpdateRoleRequest data);
+    boolean updateRoles(long roleId,AddUpdateRoleRequest data);
 }

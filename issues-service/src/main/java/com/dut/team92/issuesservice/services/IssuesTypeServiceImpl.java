@@ -6,6 +6,8 @@ import com.dut.team92.issuesservice.exception.IssuesTypeNotFoundException;
 import com.dut.team92.issuesservice.repository.IssuesTypeRepository;
 import com.dut.team92.issuesservice.services.mapper.IssuesTypeMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +17,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "issuesTypeCache")
 public class IssuesTypeServiceImpl implements IssuesTypeService {
 
     private final IssuesTypeRepository issuesTypeRepository;
@@ -48,6 +51,7 @@ public class IssuesTypeServiceImpl implements IssuesTypeService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "issues_type_organization", key = "#organizationId")
     public List<IssuesTypeDto> getAllIssuesTypeByOrganizationId(UUID organizationId) {
         List<IssuesType> issuesTypes = issuesTypeRepository.findAllByOrganizationIdOrSystem(organizationId);
         return issuesTypes.isEmpty() ? Collections.emptyList()
@@ -55,6 +59,7 @@ public class IssuesTypeServiceImpl implements IssuesTypeService {
     }
 
     @Override
+    @Cacheable(cacheNames = "single_issues_type", key = "#organizationId")
     public IssuesTypeDto getOneIssuesTypeByNameAndOrganizationId(String name, UUID organizationId) {
         IssuesType issuesType = issuesTypeRepository.findByOrganizationIdOrSystem(organizationId, name).orElseThrow(() ->
                 new IssuesTypeNotFoundException("Issues Type not found with name = " + name));

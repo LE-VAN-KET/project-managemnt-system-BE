@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -38,10 +37,13 @@ public class Permissions {
     @Transient
     private Function function;
 
-    public Permissions(UUID id, UUID functionId, boolean enable, Function function) {
+    private UUID screenId;
+
+    public Permissions(UUID id, UUID functionId, boolean enable, Function function, UUID screenId) {
         this.id = id;
         this.functionId = functionId;
         this.enable = enable;
         this.function = function;
+        this.screenId = screenId;
     }
 }

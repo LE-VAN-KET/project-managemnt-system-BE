@@ -9,6 +9,5 @@ import java.util.UUID;
 @Getter
 @Setter
 public class RolesPermissionDto {
-    private UUID rolesId;
     private List<PermissionDto> permissions;
 }

@@ -2,6 +2,7 @@ package com.dut.team92.userservice.message.mapper;
 
 import com.dut.team92.kafka.model.MemberRequestModel;
 import com.dut.team92.userservice.domain.entity.User;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,14 +12,18 @@ import java.util.stream.Collectors;
 
 @Component
 public class UserMessagingDataMapper {
-    public List<MemberRequestModel> userToMember(List<User> users) {
+    public List<MemberRequestModel> userToMember(List<User> users, UUID organizationId) {
         return users.stream().filter(Objects::nonNull).map(u -> {
             MemberRequestModel memberRequestModel = new MemberRequestModel();
             memberRequestModel.setId(UUID.randomUUID());
             memberRequestModel.setSagaId(UUID.randomUUID());
+            BeanUtils.copyProperties(u, memberRequestModel, "id");
             memberRequestModel.setUserId(u.getId());
-            memberRequestModel.setMailNotification(u.getMailNotification());
-            memberRequestModel.setOrganizationId(u.getOrganizationId());
+            memberRequestModel.setStatus(u.getStatus().name());
+            memberRequestModel.setFirstName(u.getUserInformation().getFirstName());
+            memberRequestModel.setLastName(u.getUserInformation().getLastName());
+            memberRequestModel.setDisplayName(u.getUserInformation().getDisplayName());
+            memberRequestModel.setOrganizationId(organizationId);
             return memberRequestModel;
             }).collect(Collectors.toList());
     }

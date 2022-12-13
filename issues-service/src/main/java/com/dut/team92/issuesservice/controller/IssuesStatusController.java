@@ -1,6 +1,5 @@
 package com.dut.team92.issuesservice.controller;
 
-import com.dut.team92.common.enums.Color;
 import com.dut.team92.issuesservice.domain.dto.IssuesStatusDto;
 import com.dut.team92.issuesservice.services.IssuesStatusService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

@@ -58,8 +58,6 @@ public class Function extends BaseDomain {
     @Enumerated(EnumType.STRING)
     private Methods method;
 
-    private UUID screenId;
-
 //    @ManyToOne
 //    @JoinColumn(name = "screenId", referencedColumnName = "screen_Id")
 //    private Screens screen;

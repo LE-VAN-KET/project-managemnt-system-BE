@@ -1,14 +1,11 @@
 pipeline{
     agent any
+    environment {
+        dockerhub=credentials('dockerhub_vanket')
+    }
 
     stages{
         stage('Prepare workspace') {
-            agent {
-                docker {
-                    image 'maven:3-alpine'
-                    args '-v /root/.m2:/root/.m2'
-                }
-            }
             steps {
                 echo 'Prepare workspace'
                 // Clean workspace
@@ -200,7 +197,7 @@ pipeline{
                 echo "========Build And Push image to test environment========"
                 script {
                     sh "cd infrastructure/docker-compose && docker-compose -f common.yml -f service.yml build"
-                    sh "docker login -u vanket -p dckr_pat_V1ZSZ0lJu4IESrxEJz_45ClFc60"
+                    sh "echo $dockerhub_PSW | docker login -u $dockerhub_USR --password-stdin"
                     sh "docker tag user-service:v1.0.0 vanket/user-service:v1.0.0"
                     sh "docker tag member-service:v1.0.0 vanket/member-service:v1.0.0"
                     sh "docker tag organization-service:v1.0.0 vanket/organization-service:v1.0.0"
@@ -218,17 +215,15 @@ pipeline{
 
                     echo "Login into server restart container"
                     sh """scp -i ~/.ssh/id_rsa_microservice -r ./infrastructure/docker-compose/micro-service-dev-v1.0.0.yml \
-                     root@139.59.96.208:/root/docker-compose"""
-                    echo "SSH remote to server to run docker-compose"
-                    sh """ssh -i ~/.ssh/id_rsa_microservice root@139.59.96. -yes && docker rmi vanket/issues-service:v1.0.0 \
-                    vanket/issues-service:v1.0.0 vanket/user-service:v1.0.0 vanket/organization-service:v1.0.0 -f
-                    """
+                     run.sh root@139.59.96.208:/root/docker-compose"""
 
-                    sh """ssh -i ~/.ssh/id_rsa_microservice -yes root@139.59.96.208 && cd ./docker-compose && \
-                    docker-compose -f common.yml -f micro-service-dev-v1.0.0.yml up -d"""
+                    echo "Allow permission file run.sh executed."
+                    sh "ssh -i ~/.ssh/id_rsa_microservice root@139.59.96.208 chmod +x ./docker-compose/run.sh"
+
+                    echo "SSH remote to server to run docker-compose"
+                    sh """ssh -i ~/.ssh/id_rsa_microservice root@139.59.96.208 ./docker-compose/run.sh"""
 
                     echo "Exit remote server"
-                    sh "exit;"
                 }
             }
         }

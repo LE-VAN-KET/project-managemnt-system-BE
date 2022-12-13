@@ -1,5 +1,6 @@
 package com.dut.team92.organizationservice.controller;
 
+import com.dut.team92.organizationservice.domain.dto.BoardDto;
 import com.dut.team92.organizationservice.domain.dto.response.CheckBoardExistResponse;
 import com.dut.team92.organizationservice.services.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,4 +22,5 @@ public class BoardController {
         boolean existBoard =  boardService.existBoardByBoardId(UUID.fromString(boardId));
         return CheckBoardExistResponse.builder().isExistBoard(existBoard).build();
     }
+
 }

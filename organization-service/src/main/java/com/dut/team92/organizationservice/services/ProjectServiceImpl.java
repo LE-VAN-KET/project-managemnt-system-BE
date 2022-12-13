@@ -8,7 +8,6 @@ import com.dut.team92.organizationservice.domain.entity.Project;
 import com.dut.team92.organizationservice.domain.entity.SprintStatus;
 import com.dut.team92.organizationservice.exception.ProjectIdNotFound;
 import com.dut.team92.organizationservice.repository.ProjectRepository;
-import com.dut.team92.organizationservice.repository.SprintRepository;
 import com.dut.team92.organizationservice.services.handler.CreateProjectCommandHandler;
 import com.dut.team92.organizationservice.services.handler.UpdateProjectCommandHandler;
 import com.dut.team92.organizationservice.services.mapper.ProjectDataMapper;
@@ -72,12 +71,9 @@ public class ProjectServiceImpl implements ProjectService{
     @Transactional
     @Async("threadPoolTaskExecutor")
     public void createFirstSprintAfterCreateProject(UUID projectId) {
-        String projectKey = projectRepository.findProjectKeyByProjectId(projectId).orElseThrow(() ->
-                new ProjectIdNotFound("Project not found with id = " +projectId));
         CreateSprintCommand command = new CreateSprintCommand();
         command.setProjectId(projectId);
-        command.setName(projectKey + " Sprint 1");
-        command.setPosition(1);
+        command.setName("Sprint");
         command.setStatus(SprintStatus.UNSTART);
         sprintService.createSprint(command);
     }

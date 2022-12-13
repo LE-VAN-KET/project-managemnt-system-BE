@@ -9,6 +9,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.constraints.NotNull;
 
@@ -30,5 +31,15 @@ public interface OrganizationServiceProxy {
                                      @PathVariable String organization_id,
                                      @RequestHeader(value = "Authorization", required = true)
                          String authorizationHeader);
+
+    @GetMapping("/api/sprints/backlog")
+    Object getAllSprintStaringOrUnStart(@RequestParam(name = "project_id") String projectId,
+                                               @RequestHeader(value = "Authorization", required = true)
+                                               String authorizationHeader);
+
+    @GetMapping("/api/sprints/boards")
+    Object getAllSprintRunning(@RequestParam(name = "project_id") String projectId,
+                               @RequestHeader(value = "Authorization", required = true)
+                               String authorizationHeader);
 }
 

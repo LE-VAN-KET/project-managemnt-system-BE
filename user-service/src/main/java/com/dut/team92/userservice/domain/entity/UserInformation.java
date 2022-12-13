@@ -1,12 +1,9 @@
 package com.dut.team92.userservice.domain.entity;
 
 import com.dut.team92.common.domain.BaseDomain;
-import com.dut.team92.userservice.domain.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;

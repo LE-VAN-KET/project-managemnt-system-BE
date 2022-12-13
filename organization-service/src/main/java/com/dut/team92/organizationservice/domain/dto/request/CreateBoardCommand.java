@@ -2,7 +2,6 @@ package com.dut.team92.organizationservice.domain.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.Min;
