@@ -1,6 +1,7 @@
 package com.dut.team92.memberservice.repository;
 
 import com.dut.team92.common.repository.IJpaRepository;
+import com.dut.team92.memberservice.domain.dto.response.ProjectResponse;
 import com.dut.team92.memberservice.domain.entity.Members;
 import com.dut.team92.memberservice.domain.entity.User;
 import org.springframework.data.jpa.repository.Query;
@@ -26,4 +27,10 @@ public interface MemberRepository extends IJpaRepository<Members, UUID> {
             "nullif(u.mailNotification, '') , ' ', nullif(u.displayName, '') , ' ', nullif(u.firstName, '') " +
             ", ' ', nullif(u.lastName, '') ) like %?2%")
     List<Members> searchAllByProjectId(UUID projectId, String keyword);
+
+    @Query("select new com.dut.team92.memberservice.domain.dto.response.ProjectResponse(m.projectId, m.user.id, " +
+            "m.user.isOrganizerAdmin) from Members m inner join User u on m.user.id = u.id where " +
+            "u.organizationId = :organizationId and m.user.id = :userId")
+    List<ProjectResponse> getAllProjectIdByOrganizationIdAndUserId(@Param("organizationId") UUID organizationId,
+                                                                   @Param("userId") UUID userId);
 }

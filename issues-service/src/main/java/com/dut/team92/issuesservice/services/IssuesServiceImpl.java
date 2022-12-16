@@ -22,8 +22,6 @@ import com.dut.team92.issuesservice.repository.IssuesRepository;
 import com.dut.team92.issuesservice.repository.IssuesStatusRepository;
 import com.dut.team92.issuesservice.services.mapper.IssuesMapper;
 import com.dut.team92.issuesservice.services.mapper.ObjectDataMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -33,7 +31,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
-import org.springframework.context.expression.MapAccessor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -153,7 +150,7 @@ public class IssuesServiceImpl implements IssuesService{
                 return iss;
             }).collect(Collectors.toList());
 
-            issuesRepository.saveAllAndFlush(issuesListUpdate);
+            issuesRepository.updateAllAndFlush(issuesListUpdate);
         }
         return MoveIssuesResponse.builder().code(200).message("You are moved issues successfully!").build();
     }
@@ -353,4 +350,5 @@ public class IssuesServiceImpl implements IssuesService{
             return maxPositionBacklog + 1;
         }
     }
+
 }

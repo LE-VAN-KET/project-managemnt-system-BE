@@ -2,6 +2,7 @@ package com.dut.team92.userservice.repository;
 
 import com.dut.team92.common.repository.IJpaRepository;
 import com.dut.team92.userservice.domain.entity.User;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -17,5 +18,6 @@ public interface UserRepository extends IJpaRepository<User, UUID> {
 
     boolean existsByMailNotification(String mailNotification);
 
+    @Query("select u from User u where lower(u.username) = lower(?1)")
     Optional<User> findByUsernameEqualsIgnoreCase(String username);
 }

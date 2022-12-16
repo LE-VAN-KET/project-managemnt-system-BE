@@ -79,4 +79,10 @@ public class ProjectController {
         ).build();
     }
 
+    @GetMapping("/attending")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProjectDto> getAllProjectAttended(@PathVariable("organization_id") @NotNull String organizationId) {
+        return projectService.getAllProjectAttendingInOrganizationId(UUID.fromString(organizationId));
+    }
+
 }

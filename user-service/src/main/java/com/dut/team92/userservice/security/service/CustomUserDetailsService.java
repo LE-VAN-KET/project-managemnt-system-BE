@@ -55,7 +55,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         Collection<? extends GrantedAuthority> authorities = getAuthorities(convertObjectToRoleList(response));
 
-        return new CustomUserPrincipal(username,
+        return new CustomUserPrincipal(user.getOrganizationId().toString(),
+                username,
                 user.getPassword(),
                 user.getId().toString(),
                 "",

@@ -1,10 +1,12 @@
 package com.dut.team92.memberservice.services;
 
 import com.dut.team92.common.enums.RoleType;
+import com.dut.team92.common.security.model.CustomUserPrincipal;
 import com.dut.team92.memberservice.domain.dto.MemberDto;
 import com.dut.team92.memberservice.domain.dto.UserDto;
 import com.dut.team92.memberservice.domain.dto.UserIdWithEmail;
 import com.dut.team92.memberservice.domain.dto.request.AddMemberToProjectRequest;
+import com.dut.team92.memberservice.domain.dto.response.ProjectResponse;
 import com.dut.team92.memberservice.domain.entity.Members;
 import com.dut.team92.memberservice.domain.entity.MembersRoles;
 import com.dut.team92.memberservice.domain.entity.Roles;
@@ -18,13 +20,11 @@ import com.dut.team92.memberservice.repository.UserRepository;
 import com.dut.team92.memberservice.services.mapper.MemberMapper;
 import com.dut.team92.memberservice.services.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -78,6 +78,22 @@ public class MemberServiceImpl implements MemberService{
             membersList = memberRepository.searchAllByProjectId(projectId, keyword);
         }
         return membersList.isEmpty() ? Collections.emptyList(): memberMapper.convertToDtoList(membersList);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProjectResponse> getAllProjectIdByUserIdAndOrganizationId(UUID organizationId) {
+        CustomUserPrincipal principal = (CustomUserPrincipal) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        String userId = principal.getSubId();
+        boolean isOrganizationAdmin = userRepository.existsByIdAndIsOrganizerAdmin(UUID.fromString(userId), true);
+        if (isOrganizationAdmin) {
+            return Arrays.asList(new ProjectResponse(null, UUID.fromString(userId), true));
+        }
+
+        List<ProjectResponse> projectIdList = memberRepository.getAllProjectIdByOrganizationIdAndUserId(organizationId,
+                UUID.fromString(userId));
+        return projectIdList.isEmpty() ? Collections.emptyList(): projectIdList;
     }
 
     private Members create(User user, UUID projectId) {

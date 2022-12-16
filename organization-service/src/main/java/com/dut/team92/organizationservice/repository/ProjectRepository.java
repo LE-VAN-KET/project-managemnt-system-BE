@@ -20,4 +20,6 @@ public interface ProjectRepository extends IJpaRepository<Project, UUID> {
 
     @Query("SELECT p.key FROM Project p WHERE p.id = :projectId")
     Optional<String> findProjectKeyByProjectId(@Param("projectId") UUID projectId);
+
+    List<Project> findAllByIdIn(List<UUID> projectIdList);
 }
