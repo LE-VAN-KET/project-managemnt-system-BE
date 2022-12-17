@@ -15,4 +15,5 @@ public interface ProjectService {
     void removeProject(UUID organizationId, UUID projectId);
     boolean isExistProjectByProjectIdAndOrganizationId(UUID projectId, UUID organizationId);
     String getProjectKeyByProjectId(UUID projectId);
+    List<ProjectDto> getAllProjectAttendingInOrganizationId(UUID organizationId);
 }

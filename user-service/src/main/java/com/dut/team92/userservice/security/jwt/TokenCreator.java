@@ -58,6 +58,7 @@ public class TokenCreator {
                 .claim(TokenKey.TOKEN_TYPE, tokenType)
                 .claim(TokenKey.FULL_NAME, customUserPrincipal.getFullName())
                 .claim(TokenKey.SUB_ID, customUserPrincipal.getSubId())
+                .claim(TokenKey.ORGANIZATION_ID, customUserPrincipal.getOrganizationId())
                 .signWith(SignatureAlgorithm.RS256, tokenProvider.getPrivateKey())
                 .setExpiration(FormatterUtil.convertToUtilDate(validity))
                 .compact();

@@ -49,10 +49,10 @@ public class User {
     @Email
     private String mailNotification;
 
-//    @Column(columnDefinition = "BINARY(16)")
-//    private UUID organizationId;
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID organizationId;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
     @PrimaryKeyJoinColumn
     private UserInformation userInformation;
 

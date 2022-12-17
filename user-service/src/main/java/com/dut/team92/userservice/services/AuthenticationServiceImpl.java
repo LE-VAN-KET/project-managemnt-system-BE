@@ -1,6 +1,7 @@
 package com.dut.team92.userservice.services;
 
 import com.dut.team92.common.security.TokenProvider;
+import com.dut.team92.common.security.model.CustomUserPrincipal;
 import com.dut.team92.userservice.configuration.properties.TokenProperties;
 import com.dut.team92.userservice.domain.dto.event.UserCreatedEvent;
 import com.dut.team92.userservice.domain.dto.request.*;
@@ -68,7 +69,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             TokenPair tokenPair = tokenCreateAndSaveHandler.createAndSaveToken(authentication);
             List<String> roleNameList = authentication.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+            CustomUserPrincipal principal = (CustomUserPrincipal) authentication.getPrincipal();
             return LoginResponse.builder()
+                    .userId(UUID.fromString(principal.getSubId()))
+                    .organizationId(principal.getOrganizationId())
                     .accessToken(tokenPair.getAccessToken())
                     .expiresIn(tokenProperties.getAccessTokenValidityInSeconds())
                     .refreshToken(tokenPair.getRefreshToken())
@@ -115,16 +119,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public CreateUserAdminOrganizationResponse signupOrganization(CreateUserAdminOrganizationCommand
                                                                   createUserAdminOrganizationCommand
     ) {
-        UserCreatedEvent userCreatedEvent = userCreateCommandHandler
-                .createAdminForOrganization(createUserAdminOrganizationCommand);
-
         CreateOrganizationCommand createOrganizationCommand = convertUserCommandToCreateOrganizationCommand(
                 createUserAdminOrganizationCommand);
-        createOrganizationCommand.setUserId(userCreatedEvent.getUser().getId());
+//        createOrganizationCommand.setUserId(userCreatedEvent.getUser().getId());
         // call api organization-service to create organization
         var response = proxy.createOrganization(createOrganizationCommand);
 
         if (response.getCode() == null) {
+            UserCreatedEvent userCreatedEvent = userCreateCommandHandler
+                    .createAdminForOrganization(createUserAdminOrganizationCommand, response.getOrganizationId());
             userMessagePublisher.publish(Collections.singletonList(userCreatedEvent.getUser()),
                     response.getOrganizationId().toString());
             return userDataMapper.userToCreateUserAdminOrganizationResponse(userCreatedEvent.getUser(),

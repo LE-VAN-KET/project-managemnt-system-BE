@@ -1,5 +1,6 @@
 package com.dut.team92.userservice.message.publisher;
 
+import com.dut.team92.common.exception.CommonServerErrorException;
 import com.dut.team92.kafka.helper.KafkaMessageHelper;
 import com.dut.team92.kafka.model.ListMemberRequestModel;
 import com.dut.team92.kafka.producer.KafkaProducer;
@@ -48,6 +49,7 @@ public class UserKafkaMessagePublisher implements UserMessagePublisher {
         catch(Exception e){
             log.error("Error publishing create list member event for organization id: {} and message is {}",
                     key, e.getMessage(),  e);
+            throw new CommonServerErrorException(500, e.getMessage());
         }
     }
 }

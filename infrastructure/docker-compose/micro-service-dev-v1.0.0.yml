@@ -12,6 +12,7 @@ services:
             MARIADB_PORT_NUMBER: 3306
             REDIS_HOST: redis_auth
             ISSUES_HOST: issues-service
+            MEMBER_HOST: member-service
 #            LOGSTASH_HOST_PORT: logstash:5000
 #            KAFKA_BROKER_1: kafka-broker-1
 #            KAFKA_BROKER_2: kafka-broker-2

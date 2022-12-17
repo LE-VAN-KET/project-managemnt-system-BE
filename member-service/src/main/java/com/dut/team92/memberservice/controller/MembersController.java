@@ -4,6 +4,7 @@ import com.dut.team92.memberservice.domain.dto.MemberDto;
 import com.dut.team92.memberservice.domain.dto.UserDto;
 import com.dut.team92.memberservice.domain.dto.request.AddMemberToProjectRequest;
 import com.dut.team92.memberservice.domain.dto.response.CheckExistMemberResponse;
+import com.dut.team92.memberservice.domain.dto.response.ProjectResponse;
 import com.dut.team92.memberservice.services.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,12 @@ public class MembersController {
                                                        @RequestParam(value = "keyword", required = false)
                                                        String keyword) {
         return memberService.searchMemberInProject(UUID.fromString(projectId), keyword);
+    }
+
+    @GetMapping("/project-ids")
+    public List<ProjectResponse> getListProjectIdMemberAttending(@RequestParam("organization_id") String organizationId,
+                                                                 @RequestHeader("Authorization") String authorization) {
+        return memberService.getAllProjectIdByUserIdAndOrganizationId(UUID.fromString(organizationId));
     }
 
 }

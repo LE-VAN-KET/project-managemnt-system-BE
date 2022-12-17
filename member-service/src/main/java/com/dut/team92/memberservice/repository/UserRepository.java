@@ -24,4 +24,6 @@ public interface UserRepository extends IJpaRepository<User, UUID> {
     List<User> searchAllByUsernameOrMailNotification(UUID organizationId,
                                                      String keyword);
 
+    boolean existsByIdAndIsOrganizerAdmin(UUID userId, boolean isOrganizationAdmin);
+
 }
