@@ -1,5 +1,6 @@
 package com.dut.team92.issuesservice.repository;
 
+import com.dut.team92.issuesservice.domain.entity.Issues;
 import org.hibernate.Session;
 import org.hibernate.engine.jdbc.spi.JdbcServices;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
@@ -107,6 +108,17 @@ public class HibernateRepositoryImpl<T> implements HibernateRepository<T> {
 
     protected Session session() {
         return entityManager.unwrap(Session.class);
+    }
+
+    public <S extends T> List<S> updateAttributeAndFlush(Iterable<S> entities) {
+        return executeBatch(() -> {
+            List<S> result = new ArrayList<>();
+            for(S entity : entities) {
+                result.add(update(entity));
+            }
+            entityManager.flush();
+            return result;
+        });
     }
 
 }

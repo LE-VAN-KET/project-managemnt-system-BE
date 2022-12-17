@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface IssuesRepository extends IJpaRepository<Issues, UUID>, HibernateRepository<Issues> {
+public interface IssuesRepository extends IJpaRepository<Issues, UUID>, HibernateRepository<Issues>, IssuesHibernate {
 
     @Query("SELECT new Issues(iss.id, iss.name, iss.issuesKey, iss.projectId, iss.priority, iss_status, " +
             "iss.authorId, iss.boardId, iss.isPublic, iss_type, iss.position)  from Issues iss inner join " +

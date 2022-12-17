@@ -34,6 +34,7 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -135,22 +136,26 @@ public class IssuesServiceImpl implements IssuesService{
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public MoveIssuesResponse moveIssues(MoveIssuesCommand command) {
         List<UUID> issuesIds = new ArrayList<>();
         Map<UUID, IssuesMovedRequest> issuesMovedRequestMap = new HashMap<>();
         issuesIds.addAll(getListIssuesIdBacklogChange(command, issuesMovedRequestMap));
         issuesIds.addAll(getListIssuesIdSprintChange(command, issuesMovedRequestMap));
-        List<Issues> issuesList = issuesRepository.findAllById(issuesIds);
+//        List<Issues> issuesList = issuesRepository.findAllById(issuesIds);
         if (!issuesIds.isEmpty()) {
-            List<Issues> issuesListUpdate = issuesList.stream().map(iss -> {
-                IssuesMovedRequest issuesMove = issuesMovedRequestMap.get(iss.getId());
-                iss.setPosition(issuesMove.getPosition());
-                iss.setBoardId(issuesMove.getBoardId());
-                return iss;
+
+            List<Issues> issuesListUpdate = issuesMovedRequestMap.values().stream().map(iss -> {
+//                IssuesMovedRequest issuesMove = issuesMovedRequestMap.get(iss.getId());
+                Issues entity = new Issues();
+                entity.setId(iss.getId());
+                entity.setPosition(iss.getPosition());
+                entity.setBoardId(iss.getBoardId());
+                return entity;
             }).collect(Collectors.toList());
 
-            issuesRepository.updateAllAndFlush(issuesListUpdate);
+//            issuesRepository.updateAllAndFlush(issuesListUpdate);
+            issuesRepository.updateAttributeIssues(issuesListUpdate);
         }
         return MoveIssuesResponse.builder().code(200).message("You are moved issues successfully!").build();
     }
