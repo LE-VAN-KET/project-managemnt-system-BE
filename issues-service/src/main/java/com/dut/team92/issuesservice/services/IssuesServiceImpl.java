@@ -20,12 +20,15 @@ import com.dut.team92.issuesservice.proxy.OrganizationServiceProxy;
 import com.dut.team92.issuesservice.repository.IssuesAssignRepository;
 import com.dut.team92.issuesservice.repository.IssuesRepository;
 import com.dut.team92.issuesservice.repository.IssuesStatusRepository;
+import com.dut.team92.issuesservice.repository.IssuesTypeRepository;
 import com.dut.team92.issuesservice.services.mapper.IssuesMapper;
 import com.dut.team92.issuesservice.services.mapper.ObjectDataMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -95,7 +98,8 @@ public class IssuesServiceImpl implements IssuesService{
     @Override
     @Transactional(readOnly = true)
     public List<IssuesDto> getAllIssuesBacklogByProjectId(UUID projectId) {
-        List<Issues> issues = issuesRepository.findAllByProjectIdAndBoardIdIsNull(projectId);
+        List<Issues> issues = issuesRepository.findAllByProjectIdAndBoardIdIsNull(projectId,
+                IssuesAssignStatus.ACTIVE);
         return issues.isEmpty() ? Collections.emptyList()
                 :issuesMapper.convertToDtoList(issues);
     }
@@ -108,7 +112,7 @@ public class IssuesServiceImpl implements IssuesService{
                 new IssuesNotFoundException("Issues not found incorrect id = " + issuesId));
 
         assert command != null;
-        BeanUtils.copyProperties(command, issuesExist);
+        BeanUtils.copyProperties(command, issuesExist, getNullPropertyNames(command));
         return createOrUpdateIssues(issuesExist, command);
     }
 
@@ -123,7 +127,7 @@ public class IssuesServiceImpl implements IssuesService{
     @Override
     @Transactional(readOnly = true)
     public List<IssuesDto> getAllIssuesByBoardIdIn(List<UUID> boardIs) {
-        List<Issues> issues = issuesRepository.findAllByBoardIdIn(boardIs);
+        List<Issues> issues = issuesRepository.findAllByBoardIdIn(boardIs, IssuesAssignStatus.ACTIVE);
         return issues.isEmpty() ? Collections.emptyList() : issuesMapper.convertToDtoList(issues);
     }
 
@@ -131,7 +135,7 @@ public class IssuesServiceImpl implements IssuesService{
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "issues_in_project", key = "#projectId")
     public List<IssuesDto> getAllIssuesInProject(UUID projectId) {
-        List<Issues> issuesList = issuesRepository.findAllByProjectId(projectId);
+        List<Issues> issuesList = issuesRepository.findAllByProjectId(projectId, IssuesAssignStatus.ACTIVE);
         return issuesList.isEmpty() ? Collections.emptyList() : issuesMapper.convertToDtoList(issuesList);
     }
 
@@ -249,7 +253,7 @@ public class IssuesServiceImpl implements IssuesService{
 
     @Async("threadPoolTaskExecutor1")
     public CompletableFuture<Issues> saveIssues(Issues issues) {
-        return CompletableFuture.completedFuture(issuesRepository.save(issues));
+        return CompletableFuture.completedFuture(issuesRepository.saveAndFlush(issues));
     }
 
     private void validateProjectAndAssignMember(CreateIssuesBacklogCommand command) {
@@ -307,7 +311,10 @@ public class IssuesServiceImpl implements IssuesService{
 
     private IssuesDto createOrUpdateIssues(Issues issues, CreateIssuesBacklogCommand command) {
         try {
-            IssuesType existIssuesType = issuesTypeService.get(command.getIssueTypeId());
+            if (command.getIssueTypeId() != null) {
+                IssuesType existIssuesType = issuesTypeService.get(command.getIssueTypeId());
+                issues.setIssuesType(existIssuesType);
+            }
             Issues parent = null;
             if (command.getParentId() != null) {
                 parent = issuesRepository.findById(command.getParentId()).orElseThrow(() ->
@@ -319,7 +326,6 @@ public class IssuesServiceImpl implements IssuesService{
                             + command.getIssuesStatusId()));
 
             validateProjectAndAssignMember(command);
-            issues.setIssuesType(existIssuesType);
             issues.setIssuesStatus(issuesStatus);
             issues.setParent(parent);
             String authorId = tokenProvider.extractClaim(tokenProvider.parseJwt(request))
@@ -354,6 +360,20 @@ public class IssuesServiceImpl implements IssuesService{
             int maxPositionBacklog = issuesRepository.maxPositionByProjectIdAndBoardIdIsNull(command.getProjectId());
             return maxPositionBacklog + 1;
         }
+    }
+
+    private String[] getNullPropertyNames(Object source) {
+        final BeanWrapper src = new BeanWrapperImpl(source);
+        java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
+
+        Set<String> emptyNames = new HashSet<String>();
+        for(java.beans.PropertyDescriptor pd : pds) {
+            Object srcValue = src.getPropertyValue(pd.getName());
+            if (srcValue == null) emptyNames.add(pd.getName());
+        }
+
+        String[] result = new String[emptyNames.size()];
+        return emptyNames.toArray(result);
     }
 
 }

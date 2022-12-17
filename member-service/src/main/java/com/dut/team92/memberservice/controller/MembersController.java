@@ -55,4 +55,9 @@ public class MembersController {
         return memberService.getAllProjectIdByUserIdAndOrganizationId(UUID.fromString(organizationId));
     }
 
+    @GetMapping("/{id}")
+    public MemberDto getMemberByMemberId(@PathVariable("id") String memberId) {
+        return memberService.getMemberById(UUID.fromString(memberId));
+    }
+
 }

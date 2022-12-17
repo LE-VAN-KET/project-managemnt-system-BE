@@ -12,6 +12,7 @@ import com.dut.team92.memberservice.domain.entity.MembersRoles;
 import com.dut.team92.memberservice.domain.entity.Roles;
 import com.dut.team92.memberservice.domain.entity.User;
 import com.dut.team92.memberservice.exception.MemberAlreadyExistInProject;
+import com.dut.team92.memberservice.exception.MemberNotFoundException;
 import com.dut.team92.memberservice.exception.RoleNotFoundException;
 import com.dut.team92.memberservice.exception.UserNotFoundException;
 import com.dut.team92.memberservice.repository.MemberRepository;
@@ -94,6 +95,14 @@ public class MemberServiceImpl implements MemberService{
         List<ProjectResponse> projectIdList = memberRepository.getAllProjectIdByOrganizationIdAndUserId(organizationId,
                 UUID.fromString(userId));
         return projectIdList.isEmpty() ? Collections.emptyList(): projectIdList;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public MemberDto getMemberById(UUID memberId) {
+        Members members = memberRepository.findById(memberId).orElseThrow(() ->
+                new MemberNotFoundException(404, "Member is not found!"));
+        return memberMapper.convertToDto(members);
     }
 
     private Members create(User user, UUID projectId) {

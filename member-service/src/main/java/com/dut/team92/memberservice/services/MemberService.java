@@ -14,4 +14,5 @@ public interface MemberService {
     List<UserDto> searchMemberInOrganization(UUID organizationId, String keyword);
     List<MemberDto> searchMemberInProject(UUID projectId, String keyword);
     List<ProjectResponse> getAllProjectIdByUserIdAndOrganizationId(UUID organizationId);
+    MemberDto getMemberById(UUID memberId);
 }

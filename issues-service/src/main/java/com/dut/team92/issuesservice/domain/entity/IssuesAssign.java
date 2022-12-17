@@ -28,5 +28,5 @@ public class IssuesAssign {
     private UUID issuesId;
 
     @Enumerated(EnumType.ORDINAL)
-    private IssuesAssignStatus status;
+    private IssuesAssignStatus status = IssuesAssignStatus.ACTIVE;
 }

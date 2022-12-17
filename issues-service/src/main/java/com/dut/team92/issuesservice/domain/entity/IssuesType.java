@@ -32,6 +32,6 @@ public class IssuesType {
 
     private String urlIcon;
 
-    @OneToMany(mappedBy = "issuesType", fetch = FetchType.LAZY)
-    private Set<Issues> issuesSet;
+//    @OneToMany(mappedBy = "issuesType", fetch = FetchType.LAZY)
+//    private Set<Issues> issuesSet;
 }

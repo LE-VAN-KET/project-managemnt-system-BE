@@ -84,6 +84,9 @@ resilience4j:
             organization:
                 max-attempts: 2
                 wait-duration: 3s
+            member:
+                max-attempts: 2
+                wait-duration: 3s
 
 app:
     feign:

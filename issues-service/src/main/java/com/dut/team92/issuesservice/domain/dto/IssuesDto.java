@@ -55,4 +55,5 @@ public class IssuesDto {
     private String issuesKey;
 
     private int position;
+    private UUID assignMemberId;
 }
