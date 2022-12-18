@@ -47,7 +47,7 @@ public class IssuesController {
     @PutMapping("/{issues_id}")
     @ResponseStatus(HttpStatus.OK)
     public IssuesDto updateDetailsIssues(@PathVariable("issues_id") String issuesId,
-                                         @RequestBody CreateIssuesBacklogCommand command) {
+                                         @Valid @RequestBody CreateIssuesBacklogCommand command) {
         return issuesService.updateIssues(command, UUID.fromString(issuesId));
     }
 

@@ -73,9 +73,11 @@ public class UserCreateCommandHandler {
     }
 
     @Transactional(rollbackFor = { SaveUserFailedException.class, Exception.class })
-    public UserCreatedEvent createAdminForOrganization(CreateUserAdminOrganizationCommand createUserCommand) {
+    public UserCreatedEvent createAdminForOrganization(CreateUserAdminOrganizationCommand createUserCommand,
+                                                       UUID organizationId) {
         User user = userDataMapper.createAdminOrganizationCommandToUser(createUserCommand);
         user.setIsOrganizerAdmin(true);
+        user.setOrganizationId(organizationId);
         UserInformation userInformation = userInformationDataMapper
                 .createUserCommandToUserInformation(createUserCommand);
         return saveUser(user, userInformation);

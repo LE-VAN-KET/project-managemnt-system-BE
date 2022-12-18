@@ -19,6 +19,6 @@ public class CreateOrganizationCommand implements Serializable {
 
     private String logo;
 
-    @NotNull
+//    @NotNull
     private UUID userId;
 }

@@ -198,19 +198,19 @@ pipeline{
                 script {
                     sh "cd infrastructure/docker-compose && docker-compose -f common.yml -f service.yml build"
                     sh "echo $dockerhub_PSW | docker login -u $dockerhub_USR --password-stdin"
-                    sh "docker tag user-service:v1.0.0 vanket/user-service:v1.0.0"
-                    sh "docker tag member-service:v1.0.0 vanket/member-service:v1.0.0"
-                    sh "docker tag organization-service:v1.0.0 vanket/organization-service:v1.0.0"
-                    sh "docker tag issues-service:v1.0.0 vanket/issues-service:v1.0.0"
-                    sh "docker push vanket/user-service:v1.0.0"
-                    sh "docker push vanket/issues-service:v1.0.0"
-                    sh "docker push vanket/member-service:v1.0.0"
-                    sh "docker push vanket/organization-service:v1.0.0"
+                    sh "docker tag user-service:v2.0.0 vanket/user-service:v2.0.0"
+                    sh "docker tag member-service:v2.0.0 vanket/member-service:v2.0.0"
+                    sh "docker tag organization-service:v2.0.0 vanket/organization-service:v2.0.0"
+                    sh "docker tag issues-service:v2.0.0 vanket/issues-service:v2.0.0"
+                    sh "docker push vanket/user-service:v2.0.0"
+                    sh "docker push vanket/issues-service:v2.0.0"
+                    sh "docker push vanket/member-service:v2.0.0"
+                    sh "docker push vanket/organization-service:v2.0.0"
 
                     echo "remove all image"
-                    sh """docker rmi vanket/issues-service:v1.0.0 vanket/member-service:v1.0.0 \
-                    vanket/user-service:v1.0.0  vanket/organization-service:v1.0.0 user-service:v1.0.0 \
-                    member-service:v1.0.0 organization-service:v1.0.0 issues-service:v1.0.0 -f
+                    sh """docker rmi vanket/issues-service:v2.0.0 vanket/member-service:v2.0.0 \
+                    vanket/user-service:v2.0.0  vanket/organization-service:v2.0.0 user-service:v2.0.0 \
+                    member-service:v2.0.0 organization-service:v2.0.0 issues-service:v2.0.0 -f
                     """
 
                     echo "Login into server restart container"

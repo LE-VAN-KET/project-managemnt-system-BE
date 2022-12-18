@@ -18,8 +18,8 @@ import java.util.UUID;
 @Getter
 @Setter
 public class CreateIssuesBacklogCommand {
-    @NotNull
-    @Min(1)
+//    @NotNull
+//    @Min(1)
     private Long issueTypeId;
 
     @NotNull

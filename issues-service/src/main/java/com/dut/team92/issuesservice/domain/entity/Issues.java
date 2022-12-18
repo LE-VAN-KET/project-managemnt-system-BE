@@ -76,7 +76,9 @@ public class Issues extends BaseDomain {
 
     private int position;
 
-    public Issues(UUID id, String name, String issuesKey, UUID projectId, Priority priority, IssuesStatus issuesStatus, UUID authorId, UUID boardId, Boolean isPublic, IssuesType issuesType, int position) {
+    private transient UUID assignMemberId;
+
+    public Issues(UUID id, String name, String issuesKey, UUID projectId, Priority priority, IssuesStatus issuesStatus, UUID authorId, UUID boardId, Boolean isPublic, IssuesType issuesType, int position,  UUID assignMemberId) {
         this.id = id;
         this.name = name;
         this.issuesKey = issuesKey;
@@ -88,5 +90,28 @@ public class Issues extends BaseDomain {
         this.isPublic = isPublic;
         this.issuesType = issuesType;
         this.position = position;
+        this.assignMemberId = assignMemberId;
+    }
+
+    public Issues(UUID id, String name, String issuesKey, String description, UUID projectId, UUID trackerId, Calendar startDate, Calendar dueDate, BigDecimal estimatedHours, Priority priority, IssuesStatus issuesStatus, UUID authorId, Integer doneRatio, UUID tagId, UUID boardId, Boolean isPublic, IssuesType issuesType, int position, UUID assignMemberId) {
+        this.id = id;
+        this.name = name;
+        this.issuesKey = issuesKey;
+        this.description = description;
+        this.projectId = projectId;
+        this.trackerId = trackerId;
+        this.startDate = startDate;
+        this.dueDate = dueDate;
+        this.estimatedHours = estimatedHours;
+        this.priority = priority;
+        this.issuesStatus = issuesStatus;
+        this.authorId = authorId;
+        this.doneRatio = doneRatio;
+        this.tagId = tagId;
+        this.boardId = boardId;
+        this.isPublic = isPublic;
+        this.issuesType = issuesType;
+        this.position = position;
+        this.assignMemberId = assignMemberId;
     }
 }

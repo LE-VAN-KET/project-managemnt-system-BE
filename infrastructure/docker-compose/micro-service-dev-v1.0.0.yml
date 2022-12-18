@@ -3,7 +3,7 @@ services:
     organization-service:
         hostname: organization-service
         container_name: organization-service
-        image: vanket/organization-service:v1.0.0
+        image: vanket/organization-service:v2.0.0
         restart: always
         ports:
             - "8186:8186"
@@ -12,6 +12,7 @@ services:
             MARIADB_PORT_NUMBER: 3306
             REDIS_HOST: redis_auth
             ISSUES_HOST: issues-service
+            MEMBER_HOST: member-service
 #            LOGSTASH_HOST_PORT: logstash:5000
 #            KAFKA_BROKER_1: kafka-broker-1
 #            KAFKA_BROKER_2: kafka-broker-2
@@ -22,7 +23,7 @@ services:
     user-service:
         hostname: user-service
         container_name: user-service
-        image: vanket/user-service:v1.0.0
+        image: vanket/user-service:v2.0.0
         restart: always
         ports:
             - "8182:8182"
@@ -43,7 +44,7 @@ services:
     member-service:
         hostname: member-service
         container_name: member-service
-        image: vanket/member-service:v1.0.0
+        image: vanket/member-service:v2.0.0
         restart: always
         ports:
             - "8185:8185"
@@ -60,7 +61,7 @@ services:
     issues-service:
         hostname: issues-service
         container_name: issues-service
-        image: vanket/issues-service:v1.0.0
+        image: vanket/issues-service:v2.0.0
         restart: always
         ports:
             - "8184:8184"
