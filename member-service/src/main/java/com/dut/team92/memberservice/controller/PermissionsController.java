@@ -2,11 +2,13 @@ package com.dut.team92.memberservice.controller;
 
 import com.dut.team92.memberservice.domain.dto.MemberDto;
 import com.dut.team92.memberservice.domain.dto.request.AddMemberToProjectRequest;
+import com.dut.team92.memberservice.domain.dto.request.CheckPermissionModel;
 import com.dut.team92.memberservice.domain.dto.request.permission.AddUpdateRoleRequest;
 import com.dut.team92.memberservice.domain.dto.request.permission.RolesPermissionDto;
 import com.dut.team92.memberservice.domain.dto.response.CheckExistMemberResponse;
 import com.dut.team92.memberservice.domain.dto.response.Permission.GroupsOfScreenResponse;
 import com.dut.team92.memberservice.domain.dto.response.Permission.RolesResponse;
+import com.dut.team92.memberservice.domain.dto.response.Response;
 import com.dut.team92.memberservice.services.MemberService;
 import com.dut.team92.memberservice.services.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,36 +29,20 @@ public class PermissionsController {
 
     @GetMapping("{role_id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<GroupsOfScreenResponse> getListPermission(@PathVariable("role_id") Long roleId) {
-        List<GroupsOfScreenResponse> permissions = permissionService.getListPermission(roleId);
-        return permissions;
-    }
-
-    @GetMapping("roles")
-    @ResponseStatus(HttpStatus.OK)
-    public List<RolesResponse> getListRoles(@RequestParam UUID organizationId) {
-        List<RolesResponse> roles = permissionService.getRoles(organizationId);
-        return roles;
-    }
-    @PostMapping("roles")
-    @ResponseStatus(HttpStatus.OK)
-    public boolean AddRoles(@RequestBody AddUpdateRoleRequest data) {
-        boolean done = permissionService.addNewRoles(data);
-        return done;
-    }
-
-    @PostMapping("roles/{role_id}")
-    @ResponseStatus(HttpStatus.OK)
-    public boolean AddRoles(@PathVariable long role_id ,@RequestBody AddUpdateRoleRequest data) {
-        boolean done = permissionService.updateRoles( role_id, data);
-        return done;
+    public Response getListPermission(@PathVariable("role_id") Long roleId) {
+        return permissionService.getListPermission(roleId);
     }
 
     @PostMapping("{role_id}")
     @ResponseStatus(HttpStatus.OK)
-    public boolean changePermission(@PathVariable long role_id ,@RequestBody RolesPermissionDto data) {
-        boolean done = permissionService.savePermission(role_id, data);
-        return done;
+    public Response changePermission(@PathVariable long role_id ,@RequestBody RolesPermissionDto data) {
+        return permissionService.savePermission(role_id, data);
+    }
+
+    @PostMapping("check")
+    @ResponseStatus(HttpStatus.OK)
+    public Response checkPermission(@RequestBody CheckPermissionModel data) {
+        return permissionService.checkPermission(data);
     }
 //
 //    @PostMapping()

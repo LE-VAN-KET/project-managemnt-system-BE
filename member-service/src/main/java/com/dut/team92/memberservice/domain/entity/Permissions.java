@@ -37,13 +37,10 @@ public class Permissions {
     @Transient
     private Function function;
 
-    private UUID screenId;
-
-    public Permissions(UUID id, UUID functionId, boolean enable, Function function, UUID screenId) {
+    public Permissions(UUID id, UUID functionId, boolean enable, Function function) {
         this.id = id;
         this.functionId = functionId;
         this.enable = enable;
         this.function = function;
-        this.screenId = screenId;
     }
 }

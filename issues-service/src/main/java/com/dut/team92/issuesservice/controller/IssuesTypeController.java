@@ -25,7 +25,7 @@ public class IssuesTypeController {
     }
 
     @GetMapping()
-    public List<IssuesTypeDto> getOneIssuesTypeByOrganizationIdAndName(@RequestParam(required = false)
+    public List<IssuesTypeDto> getAllIssuesTypeByOrganizationIdAndName(@RequestParam(required = false)
                                                                            String organizationId) {
         UUID organId = organizationId != null ? UUID.fromString(organizationId): null;
         return issuesTypeService.getAllIssuesTypeByOrganizationId(organId);

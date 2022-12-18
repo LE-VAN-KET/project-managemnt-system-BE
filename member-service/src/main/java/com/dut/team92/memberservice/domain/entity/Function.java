@@ -44,9 +44,10 @@ public class Function extends BaseDomain {
     @Column(length = 50)
     private String action;
 
-    @Column(length = 50)
+    @Column(length = 255)
     private String endpoint;
 
+    @Column(columnDefinition = "BINARY(16)")
     private UUID dependonFunction;
 
     private Boolean isHidden;
