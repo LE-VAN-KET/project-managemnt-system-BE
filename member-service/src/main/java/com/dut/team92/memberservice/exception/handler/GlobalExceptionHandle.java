@@ -3,6 +3,7 @@ package com.dut.team92.memberservice.exception.handler;
 import com.dut.team92.common.exception.handler.CommonExceptionHandler;
 import com.dut.team92.common.exception.model.CommonErrorResponse;
 import com.dut.team92.memberservice.exception.MemberAlreadyExistInProject;
+import com.dut.team92.memberservice.exception.MemberNotFoundException;
 import com.dut.team92.memberservice.exception.RoleNotFoundException;
 import com.dut.team92.memberservice.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ public class GlobalExceptionHandle extends CommonExceptionHandler {
         return handleBadRequestException(exception, "RoleNotFoundException");
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)
     public CommonErrorResponse handleUserNotFoundException(UserNotFoundException exception) {
         return handleBadRequestException(exception, "UserNotFoundException");
@@ -29,5 +30,11 @@ public class GlobalExceptionHandle extends CommonExceptionHandler {
     @ExceptionHandler(MemberAlreadyExistInProject.class)
     public CommonErrorResponse handleMemberAlreadyExistInProjectException(MemberAlreadyExistInProject exception) {
         return handleBadRequestException(exception, "MemberAlreadyExistInProject");
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(MemberNotFoundException.class)
+    public CommonErrorResponse handleMemberNotFoundException(MemberNotFoundException exception) {
+        return handleBadRequestException(exception, "MemberNotFoundException");
     }
 }
