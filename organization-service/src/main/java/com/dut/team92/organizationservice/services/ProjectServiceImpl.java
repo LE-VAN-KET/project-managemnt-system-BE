@@ -1,7 +1,5 @@
 package com.dut.team92.organizationservice.services;
 
-import com.dut.team92.common.security.TokenProvider;
-import com.dut.team92.common.security.model.CustomUserPrincipal;
 import com.dut.team92.organizationservice.domain.dto.ProjectDto;
 import com.dut.team92.organizationservice.domain.dto.request.CreateProjectCommand;
 import com.dut.team92.organizationservice.domain.dto.request.CreateSprintCommand;
@@ -19,7 +17,6 @@ import com.dut.team92.organizationservice.services.mapper.ProjectDataMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,7 +47,7 @@ public class ProjectServiceImpl implements ProjectService{
     }
 
     @Override
-    @Transactional(rollbackFor = {ProjectIdNotFound.class})
+    @Transactional(rollbackFor = {ProjectIdNotFound.class, Exception.class})
     public ProjectDto createProjectForOrganization(UUID organizationId, CreateProjectCommand command) {
         Project createdProject = createProjectCommandHandler.createProjectCommandHandler(organizationId,
                 command);

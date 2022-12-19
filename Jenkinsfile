@@ -215,13 +215,13 @@ pipeline{
 
                     echo "Login into server restart container"
                     sh """scp -i ~/.ssh/id_rsa_microservice -r ./infrastructure/docker-compose/micro-service-dev-v1.0.0.yml \
-                     run.sh root@139.59.96.208:/root/docker-compose"""
+                     run.sh root@165.232.173.235:/root"""
 
                     echo "Allow permission file run.sh executed."
-                    sh "ssh -i ~/.ssh/id_rsa_microservice root@139.59.96.208 chmod +x ./docker-compose/run.sh"
+                    sh "ssh -i ~/.ssh/id_rsa_microservice root@165.232.173.235 chmod +x ./run.sh"
 
                     echo "SSH remote to server to run docker-compose"
-                    sh """ssh -i ~/.ssh/id_rsa_microservice root@139.59.96.208 ./docker-compose/run.sh"""
+                    sh """ssh -i ~/.ssh/id_rsa_microservice root@165.232.173.235 ./run.sh"""
 
                     echo "Exit remote server"
                 }
