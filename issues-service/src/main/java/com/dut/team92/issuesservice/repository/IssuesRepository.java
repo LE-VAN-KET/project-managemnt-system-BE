@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -40,7 +41,7 @@ public interface IssuesRepository extends IJpaRepository<Issues, UUID>, Hibernat
             "from Issues iss where iss.projectId = :projectId")
     int maxIssuesKeyByProjectId(UUID projectId);
 
-    @Query("SELECT new Issues(iss.id, iss.name, iss.issuesKey, iss.projectId, iss.priority, iss.issuesStatus, " +
+    @Query("SELECT new Issues(iss.id, iss.name, iss.issuesKey, iss.projectId, iss.priority, iss_status, " +
             "iss.authorId, iss.boardId, iss.isPublic, iss_type, iss.position, ia.memberId) from Issues iss inner join " +
             "IssuesType iss_type on iss.issuesType.id = iss_type.id inner join IssuesStatus as iss_status " +
             "on iss.issuesStatus.id = iss_status.id left join IssuesAssign ia on iss.id = ia.issuesId " +
@@ -55,4 +56,12 @@ public interface IssuesRepository extends IJpaRepository<Issues, UUID>, Hibernat
     @Modifying
     @Query("update Issues iss set iss.boardId = NULL where iss.boardId in (:boardIdList)")
     void updateIssuesToBacklog(@Param("boardIdList") List<UUID> boardIdList);
+
+    @Query("select new Issues(iss.id, iss.name, iss.issuesKey, iss.projectId, iss.priority, iss_status, " +
+            "iss.authorId, iss.boardId, iss.isPublic, iss_type, iss.position, ia.memberId) from Issues iss " +
+            "inner join IssuesType iss_type on iss.issuesType.id = iss_type.id inner join IssuesStatus as iss_status " +
+            "on iss.issuesStatus.id = iss_status.id left join IssuesAssign ia on iss.id = ia.issuesId where iss.id = :issuesId " +
+            "and (ia is NULL or ia.status = :issuesAssignStatus) group by ia.issuesId")
+    Optional<Issues> findById(@Param("issuesId") UUID uuid,
+                              @Param("issuesAssignStatus")IssuesAssignStatus issuesAssignStatus);
 }
