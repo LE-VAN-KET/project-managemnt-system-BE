@@ -1,5 +1,6 @@
 package com.dut.team92.userservice.services.handler;
 
+import com.dut.team92.common.enums.UserStatus;
 import com.dut.team92.common.exception.CommonAuthException;
 import com.dut.team92.common.exception.CommonNotFoundException;
 import com.dut.team92.userservice.domain.dto.event.UserCreatedEvent;
@@ -58,16 +59,18 @@ public class UserCreateCommandHandler {
     private UserCreatedEvent saveUser(User user, UserInformation userInformation) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         UserCreatedEvent userCreatedEvent = validateUser(user);
+        user.setStatus(UserStatus.ACTIVE);
+        user.setUserInformation(userInformation);
+        userInformation.setUser(user);
 
+//        UserInformation savedUserInformation = userInformationService.create(userInformation);
         User savedUser = userService.create(user);
         if (savedUser == null) {
             throw new SaveUserFailedException();
         }
 
-        userInformation.setUser(savedUser);
-        UserInformation savedUserInformation = userInformationService.create(userInformation);
-        user.setUserInformation(savedUserInformation);
-        userCreatedEvent.setUser(user);
+//        savedUser.setUserInformation(savedUserInformation);
+        userCreatedEvent.setUser(savedUser);
         userCreatedEvent.getUser().setId(savedUser.getId());
         return userCreatedEvent;
     }
