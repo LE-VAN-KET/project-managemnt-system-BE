@@ -38,7 +38,7 @@ public class CreateProjectCommandHandler {
         }
         validateProjectCommand(command);
         project.setProjectStatus(ProjectStatus.ACTIVE);
-        return projectRepository.save(project);
+        return projectRepository.saveAndFlush(project);
     }
 
     private void validateProjectCommand(CreateProjectCommand command) {

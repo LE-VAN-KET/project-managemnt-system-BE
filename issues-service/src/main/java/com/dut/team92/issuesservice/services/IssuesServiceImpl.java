@@ -94,7 +94,7 @@ public class IssuesServiceImpl implements IssuesService{
         return issuesMapper.convertToDto(issues);
     }
 
-    @Cacheable(cacheNames = "issues_backlogs", key = "#projectId", unless = "#result.size() == 0")
+//    @Cacheable(cacheNames = "issues_backlogs", key = "#projectId", unless = "#result.size() == 0")
     @Override
     @Transactional(readOnly = true)
     public List<IssuesDto> getAllIssuesBacklogByProjectId(UUID projectId) {
@@ -158,7 +158,7 @@ public class IssuesServiceImpl implements IssuesService{
                 return entity;
             }).collect(Collectors.toList());
 
-//            issuesRepository.updateAllAndFlush(issuesListUpdate);
+//            issuesRepository.saveAllAndFlush(issuesListUpdate);
             issuesRepository.updateAttributeIssues(issuesListUpdate);
         }
         return MoveIssuesResponse.builder().code(200).message("You are moved issues successfully!").build();
