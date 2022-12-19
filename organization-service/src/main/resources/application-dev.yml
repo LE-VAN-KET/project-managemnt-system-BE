@@ -1,6 +1,6 @@
 spring:
     datasource:
-        url: jdbc:mariadb://${DATABASE_HOST:139.59.96.208}:${MARIADB_PORT_NUMBER:3312}/organization_service?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC
+        url: jdbc:mariadb://${DATABASE_HOST:165.232.173.235}:${MARIADB_PORT_NUMBER:3312}/organization_service?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC
         username: auth
         password: auth123
         driver-class-name: org.mariadb.jdbc.Driver
@@ -23,9 +23,9 @@ spring:
             use-key-prefix: true
     redis:
         database: 2
-        host: ${REDIS_HOST:139.59.96.208}
+        host: ${REDIS_HOST:165.232.173.235}
         port: 6379
-        timeout: 10000ms
+        timeout: 5000ms
         lettuce:
             pool:
                 max-active: 8
@@ -81,10 +81,10 @@ app:
         config:
             issues-client:
                 name: issues-service
-                url: http://${ISSUES_HOST:localhost}:8184
+                url: http://${ISSUES_HOST:localhost:8184}
             member-client:
                 name: member-service
-                url: http://${MEMBER_HOST:localhost}:8185
+                url: http://${MEMBER_HOST:localhost:8185}
 
 # Config Swagger  UI
 springdoc:
