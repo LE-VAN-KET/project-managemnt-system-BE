@@ -89,7 +89,7 @@ public class IssuesServiceImpl implements IssuesService{
     @Override
     @Transactional(readOnly = true)
     public IssuesDto get(UUID issuesId) {
-        Issues issues = issuesRepository.findById(issuesId).orElseThrow(() ->
+        Issues issues = issuesRepository.findById(issuesId, IssuesAssignStatus.ACTIVE).orElseThrow(() ->
                 new IssuesNotFoundException("Issues not exist with id equals " + issuesId));
         return issuesMapper.convertToDto(issues);
     }
@@ -244,6 +244,15 @@ public class IssuesServiceImpl implements IssuesService{
 
     @Async("threadPoolTaskExecutor2")
     public CompletableFuture<IssuesAssign> assignIssuesToMember(UUID memberId, UUID issuesId) {
+        Optional<IssuesAssign> existIssuesAssign = issuesAssignRepository.findByIssuesId(issuesId);
+        if (existIssuesAssign.isPresent()) {
+            IssuesAssign oldIssuesAssign = existIssuesAssign.get();
+            if (!oldIssuesAssign.getMemberId().equals(memberId)) {
+                return CompletableFuture.completedFuture(oldIssuesAssign);
+            }
+            oldIssuesAssign.setStatus(IssuesAssignStatus.BLOCKED);
+            issuesAssignRepository.save(oldIssuesAssign);
+        }
         IssuesAssign issuesAssign = new IssuesAssign();
         issuesAssign.setIssuesId(issuesId);
         issuesAssign.setMemberId(memberId);
