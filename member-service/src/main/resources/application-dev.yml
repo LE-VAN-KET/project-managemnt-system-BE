@@ -47,6 +47,8 @@ management:
 
 member-service:
     member-request-topic-name: member-request-topic-name
+    remove-user-request-topic-name: remove-user-request-topic-name
+    update-user-request-topic-name: update-user-request-topic-name
 
 kafka-config:
     bootstrap-servers: ${KAFKA_BROKER_1:34.143.194.243}:19092, ${KAFKA_BROKER_2:34.143.194.243}:29092, ${KAFKA_BROKER_3:34.143.194.243}:39092
@@ -68,6 +70,8 @@ kafka-consumer-config:
     key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
     member-consumer-group-id: member-topic-consumer
+    remove-user-consumer-group-id: delete-user-topic-consumer
+    update-user-consumer-group-id: update-user-topic-consumer
     auto-offset-reset: earliest
     batch-listener: true
     auto-startup: true

@@ -93,10 +93,10 @@ app:
         config:
             organization-client:
                 name: organization-service
-                url: http://${ORGANIZATION_HOST:localhost:8186}
+                url: http://${ORGANIZATION_HOST:localhost}:${ORGANIZATION_PORT:8186}
             member-client:
                 name: member-service
-                url: http://${MEMBER_HOST:localhost:8185}
+                url: http://${MEMBER_HOST:localhost}:${MEMBER_PORT:8185}
 
 logstash:
     host: ${LOGSTASH_HOST_PORT:146.190.105.184:5000}

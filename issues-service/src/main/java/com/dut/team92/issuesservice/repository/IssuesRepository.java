@@ -41,8 +41,9 @@ public interface IssuesRepository extends IJpaRepository<Issues, UUID>, Hibernat
             "from Issues iss where iss.projectId = :projectId")
     int maxIssuesKeyByProjectId(UUID projectId);
 
-    @Query("SELECT new Issues(iss.id, iss.name, iss.issuesKey, iss.projectId, iss.priority, iss_status, " +
-            "iss.authorId, iss.boardId, iss.isPublic, iss_type, iss.position, ia.memberId) from Issues iss inner join " +
+    @Query("SELECT new Issues(iss.id, iss.name, iss.issuesKey, iss.description, iss.projectId, iss.trackerId, " +
+            "iss.startDate, iss.dueDate, iss.estimatedHours, iss.priority, iss_status, iss.authorId, " +
+            "iss.doneRatio, iss.tagId, iss.boardId, iss.isPublic, iss_type, iss.position, ia.memberId) from Issues iss inner join " +
             "IssuesType iss_type on iss.issuesType.id = iss_type.id inner join IssuesStatus as iss_status " +
             "on iss.issuesStatus.id = iss_status.id left join IssuesAssign ia on iss.id = ia.issuesId " +
             "where (ia is NULL or ia.status = :issuesAssignStatus) and iss.projectId = :projectId")
@@ -57,11 +58,12 @@ public interface IssuesRepository extends IJpaRepository<Issues, UUID>, Hibernat
     @Query("update Issues iss set iss.boardId = NULL where iss.boardId in (:boardIdList)")
     void updateIssuesToBacklog(@Param("boardIdList") List<UUID> boardIdList);
 
-    @Query("select new Issues(iss.id, iss.name, iss.issuesKey, iss.projectId, iss.priority, iss_status, " +
-            "iss.authorId, iss.boardId, iss.isPublic, iss_type, iss.position, ia.memberId) from Issues iss " +
+    @Query("select new Issues(iss.id, iss.name, iss.issuesKey, iss.description, iss.projectId, iss.trackerId, " +
+            "iss.startDate, iss.dueDate, iss.estimatedHours, iss.priority, iss_status, iss.authorId, " +
+            "iss.doneRatio, iss.tagId, iss.boardId, iss.isPublic, iss_type, iss.position, ia.memberId) from Issues iss " +
             "inner join IssuesType iss_type on iss.issuesType.id = iss_type.id inner join IssuesStatus as iss_status " +
             "on iss.issuesStatus.id = iss_status.id left join IssuesAssign ia on iss.id = ia.issuesId where iss.id = :issuesId " +
-            "and (ia is NULL or ia.status = :issuesAssignStatus) group by ia.issuesId")
+            "and (ia.status = :issuesAssignStatus or ia is NULL)")
     Optional<Issues> findById(@Param("issuesId") UUID uuid,
                               @Param("issuesAssignStatus")IssuesAssignStatus issuesAssignStatus);
 }

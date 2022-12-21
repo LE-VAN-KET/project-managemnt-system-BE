@@ -60,4 +60,10 @@ public class MembersController {
         return memberService.getMemberById(UUID.fromString(memberId));
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void removeMemberInTheProject(@PathVariable("id") String memberId) {
+        memberService.removeMemberInTheProject(UUID.fromString(memberId));
+    }
+
 }

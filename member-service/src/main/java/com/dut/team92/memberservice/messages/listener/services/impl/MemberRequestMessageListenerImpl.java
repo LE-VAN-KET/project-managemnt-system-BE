@@ -6,18 +6,22 @@ import com.dut.team92.memberservice.domain.entity.Members;
 import com.dut.team92.memberservice.domain.entity.Roles;
 import com.dut.team92.memberservice.domain.entity.User;
 import com.dut.team92.memberservice.exception.RoleNotFoundException;
+import com.dut.team92.memberservice.exception.UserNotFoundException;
 import com.dut.team92.memberservice.messages.listener.services.MemberRequestMessageListener;
 import com.dut.team92.memberservice.messages.mapper.MemberMessageMapper;
 import com.dut.team92.memberservice.messages.mapper.UserMessageMapper;
 import com.dut.team92.memberservice.repository.MemberRepository;
 import com.dut.team92.memberservice.repository.RolesRepository;
 import com.dut.team92.memberservice.repository.UserRepository;
+import com.dut.team92.memberservice.utils.PropertyPojo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.management.relation.Role;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,6 +44,19 @@ public class MemberRequestMessageListenerImpl implements MemberRequestMessageLis
         } else {
             saveAllUserWithDefaultRoleMember(memberRequestModelList);
         }
+    }
+
+    @Override
+    public void removeUser(UUID userId) {
+        userRepository.deleteById(userId);
+    }
+
+    @Override
+    public void updateUser(MemberRequestModel memberRequestModel) {
+        User user = userMessageMapper.convertToUser(memberRequestModel);
+        User existUser = userRepository.findById(user.getId()).orElseThrow(() -> new UserNotFoundException("User not found!"));
+        BeanUtils.copyProperties(user, existUser, PropertyPojo.getNullPropertyNames(user));
+        userRepository.save(existUser);
     }
 
     private void saveUserWithRole(User user, String roleName) {
