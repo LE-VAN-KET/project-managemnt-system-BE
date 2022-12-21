@@ -100,6 +100,7 @@ app:
                 name: member-service
                 url: http://${MEMBER_HOST:localhost}:${MEMBER_PORT:8185}
 
+
 # Config kafka
 kafka-config:
     bootstrap-servers: ${KAFKA_BROKER_1:34.143.194.243}:19092, ${KAFKA_BROKER_2:34.143.194.243}:29092, ${KAFKA_BROKER_3:34.143.194.243}:39092

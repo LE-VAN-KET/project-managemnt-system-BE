@@ -98,6 +98,7 @@ app:
                 name: member-service
                 url: http://${MEMBER_HOST:localhost}:${MEMBER_PORT:8185}
 
+
 logstash:
     host: ${LOGSTASH_HOST_PORT:146.190.105.184:5000}
 
