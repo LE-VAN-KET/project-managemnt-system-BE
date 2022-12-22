@@ -20,11 +20,28 @@ public class UserMessagingDataMapper {
             BeanUtils.copyProperties(u, memberRequestModel, "id");
             memberRequestModel.setUserId(u.getId());
             memberRequestModel.setStatus(u.getStatus().name());
-            memberRequestModel.setFirstName(u.getUserInformation().getFirstName());
-            memberRequestModel.setLastName(u.getUserInformation().getLastName());
-            memberRequestModel.setDisplayName(u.getUserInformation().getDisplayName());
+            if (u.getUserInformation() != null) {
+                memberRequestModel.setFirstName(u.getUserInformation().getFirstName());
+                memberRequestModel.setLastName(u.getUserInformation().getLastName());
+                memberRequestModel.setDisplayName(u.getUserInformation().getDisplayName());
+            }
             memberRequestModel.setOrganizationId(organizationId);
             return memberRequestModel;
             }).collect(Collectors.toList());
+    }
+
+    public MemberRequestModel convertToMember(User user) {
+        MemberRequestModel memberRequestModel = new MemberRequestModel();
+        memberRequestModel.setId(UUID.randomUUID());
+        memberRequestModel.setSagaId(UUID.randomUUID());
+        BeanUtils.copyProperties(user, memberRequestModel, "id");
+        memberRequestModel.setUserId(user.getId());
+        memberRequestModel.setStatus(user.getStatus().name());
+        if (user.getUserInformation() != null) {
+            memberRequestModel.setFirstName(user.getUserInformation().getFirstName());
+            memberRequestModel.setLastName(user.getUserInformation().getLastName());
+            memberRequestModel.setDisplayName(user.getUserInformation().getDisplayName());
+        }
+        return memberRequestModel;
     }
 }

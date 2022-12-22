@@ -166,7 +166,7 @@ public class IssuesServiceImpl implements IssuesService{
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "issues_boards", key = "#projectId", unless = "#result.size() == 0")
+//    @Cacheable(cacheNames = "issues_boards", key = "#projectId", unless = "#result.size() == 0")
     public List<SprintDto> getAllIssuesInBoardOfSprintStatusRunningByProjectId(UUID projectId) {
         Object response = organizationServiceProxy.getAllSprintRunning(projectId.toString(),
                 request.getHeader(HttpHeaders.AUTHORIZATION));
@@ -244,10 +244,11 @@ public class IssuesServiceImpl implements IssuesService{
 
     @Async("threadPoolTaskExecutor2")
     public CompletableFuture<IssuesAssign> assignIssuesToMember(UUID memberId, UUID issuesId) {
-        Optional<IssuesAssign> existIssuesAssign = issuesAssignRepository.findByIssuesId(issuesId);
+        Optional<IssuesAssign> existIssuesAssign = issuesAssignRepository.findByIssuesIdAndStatus(issuesId,
+                IssuesAssignStatus.ACTIVE);
         if (existIssuesAssign.isPresent()) {
             IssuesAssign oldIssuesAssign = existIssuesAssign.get();
-            if (!oldIssuesAssign.getMemberId().equals(memberId)) {
+            if (oldIssuesAssign.getMemberId().equals(memberId)) {
                 return CompletableFuture.completedFuture(oldIssuesAssign);
             }
             oldIssuesAssign.setStatus(IssuesAssignStatus.BLOCKED);

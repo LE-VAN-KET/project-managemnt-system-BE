@@ -1,11 +1,13 @@
 package com.dut.team92.userservice.exception.handler;
 
+import com.dut.team92.common.exception.CommonAuthException;
 import com.dut.team92.common.exception.handler.CommonExceptionHandler;
 import com.dut.team92.common.exception.model.CommonErrorResponse;
 import com.dut.team92.common.util.WebUtil;
 import com.dut.team92.userservice.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -113,6 +115,12 @@ public class GlobalExceptionHandler extends CommonExceptionHandler {
     @ExceptionHandler(RoleNotFoundException.class)
     public CommonErrorResponse handleRoleNotFoundException(RoleNotFoundException exception) {
         return handleBadRequestException(exception, "RoleNotFoundException");
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(AccessDeniedException.class)
+    public CommonErrorResponse handleRoleNotFoundException(AccessDeniedException exception) {
+        return handleCommonAuthException(new CommonAuthException(401, exception.getMessage()));
     }
 
 }

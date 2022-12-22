@@ -19,6 +19,7 @@ import com.dut.team92.organizationservice.repository.ProjectRepository;
 import com.dut.team92.organizationservice.repository.SprintRepository;
 import com.dut.team92.organizationservice.services.mapper.BoardDataMapper;
 import com.dut.team92.organizationservice.services.mapper.SprintDataMapper;
+import com.dut.team92.organizationservice.utils.PropertyPojo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
@@ -84,7 +85,7 @@ public class SprintServiceImpl implements SprintService{
     @Override
     public SprintDto updateSprint(SprintDto dto) {
         Sprint existSprint = getOneSprint(dto.getId());
-        BeanUtils.copyProperties(dto, existSprint, getNullPropertyNames(dto));
+        BeanUtils.copyProperties(dto, existSprint, PropertyPojo.getNullPropertyNames(dto));
         return sprintDataMapper.convertToDto(sprintRepository.save(existSprint));
     }
 
@@ -167,20 +168,6 @@ public class SprintServiceImpl implements SprintService{
         return projectRepository.findProjectKeyByProjectId(projectId)
                 .orElseThrow(() -> new ProjectIdNotFound("Project not found with id = "
                         + projectId));
-    }
-
-    private String[] getNullPropertyNames(Object source) {
-        final BeanWrapper src = new BeanWrapperImpl(source);
-        java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
-
-        Set<String> emptyNames = new HashSet<String>();
-        for(java.beans.PropertyDescriptor pd : pds) {
-            Object srcValue = src.getPropertyValue(pd.getName());
-            if (srcValue == null) emptyNames.add(pd.getName());
-        }
-
-        String[] result = new String[emptyNames.size()];
-        return emptyNames.toArray(result);
     }
 
     private void resolveExceptionResponseProxy(Object response) {

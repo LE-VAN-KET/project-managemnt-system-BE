@@ -33,4 +33,5 @@ public interface MemberRepository extends IJpaRepository<Members, UUID> {
             "u.organizationId = :organizationId and m.user.id = :userId")
     List<ProjectResponse> getAllProjectIdByOrganizationIdAndUserId(@Param("organizationId") UUID organizationId,
                                                                    @Param("userId") UUID userId);
+
 }

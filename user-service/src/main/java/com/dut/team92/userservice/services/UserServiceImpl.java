@@ -1,15 +1,15 @@
 package com.dut.team92.userservice.services;
 
 import com.dut.team92.common.enums.UserStatus;
+import com.dut.team92.common.security.model.CustomUserPrincipal;
 import com.dut.team92.userservice.domain.dto.UserDto;
 import com.dut.team92.userservice.domain.dto.request.CreateMemberDto;
+import com.dut.team92.userservice.domain.dto.request.UpdateUserDto;
 import com.dut.team92.userservice.domain.dto.response.CheckOrganizationExistResponse;
 import com.dut.team92.userservice.domain.entity.User;
 import com.dut.team92.userservice.domain.entity.UserInformation;
-import com.dut.team92.userservice.exception.EmailAlreadyExistsException;
-import com.dut.team92.userservice.exception.FailedReadDataFileCSV;
-import com.dut.team92.userservice.exception.OrganizationNotFoundException;
-import com.dut.team92.userservice.exception.UsernameAlreadyExistsException;
+import com.dut.team92.userservice.exception.*;
+import com.dut.team92.userservice.message.publisher.UpdateOrRemoveUserKafkaMessagePublisher;
 import com.dut.team92.userservice.message.publisher.UserKafkaMessagePublisher;
 import com.dut.team92.userservice.proxy.OrganizationServiceProxy;
 import com.dut.team92.userservice.repository.UserInformationRepository;
@@ -17,8 +17,11 @@ import com.dut.team92.userservice.repository.UserRepository;
 import com.dut.team92.userservice.services.mapper.UserDataMapper;
 import com.dut.team92.userservice.services.mapper.UserInformationDataMapper;
 import com.dut.team92.userservice.util.CSVHelper;
+import com.dut.team92.userservice.util.PropertyPojo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +29,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -37,6 +39,7 @@ public class UserServiceImpl implements UserService{
     private UserInformationRepository userInformationRepository;
     private OrganizationServiceProxy organizationServiceProxy;
     private UserKafkaMessagePublisher userKafkaMessagePublisher;
+    private final UpdateOrRemoveUserKafkaMessagePublisher updateOrRemoveUserKafkaMessagePublisher;
 
     @Autowired
     public UserServiceImpl(UserDataMapper userDataMapper,
@@ -44,13 +47,15 @@ public class UserServiceImpl implements UserService{
                            UserInformationDataMapper userInformationDataMapper,
                            UserInformationRepository userInformationRepository,
                            OrganizationServiceProxy organizationServiceProxy,
-                           UserKafkaMessagePublisher userKafkaMessagePublisher) {
+                           UserKafkaMessagePublisher userKafkaMessagePublisher,
+                           UpdateOrRemoveUserKafkaMessagePublisher updateOrRemoveUserKafkaMessagePublisher) {
         this.userDataMapper = userDataMapper;
         this.userRepository = userRepository;
         this.userInformationDataMapper = userInformationDataMapper;
         this.userInformationRepository = userInformationRepository;
         this.organizationServiceProxy = organizationServiceProxy;
         this.userKafkaMessagePublisher = userKafkaMessagePublisher;
+        this.updateOrRemoveUserKafkaMessagePublisher = updateOrRemoveUserKafkaMessagePublisher;
     }
 
     @Override
@@ -119,6 +124,33 @@ public class UserServiceImpl implements UserService{
         } catch (IOException e) {
             throw new FailedReadDataFileCSV("Fail save csv data: " + e.getMessage());
         }
+    }
+
+    @Override
+    @Transactional
+    public UserDto update(UpdateUserDto userDto, UUID userId) {
+        User existUser = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found!"));
+        BeanUtils.copyProperties(userDto, existUser, PropertyPojo.getNullPropertyNames(userDto));
+        BeanUtils.copyProperties(userDto, existUser.getUserInformation(), PropertyPojo.getNullPropertyNames(userDto));
+        User updatedUser = userRepository.save(existUser);
+        updateOrRemoveUserKafkaMessagePublisher.publishUpdateUser(updatedUser, updatedUser.getId().toString());
+        return userDataMapper.convertToDto(updatedUser);
+    }
+
+    @Override
+    public void removeUser(UUID userId) {
+        User existUser = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found!"));
+        userRepository.delete(existUser);
+        updateOrRemoveUserKafkaMessagePublisher.publishRemoveUser(existUser, userId.toString());
+    }
+
+    @Override
+    public UserDto getCurrentUser() {
+        CustomUserPrincipal userPrincipal = (CustomUserPrincipal) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        User user = userRepository.findById(UUID.fromString(userPrincipal.getSubId())).orElseThrow((() ->
+                new UserNotFoundException("User not found!")));
+        return userDataMapper.convertToDto(user);
     }
 
     private void validateUser(@Valid User user) {

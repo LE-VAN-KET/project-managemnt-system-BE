@@ -15,4 +15,5 @@ public interface MemberService {
     List<MemberDto> searchMemberInProject(UUID projectId, String keyword);
     List<ProjectResponse> getAllProjectIdByUserIdAndOrganizationId(UUID organizationId);
     MemberDto getMemberById(UUID memberId);
+    void removeMemberInTheProject(UUID memberId);
 }

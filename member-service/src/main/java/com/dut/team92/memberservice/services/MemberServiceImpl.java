@@ -105,6 +105,12 @@ public class MemberServiceImpl implements MemberService{
         return memberMapper.convertToDto(members);
     }
 
+    @Override
+    @Transactional
+    public void removeMemberInTheProject(UUID memberId) {
+        memberRepository.deleteById(memberId);
+    }
+
     private Members create(User user, UUID projectId) {
         Members members = new Members();
         members.setUser(user);

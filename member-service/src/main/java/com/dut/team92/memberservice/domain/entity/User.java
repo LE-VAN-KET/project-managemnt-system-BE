@@ -40,7 +40,7 @@ public class User {
     @Column(columnDefinition = "BINARY(16)")
     private UUID organizationId;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Members> members;
 
     @Column(length = 50)
