@@ -81,4 +81,15 @@ public class UserDataMapper {
                 .organizationId(organizationId)
                 .build()).collect(Collectors.toList());
     }
+
+    public UserDto convertToDto(User user) {
+        UserDto userDto = UserDto.builder().build();
+        if (user != null) {
+            BeanUtils.copyProperties(user, userDto);
+            if (Objects.nonNull(user.getUserInformation())) {
+                BeanUtils.copyProperties(user.getUserInformation(), userDto);
+            }
+        }
+        return userDto;
+    }
 }

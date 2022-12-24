@@ -12,4 +12,6 @@ public class UserServiceConfigData {
     private String organizationResponseTopicName;
     private String memberRequestTopicName;
     private String memberResponseTopicName;
+    private String removeUserRequestTopicName;
+    private String updateUserRequestTopicName;
 }

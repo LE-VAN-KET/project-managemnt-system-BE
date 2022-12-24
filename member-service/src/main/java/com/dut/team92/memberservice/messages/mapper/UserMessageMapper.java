@@ -21,4 +21,12 @@ public class UserMessageMapper {
             return user;
         }).collect(Collectors.toList());
     }
+
+    public User convertToUser(MemberRequestModel memberRequestModel) {
+        User user = new User();
+        BeanUtils.copyProperties(memberRequestModel, user);
+        user.setStatus(UserStatus.valueOf(memberRequestModel.getStatus()));
+        user.setId(memberRequestModel.getUserId());
+        return user;
+    }
 }

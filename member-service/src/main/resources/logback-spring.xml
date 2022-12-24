@@ -62,7 +62,7 @@
     </appender>
 
     <springProfile name="dev">
-        <logger name="org.apache.kafka"  level="warn" additivity="false">
+        <logger name="org.apache.kafka"  level="debug" additivity="false">
             <appender-ref ref="logstash"/>
         </logger>
 

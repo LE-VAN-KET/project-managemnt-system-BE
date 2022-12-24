@@ -51,5 +51,7 @@ user-service:
     organization-response-topic-name: organization-response-value
     member-request-topic-name: member-request-topic-name
     member-response-topic-name: member-response-topic-name
+    remove-user-request-topic-name: remove-user-request-topic-name
+    update-user-request-topic-name: update-user-request-topic-name
 
 

@@ -2,6 +2,7 @@ package com.dut.team92.userservice.services;
 
 import com.dut.team92.common.service.RepositoryService;
 import com.dut.team92.userservice.domain.dto.UserDto;
+import com.dut.team92.userservice.domain.dto.request.UpdateUserDto;
 import com.dut.team92.userservice.domain.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,4 +13,7 @@ public interface UserService extends RepositoryService<User> {
     boolean isUsernameExist(String username);
     boolean isMailNotification(String mailNotification);
     List<UserDto> addListUserMemberToOrganization(MultipartFile file, UUID organizationId);
+    UserDto update(UpdateUserDto userDto, UUID userId);
+    void removeUser(UUID userId);
+    UserDto getCurrentUser();
 }

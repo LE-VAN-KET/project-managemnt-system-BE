@@ -1,6 +1,6 @@
 spring:
     datasource:
-        url: jdbc:mariadb://${DATABASE_HOST:139.59.96.208}:${MARIADB_PORT_NUMBER:3310}/issues_service?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC
+        url: jdbc:mariadb://${DATABASE_HOST:165.232.173.235}:${MARIADB_PORT_NUMBER:3310}/issues_service?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC
         username: auth
         password: auth123
         driver-class-name: org.mariadb.jdbc.Driver
@@ -23,9 +23,9 @@ spring:
             use-key-prefix: true
     redis:
         database: 1
-        host: ${REDIS_HOST:139.59.96.208}
+        host: ${REDIS_HOST:165.232.173.235}
         port: 6379
-        timeout: 10000ms
+        timeout: 5000ms
         lettuce:
             pool:
                 max-active: 8
@@ -93,10 +93,11 @@ app:
         config:
             organization-client:
                 name: organization-service
-                url: http://${ORGANIZATION_HOST:localhost}:8186
+                url: http://${ORGANIZATION_HOST:localhost}:${ORGANIZATION_PORT:8186}
             member-client:
                 name: member-service
-                url: http://${MEMBER_HOST:localhost}:8185
+                url: http://${MEMBER_HOST:localhost}:${MEMBER_PORT:8185}
+
 
 logstash:
     host: ${LOGSTASH_HOST_PORT:146.190.105.184:5000}

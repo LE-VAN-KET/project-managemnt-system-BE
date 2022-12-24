@@ -1,5 +1,6 @@
 package com.dut.team92.organizationservice.controller;
 
+import com.dut.team92.organizationservice.domain.dto.OrganizationDto;
 import com.dut.team92.organizationservice.domain.dto.request.CreateOrganizationCommand;
 import com.dut.team92.organizationservice.domain.dto.response.CheckOrganizationExistResponse;
 import com.dut.team92.organizationservice.domain.dto.response.CreateOrganizationResponse;
@@ -29,5 +30,17 @@ public class OrganizationController {
     public CheckOrganizationExistResponse checkOrganizationExist(@PathVariable("organization_id") String organizationId) {
         boolean existOrganization = organizationService.isExistOrganizationById(UUID.fromString(organizationId));
         return CheckOrganizationExistResponse.builder().isExistOrganization(existOrganization).build();
+    }
+
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public OrganizationDto updateOrganization(@PathVariable("id") String organizationId,
+                                              @RequestBody OrganizationDto organizationDto) {
+        return organizationService.update(organizationDto, UUID.fromString(organizationId));
+    }
+
+    @GetMapping("/{id}")
+    public OrganizationDto getOneOrganization(@PathVariable("id") String organizationId) {
+        return organizationService.getOne(UUID.fromString(organizationId));
     }
 }

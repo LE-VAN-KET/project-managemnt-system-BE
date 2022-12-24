@@ -39,7 +39,13 @@ public class Issues extends BaseDomain {
 
     @Column(columnDefinition = "BINARY(16)")
     private UUID trackerId;
+
+    @Basic
+    @Temporal(TemporalType.TIMESTAMP)
     private Calendar startDate;
+
+    @Basic
+    @Temporal(TemporalType.TIMESTAMP)
     private Calendar dueDate;
 
     @Column(name = "estimated_hours")
@@ -48,7 +54,7 @@ public class Issues extends BaseDomain {
     @Enumerated(EnumType.ORDINAL)
     private Priority priority;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "issues_status_id")
     private IssuesStatus issuesStatus;
 
@@ -70,7 +76,7 @@ public class Issues extends BaseDomain {
     @OneToMany(mappedBy = "parent")
     private Set<Issues> children;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "issues_type_id")
     private IssuesType issuesType;
 

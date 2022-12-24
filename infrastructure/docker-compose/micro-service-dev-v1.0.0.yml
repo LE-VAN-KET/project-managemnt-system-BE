@@ -12,7 +12,9 @@ services:
             MARIADB_PORT_NUMBER: 3306
             REDIS_HOST: redis_auth
             ISSUES_HOST: issues-service
+            ISSUES_PORT: 8184
             MEMBER_HOST: member-service
+            MEMBER_PORT: 8185
 #            LOGSTASH_HOST_PORT: logstash:5000
 #            KAFKA_BROKER_1: kafka-broker-1
 #            KAFKA_BROKER_2: kafka-broker-2
@@ -34,7 +36,9 @@ services:
             REDIS_PORT: 6379
 #            LOGSTASH_HOST_PORT: logstash:5000
             ORGANIZATION_HOST: organization-service
+            ORGANIZATION_PORT: 8186
             MEMBER_HOST: member-service
+            MEMBER_PORT: 8185
 #            KAFKA_BROKER_1: kafka-broker-1
 #            KAFKA_BROKER_2: kafka-broker-2
 #            KAFKA_BROKER_3: kafka-broker-3
@@ -69,7 +73,9 @@ services:
             DATABASE_HOST: db_issues
             MARIADB_PORT_NUMBER: 3306
             ORGANIZATION_HOST: organization-service
+            ORGANIZATION_PORT: 8186
             MEMBER_HOST: member-service
+            MEMBER_PORT: 8185
             REDIS_HOST: redis_auth
 #            LOGSTASH_HOST_PORT: logstash:5000
         networks:
