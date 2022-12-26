@@ -44,10 +44,11 @@ public class Function extends BaseDomain {
     @Column(length = 50)
     private String action;
 
-    @Column(length = 50)
+    @Column(length = 255)
     private String endpoint;
 
-    private Boolean dependonFunction;
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID dependonFunction;
 
     private Boolean isHidden;
 
@@ -58,5 +59,7 @@ public class Function extends BaseDomain {
     @Enumerated(EnumType.STRING)
     private Methods method;
 
-    private Long groupId; // cancel constrains relationship with entity Group
+//    @ManyToOne
+//    @JoinColumn(name = "screenId", referencedColumnName = "screen_Id")
+//    private Screens screen;
 }
