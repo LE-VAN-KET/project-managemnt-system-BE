@@ -21,7 +21,7 @@ public interface RolesRepository extends IJpaRepository<Roles, Long> {
             "on u.user_id = m.user_id where u.user_id = :userId ", nativeQuery = true)
     List<String> getRolesByUserId(@Param("userId") UUID userId);
 
-    @Query("SELECT NEW com.dut.team92.memberservice.domain.dto.response.Permission.RolesResponse(role.id, role.name, role.type) FROM Roles AS role WHERE role.organizationId = :organizationId")
+    @Query("SELECT NEW com.dut.team92.memberservice.domain.dto.response.Permission.RolesResponse(role.id, role.name, role.type) FROM Roles AS role WHERE role.organizationId IS NULL OR (:organizationId IS NULL OR role.organizationId = :organizationId)")
     List<RolesResponse> getListRoles(@Param("organizationId") UUID organizationId);
 
     @Query("SELECT NEW com.dut.team92.memberservice.domain.dto.response.Permission.PermissionResponse(p.id, p.functionId, p.enable, fos.screenId, f.name, f.isRequired, f.isHidden, f.dependonFunction, f.code)" +

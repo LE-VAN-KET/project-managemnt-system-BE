@@ -25,9 +25,9 @@ public class RolesController {
         return roleService.getAllRolesByUserId(UUID.fromString(userId));
     }
 
-    @GetMapping({"organization_id"})
+    @GetMapping("/list")
     @ResponseStatus(HttpStatus.OK)
-    public Response getListRoles(@PathVariable UUID organizationId) {
+    public Response getListRoles(@RequestParam(required=false) UUID organizationId) {
         return permissionService.getRoles(organizationId);
     }
     @PostMapping()

@@ -13,6 +13,7 @@ import com.dut.team92.memberservice.exception.*;
 import com.dut.team92.memberservice.repository.FunctionRepository;
 import com.dut.team92.memberservice.repository.PermissionsRepository;
 import com.dut.team92.memberservice.repository.RolesRepository;
+import com.dut.team92.memberservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,9 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Autowired
     private RolesRepository rolesRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private PermissionsRepository permissionsRepository;
@@ -54,7 +58,7 @@ public class PermissionServiceImpl implements PermissionService {
             }
             else {
                 response.setMessage("notfound");
-                response.setRspCode("403");
+                response.setRspCode("404");
             }
         }
         catch (Exception e)
@@ -93,7 +97,7 @@ public class PermissionServiceImpl implements PermissionService {
             }
             else {
                 response.setMessage("notfound");
-                response.setRspCode("403");
+                response.setRspCode("404");
             }
         }
         catch (Exception e)
@@ -109,10 +113,27 @@ public class PermissionServiceImpl implements PermissionService {
         Response res = new Response();
         try
         {
-            Optional<Roles> role = rolesRepository.findById(role_id);
-            if (!role.isPresent())
+            Optional<Roles> roleCheck = rolesRepository.findById(role_id);
+            if (!roleCheck.isPresent())
             {
                 res.setMessage("notfound");
+                res.setRspCode("404");
+                return res;
+            }
+            String userId = tokenProvider.extractClaim(tokenProvider.parseJwt(request))
+                    .get(TokenKey.SUB_ID, String.class);
+            Optional<User> userCheck = userRepository.findById(UUID.fromString(userId));
+            if(!userCheck.isPresent())
+            {
+                res.setMessage("unauthorized");
+                res.setRspCode("401");
+                return res;
+            }
+            User user = userCheck.get();
+            Roles role = roleCheck.get();
+            if(role.getType() == 0 && !user.getIsSystemAdmin())
+            {
+                res.setMessage("forbidden");
                 res.setRspCode("403");
                 return res;
             }
@@ -151,7 +172,7 @@ public class PermissionServiceImpl implements PermissionService {
             if (exist.isPresent())
             {
                 res.setMessage("notfound");
-                res.setRspCode("403");
+                res.setRspCode("404");
                 return res;
             }
             Roles role = new Roles();
@@ -191,7 +212,7 @@ public class PermissionServiceImpl implements PermissionService {
             if (!check.isPresent())
             {
                 res.setMessage("notfound");
-                res.setRspCode("403");
+                res.setRspCode("404");
                 return res;
             }
             Roles role  = check.get();
