@@ -22,5 +22,5 @@ public interface PermissionService {
     Response savePermission(long role_id,RolesPermissionDto data);
     Response addNewRoles(AddUpdateRoleRequest data);
     Response updateRoles(long roleId,AddUpdateRoleRequest data);
-    Response checkPermission(CheckPermissionModel data);
+    Response hassAccess(String functionCode);
 }

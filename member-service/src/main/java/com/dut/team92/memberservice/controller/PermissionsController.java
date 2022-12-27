@@ -13,6 +13,7 @@ import com.dut.team92.memberservice.services.MemberService;
 import com.dut.team92.memberservice.services.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,19 +31,29 @@ public class PermissionsController {
     @GetMapping("{role_id}")
     @ResponseStatus(HttpStatus.OK)
     public Response getListPermission(@PathVariable("role_id") Long roleId) {
+        Response res = permissionService.hassAccess("GET_LIST_PERMISSION");
+        if(!res.getRspCode().equals("200"))
+        {
+            return res;
+        }
         return permissionService.getListPermission(roleId);
     }
 
     @PostMapping("{role_id}")
     @ResponseStatus(HttpStatus.OK)
     public Response changePermission(@PathVariable long role_id ,@RequestBody RolesPermissionDto data) {
+        Response res = permissionService.hassAccess("UPDATE_PERMISION");
+        if(!res.getRspCode().equals("200"))
+        {
+            return res;
+        }
         return permissionService.savePermission(role_id, data);
     }
 
-    @PostMapping("check")
+    @GetMapping("check/{functionCode}")
     @ResponseStatus(HttpStatus.OK)
-    public Response checkPermission(@RequestBody CheckPermissionModel data) {
-        return permissionService.checkPermission(data);
+    public Response checkPermission(@PathVariable String functionCode) {
+        return permissionService.hassAccess(functionCode);
     }
 //
 //    @PostMapping()

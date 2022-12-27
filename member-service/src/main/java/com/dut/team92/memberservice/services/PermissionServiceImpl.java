@@ -232,13 +232,14 @@ public class PermissionServiceImpl implements PermissionService {
         return res;
     }
     @Override
-    public Response checkPermission(CheckPermissionModel data) {
+    public Response hassAccess(String functionCode) {
         Response res = new Response();
         try
         {
+            String projectId = request.getHeader("PROJECT-ID");
             String userId = tokenProvider.extractClaim(tokenProvider.parseJwt(request))
                     .get(TokenKey.SUB_ID, String.class);
-            int check = rolesRepository.checkPermission(data.getFunctionId(), UUID.fromString(userId), data.getProjectId());
+            int check = rolesRepository.checkPermission(functionCode, UUID.fromString(userId), projectId == null ? null : UUID.fromString(projectId));
             if(check > 0)
             {
                 res.setMessage("success");
