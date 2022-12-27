@@ -33,6 +33,6 @@ public interface RolesRepository extends IJpaRepository<Roles, Long> {
 
     @Query("SELECT r.id FROM Roles r where  r.name = :name AND r.organizationId = :organizerId")
     Optional<Long> checkExist(@Param("name") String name,@Param("organizerId") UUID organizerId);
-    @Query(value="CALL CheckPermissions(:userId, :projectId, :functionId)", nativeQuery = true)
-    int checkPermission(@Param("functionId") UUID functionId, @Param("userId") UUID userId, @Param("projectId") UUID projectId);
+    @Query(value="CALL CheckPermissions(:userId, :projectId, :functionCode)", nativeQuery = true)
+    int checkPermission(@Param("functionCode") String functionCode, @Param("userId") UUID userId, @Param("projectId") UUID projectId);
 }
