@@ -99,7 +99,7 @@ public class Issues extends BaseDomain {
         this.assignMemberId = assignMemberId;
     }
 
-    public Issues(UUID id, String name, String issuesKey, UUID projectId, Priority priority, IssuesStatus issuesStatus, UUID authorId, UUID boardId, Boolean isPublic, IssuesType issuesType, int position,  UUID assignMemberId, Calendar startDate, Calendar dueDate) {
+    public Issues(UUID id, String name, String issuesKey, UUID projectId, Priority priority, IssuesStatus issuesStatus, UUID authorId, UUID boardId, Boolean isPublic, IssuesType issuesType, int position,  UUID assignMemberId, Calendar startDate, Calendar dueDate, Integer doneRatio) {
         this.id = id;
         this.name = name;
         this.issuesKey = issuesKey;
@@ -114,6 +114,7 @@ public class Issues extends BaseDomain {
         this.assignMemberId = assignMemberId;
         this.startDate = startDate;
         this.dueDate = dueDate;
+        this.doneRatio = doneRatio;
     }
 
     public Issues(UUID id, String name, String issuesKey, String description, UUID projectId, UUID trackerId, Calendar startDate, Calendar dueDate, BigDecimal estimatedHours, Priority priority, IssuesStatus issuesStatus, UUID authorId, Integer doneRatio, UUID tagId, UUID boardId, Boolean isPublic, IssuesType issuesType, int position, UUID assignMemberId) {
