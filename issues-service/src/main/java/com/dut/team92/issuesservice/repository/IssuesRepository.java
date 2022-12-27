@@ -17,7 +17,7 @@ import java.util.UUID;
 public interface IssuesRepository extends IJpaRepository<Issues, UUID>, HibernateRepository<Issues>, IssuesHibernate {
 
     @Query("SELECT new Issues(iss.id, iss.name, iss.issuesKey, iss.projectId, iss.priority, iss_status, " +
-            "iss.authorId, iss.boardId, iss.isPublic, iss_type, iss.position, ia.memberId, iss.startDate, iss.dueDate)  from Issues iss inner join " +
+            "iss.authorId, iss.boardId, iss.isPublic, iss_type, iss.position, ia.memberId, iss.startDate, iss.dueDate, iss.doneRatio)  from Issues iss inner join " +
             "IssuesType iss_type on iss.issuesType.id = iss_type.id inner join IssuesStatus as iss_status " +
             "on iss.issuesStatus.id = iss_status.id left join IssuesAssign ia on iss.id = ia.issuesId " +
             "WHERE (ia is NULL or ia.status = :issuesAssignStatus) and iss.boardId IS NULL AND iss.projectId = :projectId")
@@ -30,7 +30,7 @@ public interface IssuesRepository extends IJpaRepository<Issues, UUID>, Hibernat
     int maxPositionByProjectIdAndBoardIdIsNull(@Param("projectId") UUID projectId);
 
     @Query("SELECT new Issues(iss.id, iss.name, iss.issuesKey, iss.projectId, iss.priority, iss_status, " +
-            "iss.authorId, iss.boardId, iss.isPublic, iss_type, iss.position, ia.memberId, iss.startDate, iss.dueDate) from Issues iss inner join " +
+            "iss.authorId, iss.boardId, iss.isPublic, iss_type, iss.position, ia.memberId, iss.startDate, iss.dueDate, iss.doneRatio) from Issues iss inner join " +
             "IssuesType iss_type on iss.issuesType.id = iss_type.id inner join IssuesStatus as iss_status " +
             "on iss.issuesStatus.id = iss_status.id left join IssuesAssign ia on iss.id = ia.issuesId " +
             "where (ia is NULL or ia.status = :issuesAssignStatus) and iss.boardId in (:boardIds)")

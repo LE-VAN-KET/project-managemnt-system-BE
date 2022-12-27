@@ -25,11 +25,11 @@ public class RolesController {
 
     @GetMapping
     public Object getRolesByUserId(@RequestParam("user_id") String userId) {
-        Response res = permissionService.hassAccess("GET_USER_ROLES");
-        if(!res.getRspCode().equals("200"))
-        {
-            return res;
-        }
+//        Response res = permissionService.hassAccess("GET_USER_ROLES");
+//        if(!res.getRspCode().equals("200"))
+//        {
+//            return res;
+//        }
         return roleService.getAllRolesByUserId(UUID.fromString(userId));
     }
 
