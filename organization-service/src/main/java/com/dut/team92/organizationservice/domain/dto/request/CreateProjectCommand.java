@@ -1,5 +1,6 @@
 package com.dut.team92.organizationservice.domain.dto.request;
 
+import com.dut.team92.organizationservice.utils.validator.ExistProjectKey;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
@@ -21,6 +22,7 @@ public class CreateProjectCommand {
 
     @NotNull
     @NotEmpty
+    @ExistProjectKey
     private String key;
 
     @NotNull

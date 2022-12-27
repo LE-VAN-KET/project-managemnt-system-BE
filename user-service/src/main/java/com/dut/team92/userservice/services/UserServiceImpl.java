@@ -132,6 +132,14 @@ public class UserServiceImpl implements UserService{
         User existUser = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found!"));
         BeanUtils.copyProperties(userDto, existUser, PropertyPojo.getNullPropertyNames(userDto));
         BeanUtils.copyProperties(userDto, existUser.getUserInformation(), PropertyPojo.getNullPropertyNames(userDto));
+        if (Objects.nonNull(userDto.getUsername())
+                && userRepository.isExistUsernameByNotUserId(existUser.getUsername(), existUser.getId())) {
+            throw new UsernameAlreadyExistsException(existUser.getUsername());
+        }
+        if (Objects.nonNull(userDto.getMailNotification())
+                && userRepository.isExistEmailByNotUserId(existUser.getMailNotification(), existUser.getId())) {
+            throw new EmailAlreadyExistsException(existUser.getMailNotification());
+        }
         User updatedUser = userRepository.save(existUser);
         updateOrRemoveUserKafkaMessagePublisher.publishUpdateUser(updatedUser, updatedUser.getId().toString());
         return userDataMapper.convertToDto(updatedUser);
