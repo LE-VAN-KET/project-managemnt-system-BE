@@ -201,11 +201,14 @@ public class IssuesServiceImpl implements IssuesService{
     @Override
     @Transactional
     public void updateIssuesToSPrint(List<BoardDto> oldBoardList, List<BoardDto> newBoardList) {
+        IssuesStatus issuesStatus = issuesStatusRepository.findByName("DONE")
+                .orElseThrow(() -> new IssuesStatusNotFoundException("Issues status not found by name DONE"));
         Map<String, BoardDto> boardDtoMap = new HashMap<>();
         oldBoardList.forEach(board -> boardDtoMap.put(board.getName(), board));
         newBoardList.forEach(board -> {
             if (boardDtoMap.containsKey(board.getName())) {
-                issuesRepository.updateIssuesToOtherSprint(board.getId(), boardDtoMap.get(board.getName()).getId());
+                issuesRepository.updateIssuesToOtherSprint(board.getId(), boardDtoMap.get(board.getName()).getId(),
+                        issuesStatus.getId());
             }
         });
     }
@@ -213,7 +216,9 @@ public class IssuesServiceImpl implements IssuesService{
     @Override
     @Transactional
     public void updateIssuesToBacklog(List<UUID> boardIdList) {
-        issuesRepository.updateIssuesToBacklog(boardIdList);
+        IssuesStatus issuesStatus = issuesStatusRepository.findByName("DONE")
+                .orElseThrow(() -> new IssuesStatusNotFoundException("Issues status not found by name DONE"));
+        issuesRepository.updateIssuesToBacklog(boardIdList, issuesStatus.getId());
     }
 
     private List<UUID> getListIssuesIdBacklogChange(MoveIssuesCommand command,

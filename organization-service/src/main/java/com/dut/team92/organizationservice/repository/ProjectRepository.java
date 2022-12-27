@@ -22,4 +22,5 @@ public interface ProjectRepository extends IJpaRepository<Project, UUID> {
     Optional<String> findProjectKeyByProjectId(@Param("projectId") UUID projectId);
 
     List<Project> findAllByIdIn(List<UUID> projectIdList);
+    boolean existsByKey(String key);
 }

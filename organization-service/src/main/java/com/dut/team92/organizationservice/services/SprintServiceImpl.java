@@ -98,15 +98,15 @@ public class SprintServiceImpl implements SprintService{
         sprintRepository.save(existSprint);
         String projectKey = getKeyProject(existSprint.getProjectId());
 
-        int maxPositionSprintInProject = sprintRepository.maxPositionByProjectId(existSprint.getProjectId());
-        // create new sprint unstart
-        Sprint savedSprint = createSprintAuto(projectKey, maxPositionSprintInProject, existSprint.getProjectId());
-        // create default 3 board to sprint
-        List<Board> newBoardList = boardService.createDefaultBoard(savedSprint.getId());
         List<BoardDto> oldBoardDtoList = boardService.getAllBoardBySprintId(existSprint.getId());
         Object response;
         switch (moveIssuesType) {
             case NEW_SPRINT:
+                int maxPositionSprintInProject = sprintRepository.maxPositionByProjectId(existSprint.getProjectId());
+                // create new sprint unstart
+                Sprint savedSprint = createSprintAuto(projectKey, maxPositionSprintInProject, existSprint.getProjectId());
+                // create default 3 board to sprint
+                List<Board> newBoardList = boardService.createDefaultBoard(savedSprint.getId());
                  response = issuesServiceProxy.transferIssuesToNewSprint(
                          new IssuesTransferRequest(oldBoardDtoList, new BoardDataMapper()
                                  .convertToDtoList(newBoardList)),

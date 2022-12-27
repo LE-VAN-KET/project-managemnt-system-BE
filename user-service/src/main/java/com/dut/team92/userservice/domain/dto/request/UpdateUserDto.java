@@ -12,7 +12,7 @@ public class UpdateUserDto implements Serializable {
     private String username;
     private String mailNotification;
     private String firstName;
-    private String lastname;
+    private String lastName;
     private String displayName;
     private UserStatus status;
 }
