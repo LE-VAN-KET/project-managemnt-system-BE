@@ -21,6 +21,6 @@ public class UserDto {
     private UUID organizationId;
 
     private String firstName;
-    private String lastname;
+    private String lastName;
     private String displayName;
 }

@@ -20,4 +20,6 @@ public interface IssuesStatusRepository extends IJpaRepository<IssuesStatus, UUI
             "OR issuesStatus.organizationId = :organizationId) AND UPPER(issuesStatus.name) = UPPER(:name)")
     Optional<IssuesStatus> findByNameAndOrganizationIdOrSystem(@Param("organizationId") UUID organizationId,
                                                                @Param("name") String name);
+    @Query("SELECT issuesStatus FROM IssuesStatus issuesStatus WHERE UPPER(issuesStatus.name) = UPPER(:name)")
+    Optional<IssuesStatus> findByName(@Param("name") String name);
 }
